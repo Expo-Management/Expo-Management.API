@@ -10,13 +10,13 @@ namespace Expo_Management.API.Repositories
 {
     public class IdentityRepository : IIdentityRepository
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
         private AuthUtils _authUtils;
 
         public IdentityRepository(
-            UserManager<IdentityUser> userManager,
+            UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
             IConfiguration configuration)
         {
@@ -32,8 +32,12 @@ namespace Expo_Management.API.Repositories
             if (userExists != null)
                 return new Response { Status = "Error", Message = "User already exists!" };
 
-            IdentityUser user = new()
+            User user = new()
             {
+                UserId = model.Id,
+                Name = model.Name,
+                PhoneNumber = model.Phone,
+                Lastname = model.Lastname,
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username

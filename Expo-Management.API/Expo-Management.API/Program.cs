@@ -1,4 +1,5 @@
 using Expo_Management.API.Auth;
+using Expo_Management.API.Entities;
 using Expo_Management.API.Interfaces;
 using Expo_Management.API.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,8 +16,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseSqlServer(configuration.GetConnectionString("ConnectionString")));
 
 builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
+builder.Services.AddScoped<IUsersRepository, UserRepository>();
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 

@@ -2,13 +2,13 @@
 
 namespace Expo_Management.API.Entities
 {
-    public class RegisterModel
+    public class UpdateUser
     {
         [Required(ErrorMessage = "UserID is required")]
         public string Id { get; set; }
 
         [Required(ErrorMessage = "Username is required")]
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
@@ -21,8 +21,5 @@ namespace Expo_Management.API.Entities
 
         [Required(ErrorMessage = "Phone is required")]
         public string Phone { get; set; }
-
-        [Required(ErrorMessage = "Password is required")]
-        public string Password { get; set; }
     }
 }

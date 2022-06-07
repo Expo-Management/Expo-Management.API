@@ -9,12 +9,12 @@ namespace Expo_Management.API.Utils
 {
     public class AuthUtils
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
         public AuthUtils(
-            UserManager<IdentityUser> userManager,
+            UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
             IConfiguration configuration)
         {
@@ -30,7 +30,7 @@ namespace Expo_Management.API.Utils
 
         }
 
-        public async Task AssignRole(IdentityUser userToAssignRole, string roleToAssign) 
+        public async Task AssignRole(User userToAssignRole, string roleToAssign) 
         {
             if (!await _roleManager.RoleExistsAsync(getRole(roleToAssign)))
             {

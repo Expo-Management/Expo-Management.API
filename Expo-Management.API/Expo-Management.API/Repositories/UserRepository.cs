@@ -9,14 +9,10 @@ namespace Expo_Management.API.Repositories
 {
     public class UserRepository: IUsersRepository
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
 
-        public UserRepository(
-            ApplicationDbContext context,
-            UserManager<User> userManager) 
+        public UserRepository(UserManager<User> userManager) 
         {
-            _context = context;
             _userManager = userManager;
         }
 

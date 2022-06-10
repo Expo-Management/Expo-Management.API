@@ -7,7 +7,7 @@ namespace Expo_Management.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : Controller
+    public class UsersController : ControllerBase
     {
         private readonly IUsersRepository _userRepository;
 
@@ -28,7 +28,7 @@ namespace Expo_Management.API.Controllers
                 return NotFound();
             }
             else {
-                return Json(response);
+                return Ok(response);
             }
         }
 

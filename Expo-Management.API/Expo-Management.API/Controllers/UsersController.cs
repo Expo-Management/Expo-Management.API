@@ -1,4 +1,5 @@
-﻿using Expo_Management.API.Entities;
+﻿using Abp.UI;
+using Expo_Management.API.Entities;
 using Expo_Management.API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -72,6 +73,20 @@ namespace Expo_Management.API.Controllers
             } 
             return BadRequest("Judge email does not exists!");
         }
+
+       ////subir foto test
+       //[HttpPost]
+       //[Route("photo")]
+       //public async Task<string> UploadPhotoProfile([FromForm(Name = "uploadedFile")] IFormFile file, string userId)
+       //{
+       //     var response = await _userRepository.UploadPhotoProfile(file, userId);
+       //
+       //     if (response == null)
+       //     {
+       //         return BadRequest("Check photo!");
+       //     }
+       //     return Ok(response);
+       //}
 
     }
 }

@@ -1,4 +1,5 @@
-﻿using Expo_Management.API.Auth;
+﻿using Abp.UI;
+using Expo_Management.API.Auth;
 using Expo_Management.API.Entities;
 using Expo_Management.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -81,6 +82,31 @@ namespace Expo_Management.API.Repositories
             { 
                 return false; 
             }
+        }
+
+        public async Task<string> UploadPhotoProfile(IFormFile file, string userId) 
+        {
+            if (file == null || file.Length == 0) ;
+        
+            throw new UserFriendlyException("Seleccione una foto");
+        
+            var folderName = Path.Combine("Resources", "ProfilePics");
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+        
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+        
+            var uniqueFileName = $"{userId}_profilepic.png0";
+            var dbPath = Path.Combine(filePath, uniqueFileName);
+        
+            using (var fileStream = new FileStream(Path.Combine(filePath, uniqueFileName), FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+            return dbPath;
+        
         }
     }
 }

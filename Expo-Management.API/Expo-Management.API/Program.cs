@@ -17,6 +17,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 
 builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
 builder.Services.AddScoped<IUsersRepository, UserRepository>();
+builder.Services.AddScoped<IFilesUploaderRepository, FilesUploaderRepository>();
+builder.Services.AddScoped<IProjectsRepository, ProjectsRepository>();
+
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()

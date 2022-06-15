@@ -10,13 +10,16 @@ namespace Expo_Management.API.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
+        private readonly IFilesUploaderRepository _filesUploaderRepository;
 
         public UserRepository(
             ApplicationDbContext context,
-            UserManager<User> userManager) 
+            UserManager<User> userManager,
+            IFilesUploaderRepository filesUploaderRepository) 
         {
             _context = context;
             _userManager = userManager;
+            _filesUploaderRepository = filesUploaderRepository;
         }
 
         public async Task<List<User>> GetJudgesAsync()
@@ -56,6 +59,12 @@ namespace Expo_Management.API.Repositories
             oldUser.Lastname = model.Lastname;
             oldUser.Email = model.Email;
             oldUser.PhoneNumber = model.Phone;
+
+            if(model.ProfilePicture != null)
+            {
+                var upload = await _filesUploaderRepository.AddProfilePicture(model.ProfilePicture);
+                oldUser.ProfilePicture = upload;
+            }
 
             var result = await _userManager.UpdateAsync(oldUser);
 

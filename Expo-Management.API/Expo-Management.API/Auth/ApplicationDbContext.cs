@@ -11,5 +11,10 @@ namespace Expo_Management.API.Auth
         {
         }
         public DbSet<User> User { get; set; }
+
+        public DbSet<FilesModel> Files { get; set; }
+
+        public DbSet<ProjectModel> Projects { get; set; }
+
     }
 }

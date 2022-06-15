@@ -21,5 +21,7 @@ namespace Expo_Management.API.Entities
 
         [Required(ErrorMessage = "Phone is required")]
         public string Phone { get; set; }
+
+        public IFormFile? ProfilePicture { get; set; }
     }
 }

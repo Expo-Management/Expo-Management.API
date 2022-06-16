@@ -24,12 +24,6 @@ namespace Expo_Management.API.Entities
 
         public FilesModel Files { get; set; }
 
-        //Category goes here
-        /*
-        [Required]
-        public int CategoryId { get; set; }
-        [ForeignKey("CategoryId")]
-        public Category Category { get; set; }
-         * */
+
     }
 }

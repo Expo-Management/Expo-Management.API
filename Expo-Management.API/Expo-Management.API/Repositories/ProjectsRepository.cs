@@ -62,7 +62,7 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                return await context.Projects.Include(nameof(FilesModel)).ToListAsync();
+                return await context.Projects.Include(x => x.Files).ToListAsync();
 
             }
             catch (Exception ex)

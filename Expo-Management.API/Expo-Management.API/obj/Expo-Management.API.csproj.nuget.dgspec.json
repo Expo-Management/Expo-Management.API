@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jafet\\Documents\\University\\Diseño\\W2\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj": {}
+    "C:\\Users\\jafet\\Documents\\University\\Diseño\\W2\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jafet\\Documents\\University\\Diseño\\W2\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj": {
+    "C:\\Users\\jafet\\Documents\\University\\Diseño\\W2\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W2\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj",
+        "projectUniqueName": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W2\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj",
         "projectName": "Expo-Management.API",
-        "projectPath": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W2\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj",
+        "projectPath": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W2\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj",
         "packagesPath": "C:\\Users\\jafet\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W2\\Expo-Management.API\\Expo-Management.API\\obj\\",
+        "outputPath": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W2\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\jafet\\AppData\\Roaming\\NuGet\\NuGet.Config",

@@ -8,6 +8,17 @@ namespace Expo_Management.API.Interfaces
         Task<User> GetJudgeAsync(string email);
         Task<User> UpdateJudgeAsync(UpdateUser model);
         Task<bool> DeleteJudgeAsync(string email);
-        Task<string> UploadPhotoProfile(IFormFile file, string userId);
+
+
+        Task<List<User>> GetAdminsAsync();
+        Task<User> GetAdminAsync(string email);
+        Task<User> UpdateAdminAsync(UpdateUser model);
+        Task<bool> DeleteAdminAsync(string email);
+
+
+        Task<List<User>> GetStudentsAsync();
+        Task<User> GetStudentAsync(string email);
+        Task<User> UpdateStudentAsync(UpdateUser model);
+        Task<bool> DeleteStudentAsync(string email);
     }
 }

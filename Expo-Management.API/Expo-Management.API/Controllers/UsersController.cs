@@ -1,5 +1,4 @@
-﻿using Abp.UI;
-using Expo_Management.API.Entities;
+﻿using Expo_Management.API.Entities;
 using Expo_Management.API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +15,8 @@ namespace Expo_Management.API.Controllers
         {
             _userRepository = userRepository;
         }
+
+        //Judges
 
         [HttpGet]
         [Route("judges")]
@@ -74,19 +75,126 @@ namespace Expo_Management.API.Controllers
             return BadRequest("Judge email does not exists!");
         }
 
-       ////subir foto test
-       //[HttpPost]
-       //[Route("photo")]
-       //public async Task<string> UploadPhotoProfile([FromForm(Name = "uploadedFile")] IFormFile file, string userId)
-       //{
-       //     var response = await _userRepository.UploadPhotoProfile(file, userId);
-       //
-       //     if (response == null)
-       //     {
-       //         return BadRequest("Check photo!");
-       //     }
-       //     return Ok(response);
-       //}
 
+        //Admins
+
+        [HttpGet]
+        [Route("admins")]
+        public async Task<IActionResult> GetAdminsAsync()
+        {
+            var response = await _userRepository.GetAdminsAsync();
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
+
+        [HttpGet]
+        [Route("admin")]
+        public async Task<IActionResult> GetAdminAsync(string email)
+        {
+            var response = await _userRepository.GetAdminAsync(email);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
+
+        [HttpPut]
+        [Route("admin")]
+        public async Task<IActionResult> UpdateAdminAsync([FromBody] UpdateUser model)
+        {
+            var response = await _userRepository.UpdateAdminAsync(model);
+
+            if (response == null)
+            {
+                return BadRequest("Check email!");
+            }
+            return Ok(response);
+        }
+
+        [HttpDelete]
+        [Route("admin")]
+        public async Task<IActionResult> DeleteAdminAsync(string email)
+        {
+            bool response = await _userRepository.DeleteStudentAsync(email);
+
+            if (response)
+            {
+                return Ok("Admin deleted!");
+            }
+            return BadRequest("Admin email does not exists!");
+        }
+
+
+        //Students
+
+        [HttpGet]
+        [Route("students")]
+        public async Task<IActionResult> GetStudentsAsync()
+        {
+            var response = await _userRepository.GetStudentsAsync();
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
+
+        [HttpGet]
+        [Route("student")]
+        public async Task<IActionResult> GetStudentAsync(string email)
+        {
+            var response = await _userRepository.GetStudentAsync(email);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
+
+        [HttpPut]
+        [Route("student")]
+        public async Task<IActionResult> UpdateStudentAsync([FromBody] UpdateUser model)
+        {
+            var response = await _userRepository.UpdateStudentAsync(model);
+
+            if (response == null)
+            {
+                return BadRequest("Check email!");
+            }
+            return Ok(response);
+        }
+
+        [HttpDelete]
+        [Route("student")]
+        public async Task<IActionResult> DeleteStudentAsync(string email)
+        {
+            bool response = await _userRepository.DeleteStudentAsync(email);
+
+            if (response)
+            {
+                return Ok("Student deleted!");
+            }
+            return BadRequest("Student email does not exists!");
+        }
     }
 }

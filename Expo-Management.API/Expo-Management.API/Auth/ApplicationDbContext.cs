@@ -11,5 +11,7 @@ namespace Expo_Management.API.Auth
         {
         }
         public DbSet<User> User { get; set; }
+        public DbSet<Fair> Fair { get; set; }
+        public DbSet<Event> Event { get; set; }
     }
 }

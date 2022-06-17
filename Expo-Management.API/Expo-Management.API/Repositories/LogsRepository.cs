@@ -15,8 +15,14 @@ namespace Expo_Management.API.Repositories
 
         async Task<List<Logs>> ILogsRepository.GetLogsAsync()
         {
-            //var results = (from e in _context.Logs)
-            throw new NotImplementedException();
+            var results = (from l in _context.Logs
+                           select l).ToList();
+
+            if(results.Count() > 0)
+            {
+                return (List<Logs>)results;
+            }
+            return null;
         }
     }
 }

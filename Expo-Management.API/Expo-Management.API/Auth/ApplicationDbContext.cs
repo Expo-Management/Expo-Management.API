@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Expo_Management.API.Auth
 {
-    public class ApplicationDbContext: IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {

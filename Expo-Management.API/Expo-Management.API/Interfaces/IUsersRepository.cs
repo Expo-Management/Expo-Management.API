@@ -8,5 +8,6 @@ namespace Expo_Management.API.Interfaces
         Task<User> GetJudgeAsync(string email);
         Task<User> UpdateJudgeAsync(UpdateUser model);
         Task<bool> DeleteJudgeAsync(string email);
+        Task<string> UploadPhotoProfile(IFormFile file, string userId);
     }
 }

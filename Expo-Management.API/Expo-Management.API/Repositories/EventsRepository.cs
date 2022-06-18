@@ -1,6 +1,7 @@
 ﻿using Expo_Management.API.Auth;
 using Expo_Management.API.Entities;
 using Expo_Management.API.Entities.Events;
+using Expo_Management.API.Entities.News;
 using Expo_Management.API.Interfaces;
 
 namespace Expo_Management.API.Repositories
@@ -15,7 +16,7 @@ namespace Expo_Management.API.Repositories
             _context = context;
         }
 
-        async Task<Event>? IEventsRepository.CreateEventAsync(EventInput Event)
+        public async Task<Event>? CreateEventAsync(EventInput Event)
         {
             var fair = (from f in _context.Fair
                         where f.Id == Event.FairId
@@ -45,7 +46,7 @@ namespace Expo_Management.API.Repositories
             return null;
         }
 
-        async Task<bool> IEventsRepository.DeleteEventAsync(int EventId)
+        public async Task<bool> DeleteEventAsync(int EventId)
         {
             var result = (from e in _context.Event
                            where e.Id == EventId
@@ -62,7 +63,7 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-        async Task<Event>? IEventsRepository.GetEventAsync(int EventId)
+        public async Task<Event>? GetEventAsync(int EventId)
         {
             var results = (from e in _context.Event
                            where e.Id == EventId
@@ -75,7 +76,7 @@ namespace Expo_Management.API.Repositories
             return null;
         }
 
-        async Task<List<Event>>? IEventsRepository.GetEventsAsync()
+        public async Task<List<Event>>? GetEventsAsync()
         {
             var results = (from e in _context.Event
                            select e).ToList();
@@ -87,7 +88,7 @@ namespace Expo_Management.API.Repositories
             return null;
         }
 
-        async Task<Event>? IEventsRepository.UpdateEventAsync(EventUpdate Event)
+        public async Task<Event>? UpdateEventAsync(EventUpdate Event)
         {
             var result = (from e in _context.Event
                            where e.Id == Event.Id
@@ -105,6 +106,19 @@ namespace Expo_Management.API.Repositories
             }
             return null;
 
+        }
+
+        public async Task<List<New>> GetNewsByFairIdAsync(int FairId) 
+        {
+            var results = (from n in _context.New
+                          where n.Fair.Id == FairId
+                          select n).ToList();
+
+            if (results != null && results.Count() > 0)
+            {
+                return results;
+            }
+            return null;
         }
     }
 }

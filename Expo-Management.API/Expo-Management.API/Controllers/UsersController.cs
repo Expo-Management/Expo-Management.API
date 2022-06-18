@@ -16,6 +16,8 @@ namespace Expo_Management.API.Controllers
             _userRepository = userRepository;
         }
 
+        //Judges
+
         [HttpGet]
         [Route("judges")]
         public async Task<IActionResult> GetJudgesAsync()
@@ -49,7 +51,7 @@ namespace Expo_Management.API.Controllers
 
         [HttpPut]
         [Route("judge")]
-        public async Task<IActionResult> UpdateJudgeAsync([FromBody] UpdateUser model)
+        public async Task<IActionResult> UpdateJudgeAsync([FromForm] UpdateUser model)
         {
             var response = await _userRepository.UpdateJudgeAsync(model);
 
@@ -73,5 +75,126 @@ namespace Expo_Management.API.Controllers
             return BadRequest("Judge email does not exists!");
         }
 
+
+        //Admins
+
+        [HttpGet]
+        [Route("admins")]
+        public async Task<IActionResult> GetAdminsAsync()
+        {
+            var response = await _userRepository.GetAdminsAsync();
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
+
+        [HttpGet]
+        [Route("admin")]
+        public async Task<IActionResult> GetAdminAsync(string email)
+        {
+            var response = await _userRepository.GetAdminAsync(email);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
+
+        [HttpPut]
+        [Route("admin")]
+        public async Task<IActionResult> UpdateAdminAsync([FromBody] UpdateUser model)
+        {
+            var response = await _userRepository.UpdateAdminAsync(model);
+
+            if (response == null)
+            {
+                return BadRequest("Check email!");
+            }
+            return Ok(response);
+        }
+
+        [HttpDelete]
+        [Route("admin")]
+        public async Task<IActionResult> DeleteAdminAsync(string email)
+        {
+            bool response = await _userRepository.DeleteStudentAsync(email);
+
+            if (response)
+            {
+                return Ok("Admin deleted!");
+            }
+            return BadRequest("Admin email does not exists!");
+        }
+
+
+        //Students
+
+        [HttpGet]
+        [Route("students")]
+        public async Task<IActionResult> GetStudentsAsync()
+        {
+            var response = await _userRepository.GetStudentsAsync();
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
+
+        [HttpGet]
+        [Route("student")]
+        public async Task<IActionResult> GetStudentAsync(string email)
+        {
+            var response = await _userRepository.GetStudentAsync(email);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
+
+        [HttpPut]
+        [Route("student")]
+        public async Task<IActionResult> UpdateStudentAsync([FromBody] UpdateUser model)
+        {
+            var response = await _userRepository.UpdateStudentAsync(model);
+
+            if (response == null)
+            {
+                return BadRequest("Check email!");
+            }
+            return Ok(response);
+        }
+
+        [HttpDelete]
+        [Route("student")]
+        public async Task<IActionResult> DeleteStudentAsync(string email)
+        {
+            bool response = await _userRepository.DeleteStudentAsync(email);
+
+            if (response)
+            {
+                return Ok("Student deleted!");
+            }
+            return BadRequest("Student email does not exists!");
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace Expo_Management.API.Controllers
     public class AuthenticateController : ControllerBase
     {
         private readonly IIdentityRepository _identityRepository;
+        private readonly ILogger<AuthenticateController> _logger;
         
         public AuthenticateController(
             IIdentityRepository identityRepository)
@@ -59,15 +60,24 @@ namespace Expo_Management.API.Controllers
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
         {
             var response = await _identityRepository.RegisterNewUser("Admin", model);
+            _logger.LogWarning("Error al registrar un usuario");
 
-            if (response.Status == "Success")
+            try
             {
-                return Ok(response);
+                if (response.Status == "Success")
+                {
+                    return Ok(response);
+                }
+                else
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, response);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, response);
+                _logger.LogError(ex, ex.Message);
             }
+            return StatusCode(StatusCodes.Status500InternalServerError, response);
         }
 
         [HttpPost]

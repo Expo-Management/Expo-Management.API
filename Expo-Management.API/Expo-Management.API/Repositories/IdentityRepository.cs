@@ -13,16 +13,20 @@ namespace Expo_Management.API.Repositories
         private readonly UserManager<User> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<IdentityRepository> _logger;
         private AuthUtils _authUtils;
 
         public IdentityRepository(
             UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
+            ILogger<IdentityRepository> logger,
             IConfiguration configuration)
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            _logger = logger;
             _configuration = configuration;
+
             _authUtils = new AuthUtils(_userManager, _roleManager, _configuration);
         }
 
@@ -30,7 +34,10 @@ namespace Expo_Management.API.Repositories
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
+            {
+                _logger.LogWarning("Error al registrar un usuario, ya existe");
                 return new Response { Status = "Error", Message = "User already exists!" };
+            }
 
             User user = new()
             {
@@ -45,10 +52,13 @@ namespace Expo_Management.API.Repositories
 
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." };
+            {
+                _logger.LogWarning("Error al registrar un usuario, contrasena incorrecta");
+                return new Response { Status = "Error", Message = "User creation failed! Password needs a special character, a number, an uppercase letter and an lowercase letter." };
+            }
 
             await _authUtils.AssignRole (user, Role);
-
+            _logger.LogCritical("Error al registrar un usuario, contrasena incorrecta");
             return new Response { Status = "Success", Message = "User created successfully!" };
         }
 

@@ -8,14 +8,19 @@ namespace Expo_Management.API.Repositories
 {
     public class UserRepository: IUsersRepository
     {
+        private readonly ApplicationDbContext _context;
         private readonly UserManager<User> _userManager;
+        private readonly IFilesUploaderRepository _filesUploaderRepository;
 
-        public UserRepository(UserManager<User> userManager) 
+        public UserRepository(
+            ApplicationDbContext context,
+            UserManager<User> userManager,
+            IFilesUploaderRepository filesUploaderRepository) 
         {
+            _context = context;
             _userManager = userManager;
+            _filesUploaderRepository = filesUploaderRepository;
         }
-
-        //Judges
 
         public async Task<List<User>> GetJudgesAsync()
         {
@@ -55,6 +60,12 @@ namespace Expo_Management.API.Repositories
             oldUser.Email = model.Email;
             oldUser.PhoneNumber = model.Phone;
 
+            if(model.ProfilePicture != null)
+            {
+                var upload = await _filesUploaderRepository.AddProfilePicture(model.ProfilePicture);
+                oldUser.ProfilePicture = upload;
+            }
+
             var result = await _userManager.UpdateAsync(oldUser);
 
             if (result.Succeeded)
@@ -78,143 +89,6 @@ namespace Expo_Management.API.Repositories
             } else 
             { 
                 return false; 
-            }
-        }
-
-
-        //Admins
-
-        public async Task<List<User>> GetAdminsAsync()
-        {
-            List<User> admins = (List<User>)await _userManager.GetUsersInRoleAsync("Admin");
-
-            if (admins.Count > 0)
-            {
-                return admins;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public async Task<User> GetAdminAsync(string email)
-        {
-            User admin = await _userManager.FindByEmailAsync(email);
-
-            if (admin != null)
-            {
-                return admin;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public async Task<User> UpdateAdminAsync(UpdateUser model)
-        {
-            var oldUser = await _userManager.FindByEmailAsync(model.Email);
-
-            oldUser.UserId = model.Id;
-            oldUser.UserName = model.UserName;
-            oldUser.Name = model.Name;
-            oldUser.Lastname = model.Lastname;
-            oldUser.Email = model.Email;
-            oldUser.PhoneNumber = model.Phone;
-
-            var result = await _userManager.UpdateAsync(oldUser);
-
-            if (result.Succeeded)
-            {
-                return oldUser;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public async Task<bool> DeleteAdminAsync(string email)
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user != null)
-            {
-                var result = await _userManager.DeleteAsync(user);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        //Students
-
-        public async Task<List<User>> GetStudentsAsync()
-        {
-            List<User> students = (List<User>)await _userManager.GetUsersInRoleAsync("User");
-
-            if (students.Count > 0)
-            {
-                return students;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public async Task<User> GetStudentAsync(string email)
-        {
-            User student = await _userManager.FindByEmailAsync(email);
-
-            if (student != null)
-            {
-                return student;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public async Task<User> UpdateStudentAsync(UpdateUser model)
-        {
-            var oldUser = await _userManager.FindByEmailAsync(model.Email);
-
-            oldUser.UserId = model.Id;
-            oldUser.UserName = model.UserName;
-            oldUser.Name = model.Name;
-            oldUser.Lastname = model.Lastname;
-            oldUser.Email = model.Email;
-            oldUser.PhoneNumber = model.Phone;
-
-            var result = await _userManager.UpdateAsync(oldUser);
-
-            if (result.Succeeded)
-            {
-                return oldUser;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public async Task<bool> DeleteStudentAsync(string email)
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user != null)
-            {
-                var result = await _userManager.DeleteAsync(user);
-                return true;
-            }
-            else
-            {
-                return false;
             }
         }
     }

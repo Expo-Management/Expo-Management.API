@@ -9,5 +9,6 @@ namespace Expo_Management.API.Entities
         public string UserId { get; set; }
         public string Name { get; set; }
         public string Lastname { get; set; }
+        public FilesModel? ProfilePicture { get; set; }
     }
 }

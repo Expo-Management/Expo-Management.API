@@ -95,5 +95,21 @@ namespace Expo_Management.API.Controllers
                 return Ok("Event removed successfully");
             }
         }
+
+        [HttpGet]
+        [Route("news")]
+        public async Task<IActionResult> GetNews(int FairId)
+        {
+            var response = await _eventsRepository.GetNewsByFairIdAsync(FairId);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
     }
 }

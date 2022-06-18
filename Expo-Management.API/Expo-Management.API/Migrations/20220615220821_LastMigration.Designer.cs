@@ -12,8 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
+<<<<<<<< HEAD:Expo-Management.API/Expo-Management.API/Migrations/20220615220821_LastMigration.Designer.cs
     [Migration("20220615220821_LastMigration")]
     partial class LastMigration
+========
+    [Migration("20220610013140_AddEvents")]
+    partial class AddEvents
+>>>>>>>> remotes/origin/main:Expo-Management.API/Expo-Management.API/Migrations/20220610013140_AddEvents.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +29,11 @@ namespace Expo_Management.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+<<<<<<<< HEAD:Expo-Management.API/Expo-Management.API/Migrations/20220615220821_LastMigration.Designer.cs
             modelBuilder.Entity("Expo_Management.API.Entities.FilesModel", b =>
+========
+            modelBuilder.Entity("Expo_Management.API.Entities.Event", b =>
+>>>>>>>> remotes/origin/main:Expo-Management.API/Expo-Management.API/Migrations/20220610013140_AddEvents.Designer.cs
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -32,6 +41,7 @@ namespace Expo_Management.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+<<<<<<<< HEAD:Expo-Management.API/Expo-Management.API/Migrations/20220615220821_LastMigration.Designer.cs
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -52,6 +62,36 @@ namespace Expo_Management.API.Migrations
                 });
 
             modelBuilder.Entity("Expo_Management.API.Entities.ProjectModel", b =>
+========
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Details")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("FairId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FairId");
+
+                    b.ToTable("Event");
+                });
+
+            modelBuilder.Entity("Expo_Management.API.Entities.Fair", b =>
+>>>>>>>> remotes/origin/main:Expo-Management.API/Expo-Management.API/Migrations/20220610013140_AddEvents.Designer.cs
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -60,6 +100,7 @@ namespace Expo_Management.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
+<<<<<<<< HEAD:Expo-Management.API/Expo-Management.API/Migrations/20220615220821_LastMigration.Designer.cs
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -87,6 +128,20 @@ namespace Expo_Management.API.Migrations
                     b.HasIndex("FilesId");
 
                     b.ToTable("Projects");
+========
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Fair");
+>>>>>>>> remotes/origin/main:Expo-Management.API/Expo-Management.API/Migrations/20220610013140_AddEvents.Designer.cs
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -305,13 +360,17 @@ namespace Expo_Management.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+<<<<<<<< HEAD:Expo-Management.API/Expo-Management.API/Migrations/20220615220821_LastMigration.Designer.cs
                     b.Property<int?>("ProfilePictureId")
                         .HasColumnType("int");
 
+========
+>>>>>>>> remotes/origin/main:Expo-Management.API/Expo-Management.API/Migrations/20220610013140_AddEvents.Designer.cs
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+<<<<<<<< HEAD:Expo-Management.API/Expo-Management.API/Migrations/20220615220821_LastMigration.Designer.cs
                     b.HasIndex("ProfilePictureId");
 
                     b.HasDiscriminator().HasValue("User");
@@ -326,6 +385,20 @@ namespace Expo_Management.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Files");
+========
+                    b.HasDiscriminator().HasValue("User");
+                });
+
+            modelBuilder.Entity("Expo_Management.API.Entities.Event", b =>
+                {
+                    b.HasOne("Expo_Management.API.Entities.Fair", "Fair")
+                        .WithMany()
+                        .HasForeignKey("FairId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Fair");
+>>>>>>>> remotes/origin/main:Expo-Management.API/Expo-Management.API/Migrations/20220610013140_AddEvents.Designer.cs
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

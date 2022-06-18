@@ -12,8 +12,13 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
+<<<<<<<< HEAD:Expo-Management.API/Expo-Management.API/Migrations/20220615223800_Fix1.Designer.cs
     [Migration("20220615223800_Fix1")]
     partial class Fix1
+========
+    [Migration("20220612234130_FirstMigration")]
+    partial class FirstMigration
+>>>>>>>> remotes/origin/main:Expo-Management.API/Expo-Management.API/Migrations/20220612234130_FirstMigration.Designer.cs
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -5,11 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Expo_Management.API.Migrations
 {
-<<<<<<<< HEAD:Expo-Management.API/Expo-Management.API/Migrations/20220615220821_LastMigration.cs
     public partial class LastMigration : Migration
-========
-    public partial class FirstMigration : Migration
->>>>>>>> remotes/origin/main:Expo-Management.API/Expo-Management.API/Migrations/20220612234130_FirstMigration.cs
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -31,14 +27,6 @@ namespace Expo_Management.API.Migrations
                 name: "Files",
                 columns: table => new
                 {
-<<<<<<<< HEAD:Expo-Management.API/Expo-Management.API/Migrations/20220615220821_LastMigration.cs
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Size = table.Column<long>(type: "bigint", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    uploadDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
-========
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -58,7 +46,6 @@ namespace Expo_Management.API.Migrations
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "int", nullable: false)
->>>>>>>> remotes/origin/main:Expo-Management.API/Expo-Management.API/Migrations/20220612234130_FirstMigration.cs
                 },
                 constraints: table =>
                 {

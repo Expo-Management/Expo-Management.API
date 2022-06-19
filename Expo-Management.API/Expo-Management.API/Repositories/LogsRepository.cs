@@ -18,9 +18,9 @@ namespace Expo_Management.API.Repositories
             var results = (from l in _context.Logs
                            select l).ToList();
 
-            if(results.Count() > 0)
+            if(results != null)
             {
-                return (List<Logs>)results;
+                return results;
             }
             return null;
         }

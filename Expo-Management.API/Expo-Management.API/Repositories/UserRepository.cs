@@ -82,8 +82,6 @@ namespace Expo_Management.API.Repositories
         }
 
 
-        //Admins
-
         public async Task<List<User>> GetAdminsAsync()
         {
             List<User> admins = (List<User>)await _userManager.GetUsersInRoleAsync("Admin");
@@ -122,6 +120,12 @@ namespace Expo_Management.API.Repositories
             oldUser.Lastname = model.Lastname;
             oldUser.Email = model.Email;
             oldUser.PhoneNumber = model.Phone;
+
+            /*if (model.ProfilePicture != null)
+            {
+                var upload = await _filesUploaderRepository.AddProfilePicture(model.ProfilePicture);
+                oldUser.ProfilePicture = upload;
+            }*/
 
             var result = await _userManager.UpdateAsync(oldUser);
 
@@ -190,6 +194,12 @@ namespace Expo_Management.API.Repositories
             oldUser.Lastname = model.Lastname;
             oldUser.Email = model.Email;
             oldUser.PhoneNumber = model.Phone;
+
+            /*if (model.ProfilePicture != null)
+            {
+                var upload = await _filesUploaderRepository.AddProfilePicture(model.ProfilePicture);
+                oldUser.ProfilePicture = upload;
+            }*/
 
             var result = await _userManager.UpdateAsync(oldUser);
 

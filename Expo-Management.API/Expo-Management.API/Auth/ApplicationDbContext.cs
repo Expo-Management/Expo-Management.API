@@ -17,5 +17,7 @@ namespace Expo_Management.API.Auth
         public DbSet<Event> Event { get; set; }
         public DbSet<Logs> Logs { get; set; }
         public DbSet<New> New { get; set; }
+        public DbSet<Files> Files { get; set; }
+        public DbSet<Projects> Projects { get; set; }
     }
 }

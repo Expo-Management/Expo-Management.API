@@ -79,5 +79,47 @@ namespace Expo_Management.API.Controllers
                 throw ex;
             }
         }
+
+        [HttpGet]
+        [Route("mentions")]
+        public async Task<IActionResult> GetMentions()
+        {
+            try
+            {
+                var mentions = await _projectsRepository.GetMentionsAsync();
+
+                if (mentions == null)
+                {
+                    return NoContent();
+
+                }
+                return Ok(mentions);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("current-fair-projects")]
+        public async Task<IActionResult> GetCurrentProjects()
+        {
+            try
+            {
+                var projects = await _projectsRepository.GetAllCurrentProjectsAsync();
+
+                if (projects == null)
+                {
+                    return NoContent();
+
+                }
+                return Ok(projects);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

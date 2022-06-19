@@ -3,6 +3,7 @@ using Expo_Management.API.Entities;
 using Expo_Management.API.Entities.Events;
 using Expo_Management.API.Entities.News;
 using Expo_Management.API.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Expo_Management.API.Repositories
 {
@@ -110,9 +111,9 @@ namespace Expo_Management.API.Repositories
 
         public async Task<List<New>> GetNewsByFairIdAsync(int FairId) 
         {
-            var results = (from n in _context.New
+            var results = await (from n in _context.New
                           where n.Fair.Id == FairId
-                          select n).ToList();
+                          select n).Include(n => n.Publisher).ToListAsync();
 
             if (results != null && results.Count() > 0)
             {

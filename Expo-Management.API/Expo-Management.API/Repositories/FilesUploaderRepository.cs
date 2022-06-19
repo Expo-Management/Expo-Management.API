@@ -8,48 +8,14 @@ namespace Expo_Management.API.Repositories
 {
     public class FilesUploaderRepository : IFilesUploaderRepository
     {
-        private readonly ApplicationDbContext context;
+        private readonly ApplicationDbContext _context;
         private readonly IHostEnvironment _hostEnvironment;
 
 
         public FilesUploaderRepository(ApplicationDbContext context, IHostEnvironment hostEnvironment)
         {
-            this.context = context;
+            _context = context;
             _hostEnvironment = hostEnvironment;
-        }
-
-        public async Task<FilesModel> Add(IFormFile file)
-        {
-            FilesModel obj = new FilesModel();
-            string wwwPath = _hostEnvironment.ContentRootPath;
-
-            if (file != null)
-            {
-                var uploads = Path.Combine(wwwPath, @"Resources\Files");
-                if (!Directory.Exists(uploads))
-                {
-                    Directory.CreateDirectory(uploads);
-                }
-
-                using (var FileStreams = new FileStream(Path.Combine(uploads, file.FileName),
-                    FileMode.Create))
-                {
-                    file.CopyTo(FileStreams);
-                    obj = new FilesModel()
-                    {
-                        Name = file.FileName,
-                        Size = file.Length,
-                        Url = @"\Resources\Files\" + file.FileName,
-                        uploadDateTime = DateTime.Now
-                    };
-
-                    await context.Files.AddAsync(obj);
-                    await context.SaveChangesAsync();
-                }
-
-                return obj;
-            }
-            return null;
         }
 
         public async Task<FilesModel> AddProjectsFile(IFormFile file)
@@ -78,8 +44,8 @@ namespace Expo_Management.API.Repositories
                         uploadDateTime = DateTime.Now
                     };
 
-                    await context.Files.AddAsync(obj);
-                    await context.SaveChangesAsync();
+                    await _context.Files.AddAsync(obj);
+                    await _context.SaveChangesAsync();
                 }
 
                 return obj;
@@ -112,8 +78,8 @@ namespace Expo_Management.API.Repositories
                         uploadDateTime = DateTime.Now
                     };
 
-                    await context.Files.AddAsync(obj);
-                    await context.SaveChangesAsync();
+                    await _context.Files.AddAsync(obj);
+                    await _context.SaveChangesAsync();
                 }
 
                 return obj;
@@ -125,7 +91,7 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                var result = await (from X in context.Files
+                var result = await (from X in _context.Files
                                     where X.Name == file
                                     select X).FirstOrDefaultAsync();
 
@@ -139,8 +105,8 @@ namespace Expo_Management.API.Repositories
                     System.IO.File.Delete(oldImagePath);
 
 
-                    context.Remove(result);
-                    await context.SaveChangesAsync();
+                    _context.Remove(result);
+                    await _context.SaveChangesAsync();
 
                     return result;
                 }
@@ -148,7 +114,7 @@ namespace Expo_Management.API.Repositories
             }
             catch (Exception ex)
             {
-                context.Dispose();
+                _context.Dispose();
                 return null;
             }
 
@@ -159,7 +125,7 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                var result = (from X in context.Files
+                var result = (from X in _context.Files
                               where X.Name == name
                               select X.Name).FirstOrDefault();
 
@@ -177,11 +143,45 @@ namespace Expo_Management.API.Repositories
         }
 
 
+        public async Task<FilesModel> Add(IFormFile file)
+        {
+            FilesModel obj = new FilesModel();
+            string wwwPath = _hostEnvironment.ContentRootPath;
+
+            if (file != null)
+            {
+                var uploads = Path.Combine(wwwPath, @"Resources\Files");
+                if (!Directory.Exists(uploads))
+                {
+                    Directory.CreateDirectory(uploads);
+                }
+
+                using (var FileStreams = new FileStream(Path.Combine(uploads, file.FileName),
+                    FileMode.Create))
+                {
+                    file.CopyTo(FileStreams);
+                    obj = new FilesModel()
+                    {
+                        Name = file.FileName,
+                        Size = file.Length,
+                        Url = @"\Resources\Files\" + file.FileName,
+                        uploadDateTime = DateTime.Now
+                    };
+
+                    await _context.Files.AddAsync(obj);
+                    await _context.SaveChangesAsync();
+                }
+
+                return obj;
+            }
+            return null;
+        }
+
         public async Task<List<FilesModel>> getAll()
-        { 
+        {
             try
             {
-                return await context.Files.ToListAsync();
+                return await _context.Files.ToListAsync();
             }
             catch (Exception ex)
             {
@@ -189,6 +189,5 @@ namespace Expo_Management.API.Repositories
                 throw ex;
             }
         }
-
     }
 }

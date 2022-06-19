@@ -1,5 +1,4 @@
-﻿
-using Expo_Management.API.Entities;
+﻿using Expo_Management.API.Entities;
 
 namespace Expo_Management.API.Repositories
 {

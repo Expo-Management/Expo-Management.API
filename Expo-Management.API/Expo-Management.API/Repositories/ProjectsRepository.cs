@@ -17,7 +17,7 @@ namespace Expo_Management.API.Repositories
         }
 
 
-        public async Task<Projects> CreateProject(NewProject model)
+        public async Task<ProjectModel> CreateProject(NewProject model)
         {
             try
             {
@@ -31,7 +31,7 @@ namespace Expo_Management.API.Repositories
                      
 
                     //create new project
-                    Projects newProject = new Projects()
+                    ProjectModel newProject = new ProjectModel()
                     {
                         Name = model.Name,
                         Description = model.Description,
@@ -58,7 +58,7 @@ namespace Expo_Management.API.Repositories
 
         }
 
-        public async Task<List<Projects>> GetAllProjectsAsync()
+        public async Task<List<ProjectModel>> GetAllProjectsAsync()
         {
             try
             {

@@ -51,7 +51,7 @@ namespace Expo_Management.API.Controllers
 
         [HttpPut]
         [Route("judge")]
-        public async Task<IActionResult> UpdateJudgeAsync([FromBody] UpdateUser model)
+        public async Task<IActionResult> UpdateJudgeAsync([FromForm] UpdateUser model)
         {
             var response = await _userRepository.UpdateJudgeAsync(model);
 

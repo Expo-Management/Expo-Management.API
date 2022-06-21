@@ -96,6 +96,22 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("register-student")]
+        public async Task<IActionResult> RegisterStudent([FromBody] RegisterModel model)
+        {
+            var response = await _identityRepository.RegisterNewUser("Student", model);
+
+            if (response.Status == "Success")
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, response);
+            }
+        }
+
 
     }
 }

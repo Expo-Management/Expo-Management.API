@@ -11,19 +11,23 @@ namespace Expo_Management.API.Entities
         [Required(ErrorMessage = "Project name is required")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Project descrption is required")]
+        [Required(ErrorMessage = "Project Description is required")]
         public string Description { get; set; }
 
-        public string Lider { get; set; }
+        [Required(ErrorMessage = "Lider is required")]
+        public User Lider { get; set; }
 
         [Required(ErrorMessage = "Member 2 is required")]
-        public string Member2 { get; set; }
+        public User Member2 { get; set; }
 
         [Required(ErrorMessage = "Member 3 is required")]
-        public string Member3 { get; set; }
+        public User Member3 { get; set; }
 
+        [Required(ErrorMessage = "Project File is required")]
         public FilesModel Files { get; set; }
 
+        [Required(ErrorMessage = "Project Fair is required")]
+        public Fair Fair { get; set; }
 
     }
 }

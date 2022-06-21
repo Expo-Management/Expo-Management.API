@@ -18,7 +18,7 @@ namespace Expo_Management.API.Controllers
         }
 
         [HttpPost]
-        [Route("add")]
+        [Route("projects")]
         public async Task<IActionResult> AddProjects([FromForm] NewProject model)
         {
             try
@@ -39,7 +39,7 @@ namespace Expo_Management.API.Controllers
         }
 
         [HttpGet]
-        [Route("showAll")]
+        [Route("projects")]
         public async Task<IActionResult> ShowProjects()
         {
             try
@@ -59,6 +59,7 @@ namespace Expo_Management.API.Controllers
                             Lider = items.Lider,
                             Member2 = items.Member2,
                             Member3 = items.Member3,
+                            Fair = items.Fair,
                             Files = new FilesModel()
                             {
                                 Id = items.Files.Id,
@@ -66,10 +67,32 @@ namespace Expo_Management.API.Controllers
                                 Size = items.Files.Size,
                                 Url = items.Files.Url,
                                 uploadDateTime = items.Files.uploadDateTime
+
                             }
                         });
                     }
                     return Ok(domainProjects);
+                }
+                return BadRequest("There was an error.");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("old-projects")]
+        public async Task<IActionResult> ShowOldProjects()
+        {
+            try
+            {
+                var projects = await _projectsRepository.GetOldProjectsAsync();
+
+                if (projects != null)
+                {
+                    return Ok(projects);
                 }
                 return BadRequest("There was an error.");
             }

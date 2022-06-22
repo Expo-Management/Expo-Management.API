@@ -4,6 +4,7 @@ using Expo_Management.API.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220619194345_Update-Project-Mentions")]
+    partial class UpdateProjectMentions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -213,14 +215,17 @@ namespace Expo_Management.API.Migrations
                     b.Property<int?>("FilesId")
                         .HasColumnType("int");
 
-                    b.Property<string>("LiderId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Lider")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Member2Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Member2")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Member3Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Member3")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -232,12 +237,6 @@ namespace Expo_Management.API.Migrations
                         .IsUnique();
 
                     b.HasIndex("FilesId");
-
-                    b.HasIndex("LiderId");
-
-                    b.HasIndex("Member2Id");
-
-                    b.HasIndex("Member3Id");
 
                     b.ToTable("Projects");
                 });
@@ -516,29 +515,6 @@ namespace Expo_Management.API.Migrations
             modelBuilder.Entity("Expo_Management.API.Entities.ProjectModel", b =>
                 {
                     b.HasOne("Expo_Management.API.Entities.Fair", "Fair")
-                        .WithMany()
-                        .HasForeignKey("FairId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expo_Management.API.Entities.FilesModel", "Files")
-                        .WithMany()
-                        .HasForeignKey("FilesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expo_Management.API.Entities.User", "Lider")
-                        .WithMany()
-                        .HasForeignKey("LiderId");
-
-                    b.HasOne("Expo_Management.API.Entities.User", "Member2")
-                        .WithMany()
-                        .HasForeignKey("Member2Id");
-
-                    b.HasOne("Expo_Management.API.Entities.User", "Member3")
-                        .WithMany()
-                        .HasForeignKey("Member3Id");
-
                         .WithOne("Project")
                         .HasForeignKey("Expo_Management.API.Entities.ProjectModel", "FairId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -548,16 +524,9 @@ namespace Expo_Management.API.Migrations
                         .WithMany()
                         .HasForeignKey("FilesId");
 
-
                     b.Navigation("Fair");
 
                     b.Navigation("Files");
-
-                    b.Navigation("Lider");
-
-                    b.Navigation("Member2");
-
-                    b.Navigation("Member3");
                 });
 
             modelBuilder.Entity("MentionProjectModel", b =>

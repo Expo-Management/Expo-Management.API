@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Expo_Management.API.Entities
 {
@@ -15,5 +16,7 @@ namespace Expo_Management.API.Entities
 
         [StringLength(100)]
         public string? Description { get; set; }
+
+        public ProjectModel Project { get; set; }
     }
 }

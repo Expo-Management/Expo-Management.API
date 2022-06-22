@@ -59,7 +59,7 @@ namespace Expo_Management.API.Controllers
                             Lider = items.Lider,
                             Member2 = items.Member2,
                             Member3 = items.Member3,
-                            Fair = items.Fair,
+                           // Fair = items.Fair,
                             Files = new FilesModel()
                             {
                                 Id = items.Files.Id,
@@ -84,17 +84,17 @@ namespace Expo_Management.API.Controllers
 
         [HttpGet]
         [Route("old-projects")]
-        public async Task<IActionResult> ShowOldProjects()
+        public async Task<IActionResult> showOldProjects()
         {
             try
             {
-                var projects = await _projectsRepository.GetOldProjectsAsync();
 
+                var projects = await _projectsRepository.GetOldProjectsAsync();
                 if (projects != null)
                 {
                     return Ok(projects);
                 }
-                return BadRequest("There was an error.");
+                return BadRequest("There was an error");
             }
             catch (Exception ex)
             {
@@ -102,5 +102,6 @@ namespace Expo_Management.API.Controllers
                 throw ex;
             }
         }
+
     }
 }

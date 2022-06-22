@@ -1,7 +1,7 @@
 ﻿using Expo_Management.API.Auth;
 using Expo_Management.API.Entities;
+using Expo_Management.API.Entities.Mentions;
 using Expo_Management.API.Interfaces;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -140,5 +140,45 @@ namespace Expo_Management.API.Repositories
 
         }
 
+        public async Task<List<Mention>> GetMentionsAsync() 
+        {
+            try
+            {
+                var mentions = await (from m in _context.Mention
+                                      select m).ToListAsync();
+
+                if (mentions != null && mentions.Count > 0)
+                {
+                    return mentions;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+               _context.Dispose();
+                return null;
+            }
+        }
+
+        public async Task<List<ProjectModel>> GetAllCurrentProjectsAsync()
+        {
+            try
+            {
+                var projects = await (from p in _context.Projects
+                                      where p.Fair.StartDate.Year == DateTime.Now.Year
+                                      select p).ToListAsync();
+
+                if (projects != null && projects.Count > 0)
+                {
+                    return projects;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _context.Dispose();
+                return null;
+            }
+        }
     }
  }

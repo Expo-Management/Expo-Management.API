@@ -1,4 +1,5 @@
 ﻿using Expo_Management.API.Entities;
+using Expo_Management.API.Entities.Mentions;
 
 namespace Expo_Management.API.Interfaces
 {
@@ -14,5 +15,10 @@ namespace Expo_Management.API.Interfaces
         Task<List<string>> GetOldProjectsAsync();
 
         Task<Fair> GetFair(string project);
+
+        Task<List<Mention>> GetMentionsAsync();
+
+        Task<List<ProjectModel>> GetAllCurrentProjectsAsync();
+
     }
 }

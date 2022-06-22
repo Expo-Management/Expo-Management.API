@@ -172,7 +172,7 @@ namespace Expo_Management.API.Repositories
 
         public async Task<User> GetStudentAsync(string email)
         {
-            User student = await _userManager.FindByEmailAsync(email);
+            var student = await _userManager.FindByEmailAsync(email);
 
             if (student != null)
             {
@@ -183,6 +183,7 @@ namespace Expo_Management.API.Repositories
                 return null;
             }
         }
+
 
         public async Task<User> UpdateStudentAsync(UpdateUser model)
         {
@@ -227,5 +228,7 @@ namespace Expo_Management.API.Repositories
                 return false;
             }
         }
+
+        
     }
 }

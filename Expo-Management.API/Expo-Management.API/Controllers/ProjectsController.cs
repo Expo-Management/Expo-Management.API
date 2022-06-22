@@ -18,7 +18,7 @@ namespace Expo_Management.API.Controllers
         }
 
         [HttpPost]
-        [Route("add")]
+        [Route("projects")]
         public async Task<IActionResult> AddProjects([FromForm] NewProject model)
         {
             try
@@ -39,7 +39,7 @@ namespace Expo_Management.API.Controllers
         }
 
         [HttpGet]
-        [Route("showAll")]
+        [Route("projects")]
         public async Task<IActionResult> ShowProjects()
         {
             try
@@ -59,6 +59,7 @@ namespace Expo_Management.API.Controllers
                             Lider = items.Lider,
                             Member2 = items.Member2,
                             Member3 = items.Member3,
+                           // Fair = items.Fair,
                             Files = new FilesModel()
                             {
                                 Id = items.Files.Id,
@@ -66,6 +67,7 @@ namespace Expo_Management.API.Controllers
                                 Size = items.Files.Size,
                                 Url = items.Files.Url,
                                 uploadDateTime = items.Files.uploadDateTime
+
                             }
                         });
                     }
@@ -81,45 +83,25 @@ namespace Expo_Management.API.Controllers
         }
 
         [HttpGet]
-        [Route("mentions")]
-        public async Task<IActionResult> GetMentions()
+        [Route("old-projects")]
+        public async Task<IActionResult> showOldProjects()
         {
             try
             {
-                var mentions = await _projectsRepository.GetMentionsAsync();
 
-                if (mentions == null)
+                var projects = await _projectsRepository.GetOldProjectsAsync();
+                if (projects != null)
                 {
-                    return NoContent();
-
+                    return Ok(projects);
                 }
-                return Ok(mentions);
+                return BadRequest("There was an error");
             }
             catch (Exception ex)
             {
+
                 throw ex;
             }
         }
 
-        [HttpGet]
-        [Route("current-fair-projects")]
-        public async Task<IActionResult> GetCurrentProjects()
-        {
-            try
-            {
-                var projects = await _projectsRepository.GetAllCurrentProjectsAsync();
-
-                if (projects == null)
-                {
-                    return NoContent();
-
-                }
-                return Ok(projects);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
     }
 }

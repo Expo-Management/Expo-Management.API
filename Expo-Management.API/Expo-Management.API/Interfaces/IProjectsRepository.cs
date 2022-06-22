@@ -11,7 +11,14 @@ namespace Expo_Management.API.Interfaces
         bool ProjectExists(string lider);
 
         Task<List<ProjectModel>> GetAllProjectsAsync();
+
+        Task<List<string>> GetOldProjectsAsync();
+
+        Task<Fair> GetFair(string project);
+
         Task<List<Mention>> GetMentionsAsync();
+
         Task<List<ProjectModel>> GetAllCurrentProjectsAsync();
+
     }
 }

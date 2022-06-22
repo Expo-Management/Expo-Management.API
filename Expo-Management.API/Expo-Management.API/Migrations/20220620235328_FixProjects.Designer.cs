@@ -4,6 +4,7 @@ using Expo_Management.API.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220620235328_FixProjects")]
+    partial class FixProjects
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,27 +140,6 @@ namespace Expo_Management.API.Migrations
                     b.ToTable("Logs");
                 });
 
-            modelBuilder.Entity("Expo_Management.API.Entities.Mentions.Mention", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Mention");
-                });
-
             modelBuilder.Entity("Expo_Management.API.Entities.News.New", b =>
                 {
                     b.Property<int>("Id")
@@ -210,7 +191,7 @@ namespace Expo_Management.API.Migrations
                     b.Property<int>("FairId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FilesId")
+                    b.Property<int>("FilesId")
                         .HasColumnType("int");
 
                     b.Property<string>("LiderId")
@@ -228,8 +209,7 @@ namespace Expo_Management.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FairId")
-                        .IsUnique();
+                    b.HasIndex("FairId");
 
                     b.HasIndex("FilesId");
 
@@ -240,21 +220,6 @@ namespace Expo_Management.API.Migrations
                     b.HasIndex("Member3Id");
 
                     b.ToTable("Projects");
-                });
-
-            modelBuilder.Entity("MentionProjectModel", b =>
-                {
-                    b.Property<int>("MentionsId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProjectsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MentionsId", "ProjectsId");
-
-                    b.HasIndex("ProjectsId");
-
-                    b.ToTable("MentionProjectModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -539,16 +504,6 @@ namespace Expo_Management.API.Migrations
                         .WithMany()
                         .HasForeignKey("Member3Id");
 
-                        .WithOne("Project")
-                        .HasForeignKey("Expo_Management.API.Entities.ProjectModel", "FairId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expo_Management.API.Entities.FilesModel", "Files")
-                        .WithMany()
-                        .HasForeignKey("FilesId");
-
-
                     b.Navigation("Fair");
 
                     b.Navigation("Files");
@@ -558,21 +513,6 @@ namespace Expo_Management.API.Migrations
                     b.Navigation("Member2");
 
                     b.Navigation("Member3");
-                });
-
-            modelBuilder.Entity("MentionProjectModel", b =>
-                {
-                    b.HasOne("Expo_Management.API.Entities.Mentions.Mention", null)
-                        .WithMany()
-                        .HasForeignKey("MentionsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expo_Management.API.Entities.ProjectModel", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -633,12 +573,6 @@ namespace Expo_Management.API.Migrations
                         .HasForeignKey("ProfilePictureId");
 
                     b.Navigation("ProfilePicture");
-                });
-
-            modelBuilder.Entity("Expo_Management.API.Entities.Fair", b =>
-                {
-                    b.Navigation("Project")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

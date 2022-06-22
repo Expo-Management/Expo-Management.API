@@ -4,7 +4,7 @@
 
 namespace Expo_Management.API.Migrations
 {
-    public partial class OneOneProjectFairRelation : Migration
+    public partial class AddFairProjectRelation : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,8 +18,7 @@ namespace Expo_Management.API.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Projects_FairId",
                 table: "Projects",
-                column: "FairId",
-                unique: true);
+                column: "FairId");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Projects_Fair_FairId",

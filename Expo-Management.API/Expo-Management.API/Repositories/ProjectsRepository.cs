@@ -2,7 +2,7 @@
 using Expo_Management.API.Entities;
 using Expo_Management.API.Entities.Mentions;
 using Expo_Management.API.Interfaces;
-using Microsoft.AspNetCore.Identity;
+using Expo_Management.API.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace Expo_Management.API.Repositories
@@ -13,6 +13,7 @@ namespace Expo_Management.API.Repositories
         private readonly ApplicationDbContext _context;
         private readonly IFilesUploaderRepository _filesUploader;
         private readonly IUsersRepository _usersRepository;
+        private CrudUtils _crudUtils;
 
 
         public ProjectsRepository(ApplicationDbContext context, IFilesUploaderRepository filesUploader, IUsersRepository usersRepository)
@@ -20,6 +21,7 @@ namespace Expo_Management.API.Repositories
             _context = context;
             _filesUploader = filesUploader;
             _usersRepository = usersRepository;
+            _crudUtils = new CrudUtils(_usersRepository);
         }
 
 
@@ -27,42 +29,53 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                var project = ProjectExists(model.Lider);
+                List<string> groupOfUserEmails = new List<string>();
 
+                groupOfUserEmails.Add(model.Lider);
+                groupOfUserEmails.Add(model.Member2);
+                groupOfUserEmails.Add(model.Member3);
 
-                if (!project)
+                var membersOfTheGroup = this._crudUtils.getUsersAvailable(groupOfUserEmails);
+                var project = ProjectExists(model.Name);
+                
+                if (membersOfTheGroup != null && !project)
                 {
-
-                    var lider = await  _usersRepository.GetStudentAsync(model.Lider);
-                    var member2 = await _usersRepository.GetStudentAsync(model.Member2);
-                    var member3 = await _usersRepository.GetStudentAsync(model.Member3);
                     var upload = await _filesUploader.AddProjectsFile(model.Files);
-                    //var Fair = await GetFair(model.Name); traer id por feria
+                    var Fair = await GetFair(model.Fair); //traer id por feria
 
                     //create new project
                     ProjectModel newProject = new ProjectModel()
                     {
                         Name = model.Name,
                         Description = model.Description,
-                        Lider =  lider,
-                        Member2 = member2,
-                        Member3 = member3,
-                        Files =  upload
-             };
+                        Files =  upload,
+                        Fair = Fair
+                    };
 
                     //add newProject to database
-                    await _context.Projects.AddAsync(newProject);
-                    await _context.SaveChangesAsync();
+                    if (await _context.Projects.AddAsync(newProject) != null)
+                    {
+                        await _context.SaveChangesAsync();
 
-                    return null;
+                        /*Notas: 
+                            1. Obtener proyecto de la base de datos recien creado
+                            2. Crear funcion en Crud utils o otro modulo que vea necesario para asignar ese proyecto al usuario.
+                            3. Guardar los cambios
+                        */ 
+                        return newProject;
+                    }
+                    else 
+                    {
+                        return null;
+                    }
+
                 }
-
                 return null;
             }
             catch (Exception ex)
             {
                 _context.Dispose();
-                throw ex;
+                return null;
             }
 
         }
@@ -81,13 +94,13 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-        public async Task<Fair> GetFair(string project)
+        public async Task<Fair> GetFair(int fairId)
         {
             try
             {
-                var result = await (from x in _context.Projects
-                                   where x.Name == project
-                                   select x.Fair).FirstOrDefaultAsync();
+                var result = await (from f in _context.Fair
+                                   where f.Id == fairId
+                                   select f).FirstOrDefaultAsync();
 
                 return result;
             }
@@ -100,7 +113,8 @@ namespace Expo_Management.API.Repositories
 
         public async Task<List<string>> GetOldProjectsAsync()
         {
-            try
+
+            /*try
             {
                 var actualTime = DateTime.Today;
 
@@ -112,9 +126,9 @@ namespace Expo_Management.API.Repositories
             }
             catch (Exception ex)
             {
-                _context.Dispose();
+                _context.Dispose();*/
                 return null ;
-            }
+            //}
 
         }
 
@@ -126,7 +140,7 @@ namespace Expo_Management.API.Repositories
                               where x.Name == name
                               select x.Name).FirstOrDefaultAsync();
 
-                if (result == null)
+                if (result != null)
                 {
                     return true;
                 }

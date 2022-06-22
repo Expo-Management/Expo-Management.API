@@ -56,10 +56,7 @@ namespace Expo_Management.API.Controllers
                         {
                             Name = items.Name,
                             Description = items.Description,
-                            Lider = items.Lider,
-                            Member2 = items.Member2,
-                            Member3 = items.Member3,
-                           // Fair = items.Fair,
+                            Fair = items.Fair,
                             Files = new FilesModel()
                             {
                                 Id = items.Files.Id,
@@ -67,8 +64,7 @@ namespace Expo_Management.API.Controllers
                                 Size = items.Files.Size,
                                 Url = items.Files.Url,
                                 uploadDateTime = items.Files.uploadDateTime
-
-                            }
+                            },
                         });
                     }
                     return Ok(domainProjects);

@@ -14,7 +14,7 @@ namespace Expo_Management.API.Interfaces
 
         Task<List<string>> GetOldProjectsAsync();
 
-        Task<Fair> GetFair(string project);
+        Task<Fair> GetFair(int project);
 
         Task<List<Mention>> GetMentionsAsync();
 

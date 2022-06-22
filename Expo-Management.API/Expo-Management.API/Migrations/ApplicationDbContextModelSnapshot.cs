@@ -210,17 +210,8 @@ namespace Expo_Management.API.Migrations
                     b.Property<int>("FairId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FilesId")
+                    b.Property<int>("FilesId")
                         .HasColumnType("int");
-
-                    b.Property<string>("LiderId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Member2Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Member3Id")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -228,16 +219,9 @@ namespace Expo_Management.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FairId")
-                        .IsUnique();
+                    b.HasIndex("FairId");
 
                     b.HasIndex("FilesId");
-
-                    b.HasIndex("LiderId");
-
-                    b.HasIndex("Member2Id");
-
-                    b.HasIndex("Member3Id");
 
                     b.ToTable("Projects");
                 });
@@ -465,6 +449,9 @@ namespace Expo_Management.API.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<bool>("IsLead")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Lastname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -476,11 +463,16 @@ namespace Expo_Management.API.Migrations
                     b.Property<int?>("ProfilePictureId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("ProfilePictureId");
+
+                    b.HasIndex("ProjectId");
 
                     b.HasDiscriminator().HasValue("User");
                 });
@@ -527,37 +519,9 @@ namespace Expo_Management.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Expo_Management.API.Entities.User", "Lider")
-                        .WithMany()
-                        .HasForeignKey("LiderId");
-
-                    b.HasOne("Expo_Management.API.Entities.User", "Member2")
-                        .WithMany()
-                        .HasForeignKey("Member2Id");
-
-                    b.HasOne("Expo_Management.API.Entities.User", "Member3")
-                        .WithMany()
-                        .HasForeignKey("Member3Id");
-
-                        .WithOne("Project")
-                        .HasForeignKey("Expo_Management.API.Entities.ProjectModel", "FairId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expo_Management.API.Entities.FilesModel", "Files")
-                        .WithMany()
-                        .HasForeignKey("FilesId");
-
-
                     b.Navigation("Fair");
 
                     b.Navigation("Files");
-
-                    b.Navigation("Lider");
-
-                    b.Navigation("Member2");
-
-                    b.Navigation("Member3");
                 });
 
             modelBuilder.Entity("MentionProjectModel", b =>
@@ -632,13 +596,13 @@ namespace Expo_Management.API.Migrations
                         .WithMany()
                         .HasForeignKey("ProfilePictureId");
 
-                    b.Navigation("ProfilePicture");
-                });
+                    b.HasOne("Expo_Management.API.Entities.ProjectModel", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId");
 
-            modelBuilder.Entity("Expo_Management.API.Entities.Fair", b =>
-                {
-                    b.Navigation("Project")
-                        .IsRequired();
+                    b.Navigation("ProfilePicture");
+
+                    b.Navigation("Project");
                 });
 #pragma warning restore 612, 618
         }

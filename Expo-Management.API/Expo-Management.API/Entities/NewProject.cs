@@ -22,8 +22,8 @@ namespace Expo_Management.API.Entities
         [Required(ErrorMessage = "Project File is required")]
         public IFormFile Files { get; set; }
 
-        [Required(ErrorMessage = "Project Fair is required")]
-        public DateTime Fair { get; set; }
+        [Required(ErrorMessage = "Fair Id is required")]
+        public int Fair { get; set; }
 
     }
 }

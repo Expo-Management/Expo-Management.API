@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
 
 namespace Expo_Management.API.Entities
 {
@@ -10,5 +9,7 @@ namespace Expo_Management.API.Entities
         public string Name { get; set; }
         public string Lastname { get; set; }
         public FilesModel? ProfilePicture { get; set; }
+        public ProjectModel? Project { get; set; }
+        public bool IsLead { get; set; }
     }
 }

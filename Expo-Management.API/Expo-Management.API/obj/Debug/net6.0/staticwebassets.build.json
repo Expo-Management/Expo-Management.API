@@ -1,11 +1,37 @@
 {
   "Version": 1,
-  "Hash": "sfDILshQ9VixbdUzTzSQgXvv6u1zvDPE64KMNtgOCVA=",
+  "Hash": "r+GerBSQ7p2C664ctKImihVeBsvxTYp1/Dz1mtxSc5k=",
   "Source": "Expo-Management.API",
   "BasePath": "_content/Expo-Management.API",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "Expo-Management.API\\wwwroot",
+      "Source": "Expo-Management.API",
+      "ContentRoot": "C:\\Users\\Vale2920\\Desktop\\University\\7 quarter\\Diseño y Desarollo de Sistemas\\Project\\Backend\\Expo-Management.API\\Expo-Management.API\\wwwroot\\",
+      "BasePath": "_content/Expo-Management.API",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\Vale2920\\Desktop\\University\\7 quarter\\Diseño y Desarollo de Sistemas\\Project\\Backend\\Expo-Management.API\\Expo-Management.API\\wwwroot\\confirmEmail.html",
+      "SourceId": "Expo-Management.API",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Vale2920\\Desktop\\University\\7 quarter\\Diseño y Desarollo de Sistemas\\Project\\Backend\\Expo-Management.API\\Expo-Management.API\\wwwroot\\",
+      "BasePath": "_content/Expo-Management.API",
+      "RelativePath": "confirmEmail.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\confirmEmail.html"
+    }
+  ]
 }

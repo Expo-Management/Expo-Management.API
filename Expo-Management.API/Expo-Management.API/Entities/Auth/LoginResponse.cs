@@ -1,4 +1,4 @@
-﻿namespace Expo_Management.API.Entities
+﻿namespace Expo_Management.API.Entities.Auth
 {
     public class LoginResponse
     {

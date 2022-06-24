@@ -1,4 +1,4 @@
-﻿using Expo_Management.API.Entities;
+﻿using Expo_Management.API.Entities.Auth;
 using Expo_Management.API.Interfaces;
 using Expo_Management.API.Utils;
 using Microsoft.AspNetCore.Identity;
@@ -16,11 +16,13 @@ namespace Expo_Management.API.Controllers
     {
         private readonly IIdentityRepository _identityRepository;
         private readonly ILogger<AuthenticateController> _logger;
-        
+        private readonly IConfiguration _Configuration;
         public AuthenticateController(
-            IIdentityRepository identityRepository)
+            IIdentityRepository identityRepository, 
+            IConfiguration configuration)
         {
             _identityRepository = identityRepository;
+            _Configuration = configuration;
         }
 
         [HttpPost]
@@ -96,6 +98,53 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        [HttpGet("confirmEmailToken")]
+        public async Task<IActionResult> confirmEmailToken(string userId, string token)
+        {
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(token))
+            {
+                return BadRequest("error");
+            }
+            var result = await _identityRepository.ConfirmEmailAsync(userId, token);
+
+            if (result.Status == "Success")
+            {
+                return Redirect($"{_Configuration["AppUrl"]}/confirmEmail.html");
+
+            }
+            return BadRequest("another error");
+        }
+
+        [HttpPost("ForgetPassword")]
+        public async Task<IActionResult> ForgetPassword(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return BadRequest("error");
+
+            var result = await _identityRepository.ForgetPasswordAsync(email);
+
+            if (result.Status == "Success")
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _identityRepository.ResetPasswordAsync(model);
+
+                if (result.Status == "Success")
+                {
+                    return Ok(result);
+                }
+                return BadRequest(result);
+            }
+            return BadRequest("some properties are not valid");
+        }
 
     }
 }

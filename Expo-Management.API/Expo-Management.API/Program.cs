@@ -2,6 +2,7 @@ using Expo_Management.API.Auth;
 using Expo_Management.API.Entities;
 using Expo_Management.API.Interfaces;
 using Expo_Management.API.Repositories;
+using Expo_Management.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,8 @@ builder.Services.AddScoped<IEventsRepository, EventsRepository>();
 builder.Services.AddScoped<ILogsRepository, LogsRepository>();
 builder.Services.AddScoped<IFilesUploaderRepository, FilesUploaderRepository>();
 builder.Services.AddScoped<IProjectsRepository, ProjectsRepository>();
+builder.Services.AddTransient<IMailService, SenderGridMailService>();
+
 
 builder.Services.AddIdentity<User, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()

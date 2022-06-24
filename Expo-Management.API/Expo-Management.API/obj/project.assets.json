@@ -1030,6 +1030,19 @@
           }
         }
       },
+      "SendGrid/9.28.0": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.1",
+          "starkbank-ecdsa": "[1.3.3, 2.0.0)"
+        },
+        "compile": {
+          "lib/netstandard2.0/SendGrid.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/SendGrid.dll": {}
+        }
+      },
       "Serilog/2.10.0": {
         "type": "package",
         "compile": {
@@ -1183,6 +1196,15 @@
         },
         "runtime": {
           "lib/netstandard2.0/Serilog.Sinks.PeriodicBatching.dll": {}
+        }
+      },
+      "starkbank-ecdsa/1.3.3": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.1/StarkbankEcdsa.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.1/StarkbankEcdsa.dll": {}
         }
       },
       "Swashbuckle.AspNetCore/6.3.1": {
@@ -4451,6 +4473,29 @@
         "runtimes/ubuntu.16.10-x64/native/System.Security.Cryptography.Native.OpenSsl.so"
       ]
     },
+    "SendGrid/9.28.0": {
+      "sha512": "Cckzr5ypfVtqtZuMYOLuSEULIYrJLkoAIz5CsSkvjRanD7YoHIR73ENMnoPzpWNkyrDgMAHux7jOnbImv0kL8A==",
+      "type": "package",
+      "path": "sendgrid/9.28.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/SendGrid.dll",
+        "lib/net40/SendGrid.pdb",
+        "lib/net40/SendGrid.xml",
+        "lib/net452/SendGrid.dll",
+        "lib/net452/SendGrid.pdb",
+        "lib/net452/SendGrid.xml",
+        "lib/netstandard1.3/SendGrid.dll",
+        "lib/netstandard1.3/SendGrid.pdb",
+        "lib/netstandard1.3/SendGrid.xml",
+        "lib/netstandard2.0/SendGrid.dll",
+        "lib/netstandard2.0/SendGrid.pdb",
+        "lib/netstandard2.0/SendGrid.xml",
+        "sendgrid.9.28.0.nupkg.sha512",
+        "sendgrid.nuspec"
+      ]
+    },
     "Serilog/2.10.0": {
       "sha512": "+QX0hmf37a0/OZLxM3wL7V6/ADvC1XihXN4Kq/p6d8lCPfgkRdiuhbWlMaFjR9Av0dy5F0+MBeDmDdRZN/YwQA==",
       "type": "package",
@@ -4668,6 +4713,22 @@
         "lib/netstandard2.0/Serilog.Sinks.PeriodicBatching.xml",
         "serilog.sinks.periodicbatching.2.3.0.nupkg.sha512",
         "serilog.sinks.periodicbatching.nuspec"
+      ]
+    },
+    "starkbank-ecdsa/1.3.3": {
+      "sha512": "OblOaKb1enXn+dSp7tsx9yjwV+/BEKM9jFhshIkZTwCk7LuTFTp+wSon6rFzuPiIiTGtvVWQNUw2slHjGktJog==",
+      "type": "package",
+      "path": "starkbank-ecdsa/1.3.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/StarkbankEcdsa.dll",
+        "lib/net452/StarkbankEcdsa.dll",
+        "lib/netstandard1.3/StarkbankEcdsa.dll",
+        "lib/netstandard2.0/StarkbankEcdsa.dll",
+        "lib/netstandard2.1/StarkbankEcdsa.dll",
+        "starkbank-ecdsa.1.3.3.nupkg.sha512",
+        "starkbank-ecdsa.nuspec"
       ]
     },
     "Swashbuckle.AspNetCore/6.3.1": {
@@ -9394,6 +9455,7 @@
       "Microsoft.AspNetCore.Identity.EntityFrameworkCore >= 6.0.6",
       "Microsoft.EntityFrameworkCore.SqlServer >= 6.0.6",
       "Microsoft.EntityFrameworkCore.Tools >= 6.0.6",
+      "SendGrid >= 9.28.0",
       "Serilog.AspNetCore >= 5.0.0",
       "Serilog.Settings.Configuration >= 3.3.0",
       "Serilog.Sinks.MSSqlServer >= 5.7.1",
@@ -9401,19 +9463,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\jafet\\.nuget\\packages\\": {}
+    "C:\\Users\\Vale2920\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W3\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj",
+      "projectUniqueName": "C:\\Users\\Vale2920\\Desktop\\University\\7 quarter\\Diseño y Desarollo de Sistemas\\Project\\Backend\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj",
       "projectName": "Expo-Management.API",
-      "projectPath": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W3\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj",
-      "packagesPath": "C:\\Users\\jafet\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W3\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\obj\\",
+      "projectPath": "C:\\Users\\Vale2920\\Desktop\\University\\7 quarter\\Diseño y Desarollo de Sistemas\\Project\\Backend\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj",
+      "packagesPath": "C:\\Users\\Vale2920\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Vale2920\\Desktop\\University\\7 quarter\\Diseño y Desarollo de Sistemas\\Project\\Backend\\Expo-Management.API\\Expo-Management.API\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\jafet\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Vale2920\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -9461,6 +9528,10 @@
             "target": "Package",
             "version": "[6.0.6, )"
           },
+          "SendGrid": {
+            "target": "Package",
+            "version": "[9.28.0, )"
+          },
           "Serilog.AspNetCore": {
             "target": "Package",
             "version": "[5.0.0, )"
@@ -9496,7 +9567,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
       }
     }
   }

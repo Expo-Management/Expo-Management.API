@@ -57,11 +57,9 @@ namespace Expo_Management.API.Repositories
                     {
                         await _context.SaveChangesAsync();
 
-                        /*Notas: 
-                            1. Obtener proyecto de la base de datos recien creado
-                            2. Crear funcion en Crud utils o otro modulo que vea necesario para asignar ese proyecto al usuario.
-                            3. Guardar los cambios
-                        */ 
+                        var newProjectFound = await GetNewProject();
+                        var ProjectCreated = await this._crudUtils.addUsersToProject(groupOfUserEmails, newProjectFound);
+                        await _context.SaveChangesAsync();
                         return newProject;
                     }
                     else 
@@ -78,6 +76,28 @@ namespace Expo_Management.API.Repositories
                 return null;
             }
 
+        }
+
+        /*Get new project from database*/
+        public async Task<ProjectModel> GetNewProject()
+        {
+            try
+            {
+                var result = await (from p in _context.Projects
+                                    orderby p.Id descending
+                                    select p).FirstOrDefaultAsync();
+                if (result == null)
+                {
+                    return null;
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _context.Dispose();
+                return null;
+            }
         }
 
         public async Task<List<ProjectModel>> GetAllProjectsAsync()
@@ -111,26 +131,7 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-        public async Task<List<string>> GetOldProjectsAsync()
-        {
-
-            /*try
-            {
-                var actualTime = DateTime.Today;
-
-                var result = await (from x in _context.Projects
-                                    where x.Fair.EndDate < actualTime
-                                    select x.Name).ToListAsync();
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _context.Dispose();*/
-                return null ;
-            //}
-
-        }
+       
 
         public bool ProjectExists(string name)
         {
@@ -142,9 +143,9 @@ namespace Expo_Management.API.Repositories
 
                 if (result != null)
                 {
-                    return true;
+                    return false;
                 }
-                return false;
+                return true;
             }
             catch (Exception ex)
             {
@@ -180,6 +181,27 @@ namespace Expo_Management.API.Repositories
             {
                 var projects = await (from p in _context.Projects
                                       where p.Fair.StartDate.Year == DateTime.Now.Year
+                                      select p).ToListAsync();
+
+                if (projects != null && projects.Count > 0)
+                {
+                    return projects;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _context.Dispose();
+                return null;
+            }
+        }
+
+        public async Task<List<ProjectModel>> GetOldProjectsAsync()
+        {
+            try
+            {
+                var projects = await (from p in _context.Projects
+                                      where p.Fair.StartDate.Year < DateTime.Now.Year
                                       select p).ToListAsync();
 
                 if (projects != null && projects.Count > 0)

@@ -10,6 +10,6 @@ namespace Expo_Management.API.Entities
         public string Lastname { get; set; }
         public FilesModel? ProfilePicture { get; set; }
         public ProjectModel? Project { get; set; }
-        public bool IsLead { get; set; }
+        public bool? IsLead { get; set; }
     }
 }

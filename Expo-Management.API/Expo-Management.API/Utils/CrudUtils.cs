@@ -35,7 +35,7 @@ namespace Expo_Management.API.Utils
             else return groupOfUsers;
         }
        
-
+        /*consult if users are available*/
         public bool areUsersAvailable(List<User> groupOfUsers) 
         {   
             var allUsersAreAvailable = true;
@@ -49,6 +49,27 @@ namespace Expo_Management.API.Utils
             }
 
             return allUsersAreAvailable;
+        }
+
+        /*Add students users to their new project*/
+        public async Task<List<User>> addUsersToProject(List<string> groupOfStudents, ProjectModel project)
+        {
+            try
+            {
+                var students = await getUsersAvailable(groupOfStudents);
+
+                foreach (User user in students)
+                {
+                    user.Project = project;
+                }
+
+                return students;
+            }
+            catch (Exception ex)
+            {
+                return null;
+                throw ex;
+            }
         }
     }
 }

@@ -17,7 +17,7 @@ Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
 builder.Host.UseSerilog(((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)));
 
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlServer(configuration.GetConnectionString("ConnectionString")));
+    options => options.UseSqlServer(configuration.GetConnectionString("ConnectionString")), ServiceLifetime.Transient);
 
 builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
 builder.Services.AddScoped<IUsersRepository, UserRepository>();

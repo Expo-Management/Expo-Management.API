@@ -35,13 +35,13 @@ namespace Expo_Management.API.Repositories
                 groupOfUserEmails.Add(model.Member2);
                 groupOfUserEmails.Add(model.Member3);
 
-                var membersOfTheGroup = this._crudUtils.getUsersAvailable(groupOfUserEmails);
+                var membersOfTheGroup = this._crudUtils.getUsersAvailableAsync(groupOfUserEmails);
                 var project = ProjectExists(model.Name);
                 
                 if (membersOfTheGroup != null && !project)
                 {
                     var upload = await _filesUploader.AddProjectsFile(model.Files);
-                    var Fair = await GetFair(model.Fair); //traer id por feria
+                    var Fair = await GetFair(model.Fair); 
 
                     //create new project
                     ProjectModel newProject = new ProjectModel()
@@ -139,13 +139,13 @@ namespace Expo_Management.API.Repositories
             {
                 var result = (from x in _context.Projects
                               where x.Name == name
-                              select x.Name).FirstOrDefaultAsync();
+                              select x.Name).FirstOrDefault();
 
                 if (result != null)
                 {
-                    return false;
+                    return true;
                 }
-                return true;
+                return false;
             }
             catch (Exception ex)
             {

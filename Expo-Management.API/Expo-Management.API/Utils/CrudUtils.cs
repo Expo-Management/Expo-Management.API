@@ -12,7 +12,7 @@ namespace Expo_Management.API.Utils
             _usersRepository = usersRepository;
         }
 
-        public async Task<List<User>> getUsersAvailable(List<string> groupOfUserEmails)
+        public async Task<List<User>> getUsersAvailableAsync(List<string> groupOfUserEmails)
         {
             List<User> groupOfUsers = new List<User>();
             var allUsersExists = true;
@@ -56,7 +56,7 @@ namespace Expo_Management.API.Utils
         {
             try
             {
-                var students = await getUsersAvailable(groupOfStudents);
+                var students = await getUsersAvailableAsync(groupOfStudents);
 
                 foreach (User user in students)
                 {

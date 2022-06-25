@@ -25,9 +25,9 @@ namespace Expo_Management.API.Controllers
             {
                 var project = await _projectsRepository.CreateProject(model);
 
-                if (model == null)
+                if (project == null)
                 {
-                    return BadRequest("Project or file are null");
+                    return BadRequest("Project already exists");
 
                 }
                 return Ok(project);

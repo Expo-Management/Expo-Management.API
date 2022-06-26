@@ -12,13 +12,13 @@ namespace Expo_Management.API.Interfaces
 
         Task<List<ProjectModel>> GetAllProjectsAsync();
 
-        Task<List<string>> GetOldProjectsAsync();
-
-        Task<Fair> GetFair(string project);
+        Task<Fair> GetFair(int project);
 
         Task<List<Mention>> GetMentionsAsync();
 
         Task<List<ProjectModel>> GetAllCurrentProjectsAsync();
+
+        Task<List<ProjectModel>> GetOldProjectsAsync();
 
     }
 }

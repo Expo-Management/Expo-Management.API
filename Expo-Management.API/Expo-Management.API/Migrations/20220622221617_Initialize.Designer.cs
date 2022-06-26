@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220619191723_Update-Project-Nulls")]
-    partial class UpdateProjectNulls
+    [Migration("20220622221617_Initialize")]
+    partial class Initialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -148,6 +148,10 @@ namespace Expo_Management.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -205,32 +209,14 @@ namespace Expo_Management.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FairId")
+                    b.Property<int>("FilesId")
                         .HasColumnType("int");
-
-                    b.Property<int?>("FilesId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Lider")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Member2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Member3")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FairId")
-                        .IsUnique();
 
                     b.HasIndex("FilesId");
 
@@ -510,17 +496,11 @@ namespace Expo_Management.API.Migrations
 
             modelBuilder.Entity("Expo_Management.API.Entities.ProjectModel", b =>
                 {
-                    b.HasOne("Expo_Management.API.Entities.Fair", "Fair")
-                        .WithOne("Project")
-                        .HasForeignKey("Expo_Management.API.Entities.ProjectModel", "FairId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Expo_Management.API.Entities.FilesModel", "Files")
                         .WithMany()
-                        .HasForeignKey("FilesId");
-
-                    b.Navigation("Fair");
+                        .HasForeignKey("FilesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Files");
                 });
@@ -598,12 +578,6 @@ namespace Expo_Management.API.Migrations
                         .HasForeignKey("ProfilePictureId");
 
                     b.Navigation("ProfilePicture");
-                });
-
-            modelBuilder.Entity("Expo_Management.API.Entities.Fair", b =>
-                {
-                    b.Navigation("Project")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

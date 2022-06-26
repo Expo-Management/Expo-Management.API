@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220620235328_FixProjects")]
-    partial class FixProjects
+    [Migration("20220622224721_AddUserLeadership")]
+    partial class AddUserLeadership
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -140,6 +140,27 @@ namespace Expo_Management.API.Migrations
                     b.ToTable("Logs");
                 });
 
+            modelBuilder.Entity("Expo_Management.API.Entities.Mentions.Mention", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Mention");
+                });
+
             modelBuilder.Entity("Expo_Management.API.Entities.News.New", b =>
                 {
                     b.Property<int>("Id")
@@ -194,15 +215,6 @@ namespace Expo_Management.API.Migrations
                     b.Property<int>("FilesId")
                         .HasColumnType("int");
 
-                    b.Property<string>("LiderId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Member2Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Member3Id")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -213,13 +225,22 @@ namespace Expo_Management.API.Migrations
 
                     b.HasIndex("FilesId");
 
-                    b.HasIndex("LiderId");
-
-                    b.HasIndex("Member2Id");
-
-                    b.HasIndex("Member3Id");
-
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("MentionProjectModel", b =>
+                {
+                    b.Property<int>("MentionsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MentionsId", "ProjectsId");
+
+                    b.HasIndex("ProjectsId");
+
+                    b.ToTable("MentionProjectModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -430,6 +451,9 @@ namespace Expo_Management.API.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
+                    b.Property<bool>("IsLead")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Lastname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -441,11 +465,16 @@ namespace Expo_Management.API.Migrations
                     b.Property<int?>("ProfilePictureId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("ProfilePictureId");
+
+                    b.HasIndex("ProjectId");
 
                     b.HasDiscriminator().HasValue("User");
                 });
@@ -492,27 +521,24 @@ namespace Expo_Management.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Expo_Management.API.Entities.User", "Lider")
-                        .WithMany()
-                        .HasForeignKey("LiderId");
-
-                    b.HasOne("Expo_Management.API.Entities.User", "Member2")
-                        .WithMany()
-                        .HasForeignKey("Member2Id");
-
-                    b.HasOne("Expo_Management.API.Entities.User", "Member3")
-                        .WithMany()
-                        .HasForeignKey("Member3Id");
-
                     b.Navigation("Fair");
 
                     b.Navigation("Files");
+                });
 
-                    b.Navigation("Lider");
+            modelBuilder.Entity("MentionProjectModel", b =>
+                {
+                    b.HasOne("Expo_Management.API.Entities.Mentions.Mention", null)
+                        .WithMany()
+                        .HasForeignKey("MentionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Member2");
-
-                    b.Navigation("Member3");
+                    b.HasOne("Expo_Management.API.Entities.ProjectModel", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -572,7 +598,13 @@ namespace Expo_Management.API.Migrations
                         .WithMany()
                         .HasForeignKey("ProfilePictureId");
 
+                    b.HasOne("Expo_Management.API.Entities.ProjectModel", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId");
+
                     b.Navigation("ProfilePicture");
+
+                    b.Navigation("Project");
                 });
 #pragma warning restore 612, 618
         }

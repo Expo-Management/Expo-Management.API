@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220619190940_One-One-ProjectFair-Relation")]
-    partial class OneOneProjectFairRelation
+    [Migration("20220622222008_AddFairProjectRelation")]
+    partial class AddFairProjectRelation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -148,6 +148,10 @@ namespace Expo_Management.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -211,26 +215,13 @@ namespace Expo_Management.API.Migrations
                     b.Property<int>("FilesId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Lider")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Member2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Member3")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FairId")
-                        .IsUnique();
+                    b.HasIndex("FairId");
 
                     b.HasIndex("FilesId");
 
@@ -511,8 +502,8 @@ namespace Expo_Management.API.Migrations
             modelBuilder.Entity("Expo_Management.API.Entities.ProjectModel", b =>
                 {
                     b.HasOne("Expo_Management.API.Entities.Fair", "Fair")
-                        .WithOne("Project")
-                        .HasForeignKey("Expo_Management.API.Entities.ProjectModel", "FairId")
+                        .WithMany()
+                        .HasForeignKey("FairId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -600,12 +591,6 @@ namespace Expo_Management.API.Migrations
                         .HasForeignKey("ProfilePictureId");
 
                     b.Navigation("ProfilePicture");
-                });
-
-            modelBuilder.Entity("Expo_Management.API.Entities.Fair", b =>
-                {
-                    b.Navigation("Project")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

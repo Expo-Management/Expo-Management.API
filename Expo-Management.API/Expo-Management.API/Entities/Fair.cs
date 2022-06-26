@@ -16,7 +16,5 @@ namespace Expo_Management.API.Entities
 
         [StringLength(100)]
         public string? Description { get; set; }
-
-        public ProjectModel Project { get; set; }
     }
 }

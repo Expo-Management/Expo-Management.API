@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Expo_Management.API.Entities.Mentions;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Expo_Management.API.Entities
@@ -11,19 +12,14 @@ namespace Expo_Management.API.Entities
         [Required(ErrorMessage = "Project name is required")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Project descrption is required")]
+        [Required(ErrorMessage = "Project Description is required")]
         public string Description { get; set; }
 
-        public string Lider { get; set; }
+        [Required(ErrorMessage = "Project File is required")]
+        public FilesModel? Files { get; set; }
 
-        [Required(ErrorMessage = "Member 2 is required")]
-        public string Member2 { get; set; }
+        public virtual ICollection<Mention> Mentions { get; set; }
 
-        [Required(ErrorMessage = "Member 3 is required")]
-        public string Member3 { get; set; }
-
-        public FilesModel Files { get; set; }
-
-
+        public Fair Fair { get; set; }
     }
 }

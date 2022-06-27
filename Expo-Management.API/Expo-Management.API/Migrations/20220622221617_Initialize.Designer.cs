@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220619010438_Initialize")]
+    [Migration("20220622221617_Initialize")]
     partial class Initialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -140,6 +140,27 @@ namespace Expo_Management.API.Migrations
                     b.ToTable("Logs");
                 });
 
+            modelBuilder.Entity("Expo_Management.API.Entities.Mentions.Mention", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Mention");
+                });
+
             modelBuilder.Entity("Expo_Management.API.Entities.News.New", b =>
                 {
                     b.Property<int>("Id")
@@ -191,18 +212,6 @@ namespace Expo_Management.API.Migrations
                     b.Property<int>("FilesId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Lider")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Member2")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Member3")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -212,6 +221,21 @@ namespace Expo_Management.API.Migrations
                     b.HasIndex("FilesId");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("MentionProjectModel", b =>
+                {
+                    b.Property<int>("MentionsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProjectsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MentionsId", "ProjectsId");
+
+                    b.HasIndex("ProjectsId");
+
+                    b.ToTable("MentionProjectModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -479,6 +503,21 @@ namespace Expo_Management.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Files");
+                });
+
+            modelBuilder.Entity("MentionProjectModel", b =>
+                {
+                    b.HasOne("Expo_Management.API.Entities.Mentions.Mention", null)
+                        .WithMany()
+                        .HasForeignKey("MentionsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Expo_Management.API.Entities.ProjectModel", null)
+                        .WithMany()
+                        .HasForeignKey("ProjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

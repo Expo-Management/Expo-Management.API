@@ -19,7 +19,7 @@ namespace UploadFiles.Controllers
         }
 
         [HttpPost]
-        [Route("upload")]
+        [Route("file")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
 
@@ -37,33 +37,33 @@ namespace UploadFiles.Controllers
             return BadRequest("There was an error.");
         }
 
-        [HttpPost]
-        [Route("upload-pf")]
-        public async Task<IActionResult> UploadProfilePicture(IFormFile file)
-        {
+        //[HttpPost]
+        //[Route("upload-pf")]
+        //public async Task<IActionResult> UploadProfilePicture(IFormFile file)
+        //{
 
-            if (file != null)
-            {
-                var existFile = _filesUploaderRepository.fileExist(file.FileName);
-                if (existFile == false)
-                {
-                    if (file.ContentType == "image/jpeg" || file.ContentType == "image/png" || file.ContentType == "image/jpg")
-                    {
-                        await _filesUploaderRepository.Add(file);
-                        return Ok($"Profile picture upload succesfully!");
-                    }
+        //    if (file != null)
+        //    {
+        //        var existFile = _filesUploaderRepository.fileExist(file.FileName);
+        //        if (existFile == false)
+        //        {
+        //            if (file.ContentType == "image/jpeg" || file.ContentType == "image/png" || file.ContentType == "image/jpg")
+        //            {
+        //                await _filesUploaderRepository.Add(file);
+        //                return Ok($"Profile picture upload succesfully!");
+        //            }
 
-                    return BadRequest("Profile picture must be only JPEG or PNG");
+        //            return BadRequest("Profile picture must be only JPEG or PNG");
 
-                }
-                return BadRequest("File already exists.");
-            }
+        //        }
+        //        return BadRequest("File already exists.");
+        //    }
 
-            return BadRequest("There was an error.");
-        }
+        //    return BadRequest("There was an error.");
+        //}
 
         [HttpDelete]
-        [Route("delete")]
+        [Route("file")]
         public async Task<IActionResult> DeleteFile(string file)
         {
             var result = await _filesUploaderRepository.deleteFiles(file);
@@ -78,7 +78,7 @@ namespace UploadFiles.Controllers
 
 
         [HttpGet]
-        [Route("showAll")]
+        [Route("files")]
         public async Task<IActionResult> ShowFiles()
         {
 

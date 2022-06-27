@@ -1,5 +1,6 @@
 ﻿using Expo_Management.API.Entities;
 using Expo_Management.API.Entities.Logs;
+using Expo_Management.API.Entities.Mentions;
 using Expo_Management.API.Entities.News;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -19,5 +20,6 @@ namespace Expo_Management.API.Auth
         public DbSet<New> New { get; set; }
         public DbSet<FilesModel> Files { get; set; }
         public DbSet<ProjectModel> Projects { get; set; }
+        public DbSet<Mention> Mention { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Expo_Management.API.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220622222008_AddFairProjectRelation")]
+    partial class AddFairProjectRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -449,9 +451,6 @@ namespace Expo_Management.API.Migrations
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<bool>("IsLead")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Lastname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -463,16 +462,11 @@ namespace Expo_Management.API.Migrations
                     b.Property<int?>("ProfilePictureId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ProjectId")
-                        .HasColumnType("int");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("ProfilePictureId");
-
-                    b.HasIndex("ProjectId");
 
                     b.HasDiscriminator().HasValue("User");
                 });
@@ -596,13 +590,7 @@ namespace Expo_Management.API.Migrations
                         .WithMany()
                         .HasForeignKey("ProfilePictureId");
 
-                    b.HasOne("Expo_Management.API.Entities.ProjectModel", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId");
-
                     b.Navigation("ProfilePicture");
-
-                    b.Navigation("Project");
                 });
 #pragma warning restore 612, 618
         }

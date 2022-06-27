@@ -109,7 +109,7 @@ namespace Expo_Management.API.Controllers
 
             if (result.Status == "Success")
             {
-                return Redirect($"{_Configuration["AppUrl"]}/confirmEmail.html");
+                return Redirect($"{_Configuration["WebUrl"]}/auth/login");
 
             }
             return BadRequest("another error");

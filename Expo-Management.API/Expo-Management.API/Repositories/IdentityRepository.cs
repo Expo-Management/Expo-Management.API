@@ -57,7 +57,8 @@ namespace Expo_Management.API.Repositories
                 UserName = model.Username
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.Password);            
+
             if (!result.Succeeded)
             {
                 _logger.LogWarning("Error al registrar un usuario, contrasena incorrecta");
@@ -71,7 +72,7 @@ namespace Expo_Management.API.Repositories
             var confirmEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var encodedMailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
             var validEmailToken = WebEncoders.Base64UrlEncode(encodedMailToken);
-            string url = $"{_configuration["AppUrl"]}/api/authenticate/confirmEmailToken?userId={user.UserId}&token={validEmailToken}";
+            string url = $"{_configuration["AppUrl"]}/api/authenticate/confirmEmailToken?userId={user.Id}&token={validEmailToken}";
 
             dynamic ConfirmEmailTemplate = new DynamicTemplate();
 
@@ -113,7 +114,8 @@ namespace Expo_Management.API.Repositories
                 return new LoginResponse {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
                     Expiration = token.ValidTo,
-                    Role = userRoleStored
+                    Role = userRoleStored,
+                    EmailConfirmed = user.EmailConfirmed,
                 };
             }
             return null;
@@ -123,9 +125,10 @@ namespace Expo_Management.API.Repositories
         {
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user == null)
+            if (user == null) {
                 _logger.LogWarning("Error al encontrar usuario");
                 return new Response { Status = "Error", Message = "User not found" };
+            }
             
             //decode and validate token
             var decodeToken = WebEncoders.Base64UrlDecode(token);
@@ -133,9 +136,11 @@ namespace Expo_Management.API.Repositories
 
             var result = await _userManager.ConfirmEmailAsync(user, normalToken);
 
-            if (!result.Succeeded)
+            if (!result.Succeeded) {
                 _logger.LogWarning("Error al enviar correo");
                 return new Response { Status = "Error", Message = "Email not found" };
+            }
+            return new Response { Status = "Success", Message = "Account confirmed" };
         }
 
         public async Task<Response> ForgetPasswordAsync(string email)

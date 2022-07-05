@@ -9,9 +9,14 @@ namespace Expo_Management.API.Repositories
     public class UserRepository: IUsersRepository
     {
         private readonly UserManager<User> _userManager;
+        private readonly ApplicationDbContext _context;
 
-        public UserRepository(UserManager<User> userManager) 
+        public UserRepository(
+            UserManager<User> userManager,
+            ApplicationDbContext context
+            ) 
         {
+            _context = context;
             _userManager = userManager;
         }
 
@@ -172,7 +177,9 @@ namespace Expo_Management.API.Repositories
 
         public async Task<User> GetStudentAsync(string email)
         {
-            var student = await _userManager.FindByEmailAsync(email);
+            var student = await (from u in _context.User
+                                 where u.Email == email
+                                 select u).Include(x => x.Project).FirstAsync();
 
             if (student != null)
             {
@@ -195,6 +202,7 @@ namespace Expo_Management.API.Repositories
             oldUser.Lastname = model.Lastname;
             oldUser.Email = model.Email;
             oldUser.PhoneNumber = model.Phone;
+            oldUser.Project = model.Project;
 
             /*if (model.ProfilePicture != null)
             {

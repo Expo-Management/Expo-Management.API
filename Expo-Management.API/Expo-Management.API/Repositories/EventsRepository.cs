@@ -29,7 +29,8 @@ namespace Expo_Management.API.Repositories
                 {
                     Description = Event.Description,
                     Location = Event.Location,
-                    Date = Event.Date,
+                    StartDate = Event.StartDate,
+                    EndDate = Event.EndDate,
                     Details = Event.Details,
                     Fair = fair
                 };
@@ -99,7 +100,8 @@ namespace Expo_Management.API.Repositories
             {
                 result.Description = Event.Description;
                 result.Location = Event.Location;
-                result.Date = Event.Date;
+                result.StartDate = Event.StartDate;
+                result.EndDate = Event.EndDate;
                 result.Details = Event.Details;
                 _context.SaveChanges();
 

@@ -22,6 +22,9 @@ namespace Expo_Management.API.Entities
         [Required(ErrorMessage = "Phone is required")]
         public string Phone { get; set; }
 
+        [Required(ErrorMessage = "Project is required")]
+        public ProjectModel Project { get; set; }
+
         public IFormFile? ProfilePicture { get; set; }
     }
 }

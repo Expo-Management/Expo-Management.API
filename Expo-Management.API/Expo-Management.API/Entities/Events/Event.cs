@@ -16,7 +16,10 @@ namespace Expo_Management.API.Entities
         public string Location { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public DateTime StartDate { get; set; }
+
+        [Required]
+        public DateTime EndDate { get; set; }
 
         [StringLength(200)]
         public string? Details { get; set; }

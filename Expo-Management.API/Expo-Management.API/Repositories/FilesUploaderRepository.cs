@@ -37,15 +37,12 @@ namespace Expo_Management.API.Repositories
                 {
                     file.CopyTo(FileStreams);
                     obj = new FilesModel()
-                    {
+                    { 
                         Name = file.FileName,
                         Size = file.Length,
                         Url = @"\Resources\ProjectsFiles\" + file.FileName,
                         uploadDateTime = DateTime.Now
-                    };
-
-                    await _context.Files.AddAsync(obj);
-                    await _context.SaveChangesAsync();
+                    };                    
                 }
 
                 return obj;

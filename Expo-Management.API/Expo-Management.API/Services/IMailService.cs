@@ -21,7 +21,7 @@ namespace Expo_Management.API.Services
 
         public async Task SendEmailAsync(string toEmail, string templateId, object dynamicTemplateData)
         {
-            var apiKey = _configuration["SendGridAPIKey"];
+            var apiKey = Environment.GetEnvironmentVariable("SendGridAPIKey");
             var client = new SendGridClient(apiKey);
             var from = new EmailAddress("noreplyexpomanagement@gmail.com", "Expo-Management Team");
             var to = new EmailAddress(toEmail);

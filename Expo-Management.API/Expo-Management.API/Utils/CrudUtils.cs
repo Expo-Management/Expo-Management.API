@@ -1,4 +1,5 @@
-﻿using Expo_Management.API.Entities;
+﻿using Expo_Management.API.Auth;
+using Expo_Management.API.Entities;
 using Expo_Management.API.Interfaces;
 
 namespace Expo_Management.API.Utils
@@ -6,9 +7,11 @@ namespace Expo_Management.API.Utils
     public class CrudUtils
     {
         private readonly IUsersRepository _usersRepository;
-
-        public CrudUtils(IUsersRepository usersRepository)
+        private readonly ApplicationDbContext _context;
+        public CrudUtils(IUsersRepository usersRepository,
+            ApplicationDbContext context)
         {
+            _context = context;
             _usersRepository = usersRepository;
         }
 
@@ -31,8 +34,13 @@ namespace Expo_Management.API.Utils
                 }
             }
 
-            if (!allUsersExists && !this.areUsersAvailable(groupOfUsers)) return null;
-            else return groupOfUsers;
+            var areUsersAvailablesForProjects = areUsersAvailable(groupOfUsers);
+
+            if (allUsersExists && areUsersAvailablesForProjects)
+            {
+                return groupOfUsers;
+            } 
+            return null;
         }
        
         /*consult if users are available*/
@@ -44,7 +52,12 @@ namespace Expo_Management.API.Utils
             {
                 if (user.Project == null)
                 {
+                    allUsersAreAvailable = true;
+                }
+                else 
+                {
                     allUsersAreAvailable = false;
+                    return allUsersAreAvailable;
                 }
             }
 
@@ -61,6 +74,17 @@ namespace Expo_Management.API.Utils
                 foreach (User user in students)
                 {
                     user.Project = project;
+                    var updatedUser = await _usersRepository.UpdateStudentAsync(new UpdateUser() {
+                        Id = user.UserId,
+                        UserName = user.UserName,
+                        Project = project,
+                        Name = user.Name,
+                        Lastname = user.Lastname,
+                        Email = user.Email,
+                        Phone = user.PhoneNumber
+                    });
+
+                    _context.SaveChanges();
                 }
 
                 return students;

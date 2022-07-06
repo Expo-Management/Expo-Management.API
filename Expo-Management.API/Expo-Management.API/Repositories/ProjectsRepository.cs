@@ -21,7 +21,7 @@ namespace Expo_Management.API.Repositories
             _context = context;
             _filesUploader = filesUploader;
             _usersRepository = usersRepository;
-            _crudUtils = new CrudUtils(_usersRepository);
+            _crudUtils = new CrudUtils(_usersRepository, _context);
         }
 
 
@@ -35,13 +35,13 @@ namespace Expo_Management.API.Repositories
                 groupOfUserEmails.Add(model.Member2);
                 groupOfUserEmails.Add(model.Member3);
 
-                var membersOfTheGroup = this._crudUtils.getUsersAvailableAsync(groupOfUserEmails);
+                var membersOfTheGroup = await this._crudUtils.getUsersAvailableAsync(groupOfUserEmails);
                 var project = ProjectExists(model.Name);
                 
                 if (membersOfTheGroup != null && !project)
                 {
                     var upload = await _filesUploader.AddProjectsFile(model.Files);
-                    var Fair = await GetFair(model.Fair); 
+                    var Fair = await GetFair(model.Fair);
 
                     //create new project
                     ProjectModel newProject = new ProjectModel()
@@ -52,21 +52,15 @@ namespace Expo_Management.API.Repositories
                         Fair = Fair
                     };
 
+                    var projectCreated = await _context.Projects.AddAsync(newProject);
+                    await _context.SaveChangesAsync();
+
                     //add newProject to database
-                    if (await _context.Projects.AddAsync(newProject) != null)
-                    {
-                        await _context.SaveChangesAsync();
 
-                        var newProjectFound = await GetNewProject();
-                        var ProjectCreated = await this._crudUtils.addUsersToProject(groupOfUserEmails, newProjectFound);
-                        await _context.SaveChangesAsync();
-                        return newProject;
-                    }
-                    else 
-                    {
-                        return null;
-                    }
+                    var ProjectCreated = await _crudUtils.addUsersToProject(groupOfUserEmails, newProject);
 
+                    return newProject;
+                    
                 }
                 return null;
             }
@@ -76,28 +70,6 @@ namespace Expo_Management.API.Repositories
                 return null;
             }
 
-        }
-
-        /*Get new project from database*/
-        public async Task<ProjectModel> GetNewProject()
-        {
-            try
-            {
-                var result = await (from p in _context.Projects
-                                    orderby p.Id descending
-                                    select p).FirstOrDefaultAsync();
-                if (result == null)
-                {
-                    return null;
-                }
-
-                return result;
-            }
-            catch (Exception ex)
-            {
-                _context.Dispose();
-                return null;
-            }
         }
 
         public async Task<List<ProjectModel>> GetAllProjectsAsync()

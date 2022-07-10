@@ -1,6 +1,7 @@
 ﻿using Expo_Management.API.Auth;
 using Expo_Management.API.Entities;
 using Expo_Management.API.Entities.Mentions;
+using Expo_Management.API.Entities.Projects;
 using Expo_Management.API.Interfaces;
 using Expo_Management.API.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -172,7 +173,8 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                var projects = await (from p in _context.Projects
+                var projects = await (from p in _context.Projects.
+                                      Include(x => x.Fair)
                                       where p.Fair.StartDate.Year < DateTime.Now.Year
                                       select p).ToListAsync();
 
@@ -185,6 +187,69 @@ namespace Expo_Management.API.Repositories
             catch (Exception ex)
             {
                 _context.Dispose();
+                return null;
+            }
+        }
+
+        public async Task<List<ProjectDetails>> GetProjectDetails(int projectId)
+        {
+            try
+            {
+                var projects = await (from p in _context.Projects
+                                      where p.Id == projectId
+                                      select new ProjectDetails()
+                                      {
+                                          ProjectId = p.Id,
+                                          ProjectName = p.Name,
+                                          ProjectDescription = p.Description,
+                                          Members = null,
+                                          Category = null,
+                                          FinalPunctuation = null,
+                                      }).ToListAsync();
+
+                if (projects != null)
+                {
+                    List<string> members = await (from u in _context.User
+                                         join p in _context.Projects on u.Project.Id equals p.Id
+                                         where p.Id == projectId
+                                         select u.Name + " " + u.Lastname).ToListAsync();
+
+                    projects[0].Members = members;
+
+                    return projects;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<ProjectQualifications>> GetProjectWithQualificationsAsync(int projectId)
+        {
+            try
+            {
+                var projects = await (from p in _context.Projects
+                                      join q in _context.Qualifications on p.Id equals q.Project.Id 
+                                      join u in _context.User on q.Judge.Id equals u.Id
+                                      where p.Id == projectId
+                                      select new ProjectQualifications(){ 
+                                          ProjectId = p.Id,
+                                          ProjectName = p.Name,
+                                          ProjectDescription = p.Description,
+                                          Punctuation = q.Punctuation,
+                                          JudgeName = u.Name + " " + u.Lastname
+                                      }).ToListAsync();
+
+                if (projects != null)
+                {
+                    return projects;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
                 return null;
             }
         }

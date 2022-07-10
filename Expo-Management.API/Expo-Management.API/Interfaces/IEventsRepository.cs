@@ -12,5 +12,6 @@ namespace Expo_Management.API.Interfaces
         Task<Event>? UpdateEventAsync(EventUpdate Event);
         Task<bool> DeleteEventAsync(int EventId);
         Task<List<New>> GetNewsByFairIdAsync(int FairId);
+        Task<List<SecurityProtocols>> GetGetSecurityProtocols(int FairId);
     }
 }

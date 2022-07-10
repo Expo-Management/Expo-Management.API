@@ -143,7 +143,7 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest(result);
             }
-            return BadRequest("Algunas propiedades no son validas");
+            return BadRequest("some properties are not valid");
         }
     }
 }

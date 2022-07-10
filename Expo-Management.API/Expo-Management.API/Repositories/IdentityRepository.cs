@@ -43,7 +43,7 @@ namespace Expo_Management.API.Repositories
             if (userExists != null)
             {
                 _logger.LogWarning("Error al registrar un usuario, ya existe");
-                return new Response { Status = "Error", Message = "Usuario ya existe!" };
+                return new Response { Status = "Error", Message = "User already exists!" };
             }
 
             User user = new()
@@ -57,12 +57,12 @@ namespace Expo_Management.API.Repositories
                 UserName = model.Username
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.Password);            
 
             if (!result.Succeeded)
             {
                 _logger.LogWarning("Error al registrar un usuario, contrasena incorrecta");
-                return new Response { Status = "Error", Message = "Fallo al crear usuario! Contraseña requiere tener un caracter especial, un numero, una mayuscula." };
+                return new Response { Status = "Error", Message = "User creation failed! Password needs a special character, a number, an uppercase letter and an lowercase letter." };
             }
 
             await _authUtils.AssignRole(user, Role);
@@ -127,9 +127,9 @@ namespace Expo_Management.API.Repositories
 
             if (user == null) {
                 _logger.LogWarning("Error al encontrar usuario");
-                return new Response { Status = "Error", Message = "Usuario no encontrado" };
+                return new Response { Status = "Error", Message = "User not found" };
             }
-
+            
             //decode and validate token
             var decodeToken = WebEncoders.Base64UrlDecode(token);
             var normalToken = Encoding.UTF8.GetString(decodeToken);
@@ -138,9 +138,9 @@ namespace Expo_Management.API.Repositories
 
             if (!result.Succeeded) {
                 _logger.LogWarning("Error al enviar correo");
-                return new Response { Status = "Error", Message = "Correo no encontrado" };
+                return new Response { Status = "Error", Message = "Email not found" };
             }
-            return new Response { Status = "Success", Message = "Cuenta confirmada!" };
+            return new Response { Status = "Success", Message = "Account confirmed" };
         }
 
         public async Task<Response> ForgetPasswordAsync(string email)
@@ -148,15 +148,13 @@ namespace Expo_Management.API.Repositories
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
-            {
                 _logger.LogWarning("Error al encontrar usuario");
-                return new Response { Status = "Error", Message = "Usuario no encontrado" };
-            }
+                 return new Response { Status = "Error", Message = "User not found" };
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedMailToken = Encoding.UTF8.GetBytes(token);
             var validToken = WebEncoders.Base64UrlEncode(encodedMailToken);
-            string url = $"{_configuration["WebUrl"]}/administrator/reset-password?email={email}&token={validToken}";
+            string url = $"{_configuration["WebUrl"]}/ResetPassword?email={email}&token={validToken}";
             dynamic ForgetPasswordTemplate = new DynamicTemplate();
 
             await _mailService.SendEmailAsync(email, "d-9b96ec3a9bb846dd99b1d3c09903e90c", ForgetPasswordTemplate = new
@@ -164,25 +162,20 @@ namespace Expo_Management.API.Repositories
                 username = user.UserName,
                 url = url
             });
-
-            return new Response { Status = "Success", Message = "Correo enviado exitosamente!" };
         }
-    
 
         public async Task<Response> ResetPasswordAsync(ResetPasswordViewModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
-            {
                 _logger.LogWarning("Error al encontrar usuario");
-                return new Response { Status = "Error", Message = "Usuario no encontrado" };
-            }
-               
+                return new Response { Status = "Error", Message = "User not found" };
+
             if (model.NewPassword != model.ConfirmPassword)
             {
                 _logger.LogWarning("Error durante cambio de contraseñas");
-                return new Response { Status = "Error", Message = "Contraseña y Contraseña nueva no son iguales" };
+                return new Response { Status = "Error", Message = "Passwords doesn't match" };
             }
             
             var decodeToken = WebEncoders.Base64UrlDecode(model.Token);
@@ -190,13 +183,8 @@ namespace Expo_Management.API.Repositories
             var result = await _userManager.ResetPasswordAsync(user, normalToken, model.NewPassword);
 
             if (!result.Succeeded)
-            {
                 _logger.LogWarning("Error al cambiar contrsaeña");
-                return new Response { Status = "Error", Message = "Se acaba de dar un error interno, por favor, intentelo más tarde" };
-            }
-
-            return new Response { Status = "Success", Message = "Contraseña cambiada exitosamente!" };
-
+            return new Response { Status = "Error", Message = "something went wrong" };
         }
     }
 }

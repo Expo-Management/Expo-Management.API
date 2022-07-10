@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ujKHyRmLtkw6MXnj4EQby3gjSdwTTPsegr3nGOD+x0Q=",
+  "Hash": "r+GerBSQ7p2C664ctKImihVeBsvxTYp1/Dz1mtxSc5k=",
   "Source": "Expo-Management.API",
   "BasePath": "_content/Expo-Management.API",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "Expo-Management.API\\wwwroot",
       "Source": "Expo-Management.API",
-      "ContentRoot": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W3\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Vale2920\\Desktop\\University\\7 quarter\\Diseño y Desarollo de Sistemas\\Project\\Backend\\Expo-Management.API\\Expo-Management.API\\wwwroot\\",
       "BasePath": "_content/Expo-Management.API",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W3\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\wwwroot\\confirmEmail.html",
+      "Identity": "C:\\Users\\Vale2920\\Desktop\\University\\7 quarter\\Diseño y Desarollo de Sistemas\\Project\\Backend\\Expo-Management.API\\Expo-Management.API\\wwwroot\\confirmEmail.html",
       "SourceId": "Expo-Management.API",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W3\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\Vale2920\\Desktop\\University\\7 quarter\\Diseño y Desarollo de Sistemas\\Project\\Backend\\Expo-Management.API\\Expo-Management.API\\wwwroot\\",
       "BasePath": "_content/Expo-Management.API",
       "RelativePath": "confirmEmail.html",
       "AssetKind": "All",

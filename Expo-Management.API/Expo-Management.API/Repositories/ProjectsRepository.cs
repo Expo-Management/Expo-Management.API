@@ -172,7 +172,8 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                var projects = await (from p in _context.Projects
+                var projects = await (from p in _context.Projects.
+                                      Include(x => x.Fair)
                                       where p.Fair.StartDate.Year < DateTime.Now.Year
                                       select p).ToListAsync();
 

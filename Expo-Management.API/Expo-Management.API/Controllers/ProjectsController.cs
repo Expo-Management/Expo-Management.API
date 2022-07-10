@@ -54,6 +54,7 @@ namespace Expo_Management.API.Controllers
                     {
                         domainProjects.Add(new ProjectModel()
                         {
+                            Id = items.Id,
                             Name = items.Name,
                             Description = items.Description,
                             Fair = items.Fair,
@@ -99,5 +100,69 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("mentions")]
+        public async Task<IActionResult> showMentions()
+        {
+            try
+            {
+
+                var mentions = await _projectsRepository.GetMentionsAsync();
+                if (mentions != null)
+                {
+                    return Ok(mentions);
+                }
+                return NotFound("No hay menciones creadas aun.");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("project-details")]
+        public async Task<IActionResult> getProjectDetailsAsync(int projectId)
+        {
+            try
+            {
+
+                var projectDetails = await _projectsRepository.GetProjectDetails(projectId);
+                
+                if (projectDetails != null)
+                {
+                    return Ok(projectDetails);
+                }
+
+                return NotFound("No hay projectos con el ID especificado.");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("project")]
+        public async Task<IActionResult> getProjectQualificationAsync(int projectId)
+        {
+            try
+            {
+
+                var projectsWithQualifications = await _projectsRepository.GetProjectWithQualificationsAsync(projectId);
+                if (projectsWithQualifications.Count <= 0)
+                {
+                    var qualifiedProjects = await getProjectDetailsAsync(projectId);
+                    return qualifiedProjects;
+                }
+                return Ok(projectsWithQualifications);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

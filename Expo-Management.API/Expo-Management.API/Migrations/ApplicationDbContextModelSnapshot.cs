@@ -229,6 +229,58 @@ namespace Expo_Management.API.Migrations
                     b.ToTable("Projects");
                 });
 
+            modelBuilder.Entity("Expo_Management.API.Entities.Projects.Qualifications", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("JudgeId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Punctuation")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JudgeId");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Qualifications");
+                });
+
+            modelBuilder.Entity("Expo_Management.API.Entities.SecurityProtocols", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FairId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FairId");
+
+                    b.ToTable("SecurityProtocols");
+                });
+
             modelBuilder.Entity("MentionProjectModel", b =>
                 {
                     b.Property<int>("MentionsId")
@@ -525,6 +577,34 @@ namespace Expo_Management.API.Migrations
                     b.Navigation("Fair");
 
                     b.Navigation("Files");
+                });
+
+            modelBuilder.Entity("Expo_Management.API.Entities.Projects.Qualifications", b =>
+                {
+                    b.HasOne("Expo_Management.API.Entities.User", "Judge")
+                        .WithMany()
+                        .HasForeignKey("JudgeId");
+
+                    b.HasOne("Expo_Management.API.Entities.ProjectModel", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Judge");
+
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("Expo_Management.API.Entities.SecurityProtocols", b =>
+                {
+                    b.HasOne("Expo_Management.API.Entities.Fair", "Fair")
+                        .WithMany()
+                        .HasForeignKey("FairId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Fair");
                 });
 
             modelBuilder.Entity("MentionProjectModel", b =>

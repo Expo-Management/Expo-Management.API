@@ -111,5 +111,21 @@ namespace Expo_Management.API.Controllers
                 return Ok(response);
             }
         }
+
+        [HttpGet]
+        [Route("security-protocols")]
+        public async Task<IActionResult> GetSecurityProtocols(int FairId)
+        {
+            var response = await _eventsRepository.GetGetSecurityProtocols(FairId);
+
+            if (response == null)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
     }
 }

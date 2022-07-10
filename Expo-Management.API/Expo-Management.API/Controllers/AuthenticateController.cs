@@ -112,7 +112,7 @@ namespace Expo_Management.API.Controllers
                 return Redirect($"{_Configuration["WebUrl"]}/auth/login");
 
             }
-            return BadRequest("another error");
+            return BadRequest("Se acaba de dar un error, por favor intentelo más tarde");
         }
 
         [HttpPost("ForgetPassword")]
@@ -143,7 +143,7 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest(result);
             }
-            return BadRequest("some properties are not valid");
+            return BadRequest("algunas propiedades escritas no son validas");
         }
     }
 }

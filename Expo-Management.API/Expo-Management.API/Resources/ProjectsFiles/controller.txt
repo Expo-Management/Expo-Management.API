@@ -1,0 +1,31 @@
+  [HttpGet, DisableRequestSizeLimit]
+        [Route("download")]
+        public async Task<IActionResult> Download([FromQuery] string fileUrl)
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), fileUrl);
+
+            if (!System.IO.File.Exists(filePath))
+                return NotFound();
+
+            var memory = new MemoryStream();
+            await using (var stream = new FileStream(filePath, FileMode.Open))
+            {
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            return File(memory, GetContentType(filePath), filePath);
+        }
+
+        private string GetContentType(string path)
+        {
+            var provider = new FileExtensionContentTypeProvider();
+            string contentType;
+
+            if (!provider.TryGetContentType(path, out contentType))
+            {
+                contentType = "~/Resources/Files/ProjectFiles/test.docx";
+            }
+
+            return contentType;
+        }

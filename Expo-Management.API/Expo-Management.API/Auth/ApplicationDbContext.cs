@@ -21,5 +21,6 @@ namespace Expo_Management.API.Auth
         public DbSet<FilesModel> Files { get; set; }
         public DbSet<ProjectModel> Projects { get; set; }
         public DbSet<Mention> Mention { get; set; }
+        public DbSet<JudgeRecommendation> JudgeRecommendation { get; set; }
     }
 }

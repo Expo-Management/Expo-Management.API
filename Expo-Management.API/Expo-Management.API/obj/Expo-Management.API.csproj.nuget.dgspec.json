@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jafet\\Documents\\University\\Diseño\\W3\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj": {}
+    "C:\\Users\\capa6\\Documents\\GitHub\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jafet\\Documents\\University\\Diseño\\W3\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj": {
+    "C:\\Users\\capa6\\Documents\\GitHub\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W3\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj",
+        "projectUniqueName": "C:\\Users\\capa6\\Documents\\GitHub\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj",
         "projectName": "Expo-Management.API",
-        "projectPath": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W3\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj",
-        "packagesPath": "C:\\Users\\jafet\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jafet\\Documents\\University\\Diseño\\W3\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\obj\\",
+        "projectPath": "C:\\Users\\capa6\\Documents\\GitHub\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\Expo-Management.API.csproj",
+        "packagesPath": "C:\\Users\\capa6\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\capa6\\Documents\\GitHub\\expo-management.api\\Expo-Management.API\\Expo-Management.API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\jafet\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\capa6\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -101,7 +101,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }

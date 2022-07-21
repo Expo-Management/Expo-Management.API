@@ -188,5 +188,64 @@ namespace Expo_Management.API.Repositories
                 return null;
             }
         }
+
+        public async Task<JudgeRecommendation> JudgeRecommendation(NewRecommendation model)
+        {
+
+            try
+            {
+                //verifica el juez
+                var juez = await _usersRepository.GetJudgeAsync(model.correoJuez);
+                var project = await GetProjectById(model.IdProject);
+
+                if (juez != null && project != null)
+                {
+                    var newRecommendation = new JudgeRecommendation()
+                    {
+
+                        project = project,
+                        user = juez,
+                        Recomendacion = model.Recommendation
+                    };
+
+                    await _context.AddAsync<JudgeRecommendation>(newRecommendation);
+                    _context.SaveChangesAsync();
+
+                    return newRecommendation;
+
+                }
+
+                return null;     
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }                      
+
+            //se agrega a la base de datos
+           
+        }
+
+        public async Task<ProjectModel> GetProjectById(int ProjectId)
+        {
+            try
+            {
+                var project = await (from p in _context.Projects
+                                     where p.Id == ProjectId
+                                     select p).FirstAsync();
+
+                if (project != null)
+                {
+                    return project;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
  }

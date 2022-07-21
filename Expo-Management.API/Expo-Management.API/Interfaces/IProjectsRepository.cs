@@ -20,5 +20,8 @@ namespace Expo_Management.API.Interfaces
 
         Task<List<ProjectModel>> GetOldProjectsAsync();
 
+        Task<JudgeRecommendation> JudgeRecommendation(NewRecommendation model);
+        Task<ProjectModel> GetProjectById(int ProjectId);
+
     }
 }

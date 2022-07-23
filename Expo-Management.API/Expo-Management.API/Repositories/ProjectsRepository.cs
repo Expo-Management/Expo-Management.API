@@ -204,17 +204,18 @@ namespace Expo_Management.API.Repositories
                                           ProjectDescription = p.Description,
                                           Members = null,
                                           Category = null,
+                                          ProjectQualifications = null,
                                           FinalPunctuation = null,
                                       }).ToListAsync();
 
                 if (projects != null)
                 {
-                    List<string> members = await (from u in _context.User
-                                         join p in _context.Projects on u.Project.Id equals p.Id
-                                         where p.Id == projectId
-                                         select u.Name + " " + u.Lastname).ToListAsync();
+                    List<string> members = await GetProjectMembers(projectId);
+                    List<ProjectQualifications> qualifications = await GetProjectQualifications(projectId);
 
                     projects[0].Members = members;
+                    projects[0].ProjectQualifications = qualifications;
+                    projects[0].FinalPunctuation = CalculateProjectFinalPunctuation(qualifications).Result.ToString();
 
                     return projects;
                 }
@@ -224,33 +225,44 @@ namespace Expo_Management.API.Repositories
             {
                 return null;
             }
-        }
 
-        public async Task<List<ProjectQualifications>> GetProjectWithQualificationsAsync(int projectId)
-        {
-            try
+            async Task<List<string>> GetProjectMembers(int projectId)
             {
-                var projects = await (from p in _context.Projects
-                                      join q in _context.Qualifications on p.Id equals q.Project.Id 
-                                      join u in _context.User on q.Judge.Id equals u.Id
-                                      where p.Id == projectId
-                                      select new ProjectQualifications(){ 
-                                          ProjectId = p.Id,
-                                          ProjectName = p.Name,
-                                          ProjectDescription = p.Description,
-                                          Punctuation = q.Punctuation,
-                                          JudgeName = u.Name + " " + u.Lastname
-                                      }).ToListAsync();
-
-                if (projects != null)
-                {
-                    return projects;
-                }
-                return null;
+                return await (from u in _context.User
+                              join p in _context.Projects on u.Project.Id equals p.Id
+                              where p.Id == projectId
+                              select u.Name + " " + u.Lastname).ToListAsync();
             }
-            catch (Exception ex)
+
+            async Task<List<ProjectQualifications>> GetProjectQualifications(int projectId)
             {
-                return null;
+                return await (from p in _context.Projects
+                              join q in _context.Qualifications on p.Id equals q.Project.Id
+                              join u in _context.User on q.Judge.Id equals u.Id
+                              where p.Id == projectId
+                              select new ProjectQualifications()
+                              {
+                                  Punctuation = q.Punctuation,
+                                  JudgeName = u.Name + " " + u.Lastname
+                              }).ToListAsync();
+            }
+
+            async Task<int> CalculateProjectFinalPunctuation(List<ProjectQualifications> qualifications)
+            {
+                if (qualifications != null && qualifications.Count() > 0) {
+                    var FinalQualification = 0;
+                    var counter = 0;
+
+                    foreach (var judgeQualification in qualifications)
+                    {
+                        FinalQualification = FinalQualification + judgeQualification.Punctuation;
+                        counter++;
+                    }
+
+                    return FinalQualification / counter;
+                }
+                return 0;
+                
             }
         }
     }

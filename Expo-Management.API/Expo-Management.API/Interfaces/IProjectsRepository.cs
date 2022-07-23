@@ -14,7 +14,6 @@ namespace Expo_Management.API.Interfaces
         Task<List<Mention>> GetMentionsAsync();
         Task<List<ProjectModel>> GetAllCurrentProjectsAsync();
         Task<List<ProjectModel>> GetOldProjectsAsync();
-        Task<List<ProjectQualifications>> GetProjectWithQualificationsAsync(int projectId);
         Task<List<ProjectDetails>> GetProjectDetails(int projectId);
 
     }

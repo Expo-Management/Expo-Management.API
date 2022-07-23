@@ -122,46 +122,19 @@ namespace Expo_Management.API.Controllers
         }
 
         [HttpGet]
-        [Route("project-details")]
-        public async Task<IActionResult> getProjectDetailsAsync(int projectId)
-        {
-            try
-            {
-
-                var projectDetails = await _projectsRepository.GetProjectDetails(projectId);
-                
-                if (projectDetails != null)
-                {
-                    return Ok(projectDetails);
-                }
-
-                return NotFound("No hay projectos con el ID especificado.");
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-        }
-
-        [HttpGet]
         [Route("project")]
         public async Task<IActionResult> getProjectQualificationAsync(int projectId)
         {
             try
             {
 
-                var projectsWithQualifications = await _projectsRepository.GetProjectWithQualificationsAsync(projectId);
-                if (projectsWithQualifications.Count <= 0)
-                {
-                    var qualifiedProjects = await getProjectDetailsAsync(projectId);
-                    return qualifiedProjects;
-                }
-                return Ok(projectsWithQualifications);
+                var projectDetails = await _projectsRepository.GetProjectDetails(projectId);
+                
+                return Ok(projectDetails);
             }
             catch (Exception ex)
             {
-                throw ex;
+                return StatusCode(500);
             }
         }
     }

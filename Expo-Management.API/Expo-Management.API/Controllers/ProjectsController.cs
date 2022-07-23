@@ -121,5 +121,26 @@ namespace Expo_Management.API.Controllers
                 throw ex;
             }           
         }
+
+        [HttpGet]
+        [Route("getRecommendation")]
+        public async Task<IActionResult> getRecommendation(int recomendacion)
+        {
+            try
+            {
+
+                var recommendation = await _projectsRepository.GetRecommendation(recomendacion);
+
+                if (recommendation != null)
+                {
+                    return Ok(recommendation);
+                }
+                return BadRequest("Hubo un error interno, por favor intentelo mas tarde");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

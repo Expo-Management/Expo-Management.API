@@ -22,6 +22,7 @@ namespace Expo_Management.API.Interfaces
 
         Task<JudgeRecommendation> JudgeRecommendation(NewRecommendation model);
         Task<ProjectModel> GetProjectById(int ProjectId);
+        Task<JudgeRecommendation> GetRecommendation(int recomendacion);
 
     }
 }

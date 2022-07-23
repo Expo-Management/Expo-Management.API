@@ -228,6 +228,32 @@ namespace Expo_Management.API.Repositories
            
         }
 
+        public async Task<JudgeRecommendation> GetRecommendation(int recomendacion)
+        {
+            try
+            {
+
+               // var project = await GetProjectById(model.IdProject);
+               // var student = await _usersRepository.GetStudentAsync(model.correoEstudiante);
+
+               // if (student != null && project != null)
+               // {
+                    //    var recomendation = await (from j in _context.NewRecommendation
+                    //                               where j.Recommendation == model.Recommendation
+                    //                               select j);
+                    var recommendation = await (from r in _context.JudgeRecommendation
+                                                where r.Id == recomendacion
+                                                select r).FirstOrDefaultAsync();   
+                        return recommendation;
+                    
+             //   }
+                
+            }catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<ProjectModel> GetProjectById(int ProjectId)
         {
             try

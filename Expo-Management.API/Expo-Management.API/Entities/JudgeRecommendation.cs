@@ -9,5 +9,6 @@ namespace Expo_Management.API.Entities
         public User user { get; set; }            
         [Required(ErrorMessage = "A recomendation is required")]
         public string Recomendacion { get; set; }
+
     }
 }

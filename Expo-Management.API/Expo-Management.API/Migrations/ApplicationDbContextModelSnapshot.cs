@@ -189,6 +189,27 @@ namespace Expo_Management.API.Migrations
                     b.ToTable("Mention");
                 });
 
+            modelBuilder.Entity("Expo_Management.API.Entities.NewRecommendation", b =>
+                {
+                    b.Property<int>("IdProject")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdProject"), 1L, 1);
+
+                    b.Property<string>("Recommendation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("correoJuez")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("IdProject");
+
+                    b.ToTable("NewRecommendation");
+                });
+
             modelBuilder.Entity("Expo_Management.API.Entities.News.New", b =>
                 {
                     b.Property<int>("Id")

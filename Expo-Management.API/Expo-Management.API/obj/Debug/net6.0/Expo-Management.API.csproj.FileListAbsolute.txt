@@ -196,16 +196,12 @@ C:\Users\Vale2920\Desktop\University\7 quarter\Diseño y Desarollo de Sistemas\P
 C:\Users\jafet\Documents\University\Diseño\W3\expo-management.api\Expo-Management.API\Expo-Management.API\bin\Debug\net6.0\Expo-Management.API.staticwebassets.runtime.json
 C:\Users\jafet\Documents\University\Diseño\W3\expo-management.api\Expo-Management.API\Expo-Management.API\bin\Debug\net6.0\SendGrid.dll
 C:\Users\jafet\Documents\University\Diseño\W3\expo-management.api\Expo-Management.API\Expo-Management.API\bin\Debug\net6.0\StarkbankEcdsa.dll
-C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.csproj.AssemblyReference.cache
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.AssemblyInfoInputs.cache
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.AssemblyInfo.cs
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.csproj.CoreCompileInputs.cache
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.dll
-C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\ref\Expo-Management.API.dll
-C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.pdb
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\bin\Debug\net6.0\appsettings.Development.json
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\bin\Debug\net6.0\appsettings.json
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\bin\Debug\net6.0\Expo-Management.API.staticwebassets.runtime.json
@@ -294,4 +290,8 @@ C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Man
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\staticwebassets.development.json
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\scopedcss\bundle\Expo-Management.API.styles.css
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.csproj.CopyComplete
+C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.dll
+C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\ref\Expo-Management.API.dll
+C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.pdb
 C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.genruntimeconfig.cache
+C:\Users\capa6\Documents\GitHub\expo-management.api\Expo-Management.API\Expo-Management.API\obj\Debug\net6.0\Expo-Management.API.csproj.AssemblyReference.cache

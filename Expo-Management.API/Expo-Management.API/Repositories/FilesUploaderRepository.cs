@@ -44,8 +44,11 @@ namespace Expo_Management.API.Repositories
                         uploadDateTime = DateTime.Now
                     };                    
                 }
+                if (file.ContentType == "application/pdf" || file.ContentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                {
 
-                return obj;
+                    return obj;
+                }
             }
             return null;
         }
@@ -74,9 +77,8 @@ namespace Expo_Management.API.Repositories
                         Url = @"\Resources\ProfilePictures\" + file.FileName,
                         uploadDateTime = DateTime.Now
                     };
-
-                    await _context.Files.AddAsync(obj);
-                    await _context.SaveChangesAsync();
+                      await _context.Files.AddAsync(obj);
+                      await _context.SaveChangesAsync();
                 }
 
                 return obj;

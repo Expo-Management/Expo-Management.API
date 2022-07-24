@@ -24,5 +24,7 @@ namespace Expo_Management.API.Entities.Auth
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
+        public string Position { get; set; }
+        public string Institution { get; set; }
     }
 }

@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public int Punctuation { get; set; }
+        public string Comments { get; set; }
         public User Judge { get; set; }
         public ProjectModel Project { get; set; }
 

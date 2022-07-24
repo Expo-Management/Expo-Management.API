@@ -10,5 +10,7 @@ namespace Expo_Management.API.Entities
         public FilesModel? ProfilePicture { get; set; }
         public ProjectModel? Project { get; set; }
         public bool? IsLead { get; set; }
+        public string Position { get; set; }
+        public string Institution { get; set; }
     }
 }

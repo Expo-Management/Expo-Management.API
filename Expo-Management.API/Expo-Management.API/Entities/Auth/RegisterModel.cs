@@ -24,5 +24,7 @@ namespace Expo_Management.API.Entities.Auth
 
         [Required(ErrorMessage = "Contraseña es requerido")]
         public string Password { get; set; }
+        public string Position { get; set; }
+        public string Institution { get; set; }
     }
 }

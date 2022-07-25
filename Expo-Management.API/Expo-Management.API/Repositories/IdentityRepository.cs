@@ -54,7 +54,9 @@ namespace Expo_Management.API.Repositories
                 Lastname = model.Lastname,
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
-                UserName = model.Username
+                UserName = model.Username,
+                Institution = model.Institution,
+                Position = model.Position,
             };
 
             var result = await _userManager.CreateAsync(user, model.Password);

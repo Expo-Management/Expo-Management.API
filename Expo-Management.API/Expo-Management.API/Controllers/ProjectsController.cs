@@ -1,4 +1,5 @@
 ﻿using Expo_Management.API.Entities;
+using Expo_Management.API.Entities.Projects;
 using Expo_Management.API.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -54,6 +55,7 @@ namespace Expo_Management.API.Controllers
                     {
                         domainProjects.Add(new ProjectModel()
                         {
+                            Id = items.Id,
                             Name = items.Name,
                             Description = items.Description,
                             Fair = items.Fair,
@@ -99,5 +101,65 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("mentions")]
+        public async Task<IActionResult> showMentions()
+        {
+            try
+            {
+
+                var mentions = await _projectsRepository.GetMentionsAsync();
+                if (mentions != null)
+                {
+                    return Ok(mentions);
+                }
+                return NotFound("No hay menciones creadas aun.");
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("project")]
+        public async Task<IActionResult> getProjectQualificationAsync(int projectId)
+        {
+            try
+            {
+
+                var projectDetails = await _projectsRepository.GetProjectDetails(projectId);
+                
+                return Ok(projectDetails);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        [Route("create-claim")]
+        public async Task<IActionResult> CreateProjectClaim(NewClaim model)
+        {
+            try
+            {
+
+                var claim = await _projectsRepository.CreateProjectClaim(model);
+
+                if (claim != null)
+                {
+                    return Ok(claim);
+                }
+
+                return BadRequest("Id del proyecto o detalles icorrectos");
+                
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
     }
 }

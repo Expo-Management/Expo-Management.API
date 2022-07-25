@@ -123,5 +123,18 @@ namespace Expo_Management.API.Repositories
             }
             return null;
         }
+
+        public async Task<List<SecurityProtocols>> GetGetSecurityProtocols(int FairId)
+        {
+            var results = await (from sp in _context.SecurityProtocols
+                                 where sp.Fair.Id == FairId
+                                 select sp).ToListAsync();
+
+            if (results != null && results.Count() > 0)
+            {
+                return results;
+            }
+            return null;
+        }
     }
 }

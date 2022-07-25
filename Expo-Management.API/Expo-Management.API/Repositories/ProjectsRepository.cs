@@ -1,6 +1,7 @@
 ﻿using Expo_Management.API.Auth;
 using Expo_Management.API.Entities;
 using Expo_Management.API.Entities.Mentions;
+using Expo_Management.API.Entities.Projects;
 using Expo_Management.API.Interfaces;
 using Expo_Management.API.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -172,7 +173,8 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                var projects = await (from p in _context.Projects
+                var projects = await (from p in _context.Projects.
+                                      Include(x => x.Fair)
                                       where p.Fair.StartDate.Year < DateTime.Now.Year
                                       select p).ToListAsync();
 
@@ -186,6 +188,103 @@ namespace Expo_Management.API.Repositories
             {
                 _context.Dispose();
                 return null;
+            }
+        }
+
+        public async Task<Claim> CreateProjectClaim(NewClaim model)
+        {
+            var project = await (from p in _context.Projects
+                                 where p.Id == model.ProjectId
+                                 select p).FirstOrDefaultAsync();
+            
+            if (project == null)
+            {
+                return null;
+            }
+
+            var claim = new Claim()
+            {
+                ClaimDescription = model.ClaimDescription,
+                Project = project
+            };
+
+            await _context.Claim.AddAsync(claim);
+            await _context.SaveChangesAsync();
+            return claim;
+        }
+
+        public async Task<List<ProjectDetails>> GetProjectDetails(int projectId)
+        {
+            try
+            {
+                var projects = await (from p in _context.Projects
+                                      where p.Id == projectId
+                                      select new ProjectDetails()
+                                      {
+                                          ProjectId = p.Id,
+                                          ProjectName = p.Name,
+                                          ProjectDescription = p.Description,
+                                          Members = null,
+                                          Category = null,
+                                          ProjectQualifications = null,
+                                          FinalPunctuation = null,
+                                      }).ToListAsync();
+
+                if (projects != null)
+                {
+                    List<string> members = await GetProjectMembers(projectId);
+                    List<ProjectQualifications> qualifications = await GetProjectQualifications(projectId);
+
+                    projects[0].Members = members;
+                    projects[0].ProjectQualifications = qualifications;
+                    projects[0].FinalPunctuation = CalculateProjectFinalPunctuation(qualifications).Result.ToString();
+
+                    return projects;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+            async Task<List<string>> GetProjectMembers(int projectId)
+            {
+                return await (from u in _context.User
+                              join p in _context.Projects on u.Project.Id equals p.Id
+                              where p.Id == projectId
+                              select u.Name + " " + u.Lastname).ToListAsync();
+            }
+
+            async Task<List<ProjectQualifications>> GetProjectQualifications(int projectId)
+            {
+                return await (from p in _context.Projects
+                              join q in _context.Qualifications on p.Id equals q.Project.Id
+                              join u in _context.User on q.Judge.Id equals u.Id
+                              where p.Id == projectId
+                              select new ProjectQualifications()
+                              {
+                                  Punctuation = q.Punctuation,
+                                  JudgeName = u.Name + " " + u.Lastname
+                              }).ToListAsync();
+            }
+
+            async Task<int> CalculateProjectFinalPunctuation(List<ProjectQualifications> qualifications)
+            {
+                if (qualifications != null && qualifications.Count() > 0) {
+                    var FinalQualification = 0;
+                    var counter = 0;
+
+                    foreach (var judgeQualification in qualifications)
+                    {
+                        FinalQualification = FinalQualification + judgeQualification.Punctuation;
+                        counter++;
+                    }
+
+                    return FinalQualification / counter;
+                }
+                return 0;
+                
             }
         }
     }

@@ -9,13 +9,13 @@ namespace Expo_Management.API.Entities
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Project name is required")]
+        [Required(ErrorMessage = "Nombre del proyecto es requerido")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Project Description is required")]
+        [Required(ErrorMessage = "Descripcion del proyecto es requerido")]
         public string Description { get; set; }
 
-        [Required(ErrorMessage = "Project File is required")]
+        [Required(ErrorMessage = "Documento del proyecto es requerido")]
         public FilesModel? Files { get; set; }
 
         public virtual ICollection<Mention> Mentions { get; set; }

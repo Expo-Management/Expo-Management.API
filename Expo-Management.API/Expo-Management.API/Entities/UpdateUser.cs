@@ -4,25 +4,28 @@ namespace Expo_Management.API.Entities
 {
     public class UpdateUser
     {
-        [Required(ErrorMessage = "UserID is required")]
+        [Required(ErrorMessage = "UserId es requerido")]
         public string Id { get; set; }
 
-        [Required(ErrorMessage = "Username is required")]
+        [Required(ErrorMessage = "Username es requerido")]
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = "Name is required")]
+        [Required(ErrorMessage = "Nombre es requerido")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage = "Lastname is required")]
+        [Required(ErrorMessage = "Apellidos son requeridos")]
         public string Lastname { get; set; }
 
-        [Required(ErrorMessage = "Email is required")]
+        [Required(ErrorMessage = "Correo es requerido")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "Phone is required")]
+        [Required(ErrorMessage = "Telefono es requerido")]
         public string Phone { get; set; }
 
-        [Required(ErrorMessage = "Project is required")]
+        [Required(ErrorMessage = "Contraseña es requerido")]
+        public string Password { get; set; }
+
+        [Required(ErrorMessage = "Id del proyecto es requerido")]
         public ProjectModel Project { get; set; }
 
         public IFormFile? ProfilePicture { get; set; }

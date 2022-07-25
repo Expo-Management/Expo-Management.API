@@ -28,13 +28,17 @@ namespace UploadFiles.Controllers
                 var existFile = _filesUploaderRepository.fileExist(file.FileName);
                 if(existFile == false)
                 {
-                    await _filesUploaderRepository.Add(file);
-                    return Ok($"File {file.FileName} upload succesfully!");
+                    if (file.ContentType == "application/pdf" || file.ContentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                    {
+                        await _filesUploaderRepository.Add(file);
+                        return Ok($"Documento {file.FileName} subido exitosamente!");
+                    }
+                    return BadRequest("Documento solo puede ser PDF o Word.");
                 }
-                return BadRequest("File already exists.");
+                return BadRequest("Documento ya existe.");
             }
 
-            return BadRequest("There was an error.");
+            return BadRequest("Hubo un error por favor intentelo más tarde.");
         }
 
         //[HttpPost]
@@ -70,10 +74,10 @@ namespace UploadFiles.Controllers
 
                 if (result != null)
                 {
-                    return Ok($"File deleted succesfully!");
+                    return Ok($"Documento borrado exitosamente!");
                 }            
 
-            return BadRequest("File doesn't exist.");
+            return BadRequest("Documento no existe.");
         }
 
 
@@ -100,7 +104,7 @@ namespace UploadFiles.Controllers
                 }
                 return Ok(domainFiles);
             }
-            return BadRequest("There was an error.");
+            return BadRequest("Hubo un error, por favor, intentelo más tarde.");
         }
     }
 }

@@ -60,7 +60,7 @@ namespace Expo_Management.API.Controllers
             }
             else
             {
-                return Ok("Event created successfully!");
+                return Ok("Evento creado exitosamente!");
             }
         }
 
@@ -76,7 +76,7 @@ namespace Expo_Management.API.Controllers
             }
             else
             {
-                return Ok("Event updated successfully!");
+                return Ok("Evento actualizado exitosamente!");
             }
         }
 
@@ -92,7 +92,7 @@ namespace Expo_Management.API.Controllers
             }
             else
             {
-                return Ok("Event removed successfully");
+                return Ok("Evento removido exitosamente");
             }
         }
 

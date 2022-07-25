@@ -71,7 +71,7 @@ namespace Expo_Management.API.Controllers
                     }
                     return Ok(domainProjects);
                 }
-                return BadRequest("There was an error.");
+                return BadRequest("Hubo un error, por favor, intentelo más tarde.");
             }
             catch (Exception ex)
             {
@@ -92,7 +92,7 @@ namespace Expo_Management.API.Controllers
                 {
                     return Ok(projects);
                 }
-                return BadRequest("There was an error");
+                return BadRequest("Hubo un error, por favor, intentelo más tarde");
             }
             catch (Exception ex)
             {

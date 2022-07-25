@@ -57,7 +57,7 @@ namespace Expo_Management.API.Controllers
 
             if (response == null)
             {
-                return BadRequest("Check username!");
+                return BadRequest("Hubo un error, por favor, intentelo más tarde!");
             }
             return Ok(response);
         }
@@ -71,8 +71,8 @@ namespace Expo_Management.API.Controllers
             if (response)
             {
                 return Ok("Judge deleted!");
-            } 
-            return BadRequest("Judge email does not exists!");
+            }
+            return BadRequest("Correo incorrecto!");
         }
 
 
@@ -118,7 +118,7 @@ namespace Expo_Management.API.Controllers
 
             if (response == null)
             {
-                return BadRequest("Check email!");
+                return BadRequest("Correo incorrecto!");
             }
             return Ok(response);
         }
@@ -133,7 +133,7 @@ namespace Expo_Management.API.Controllers
             {
                 return Ok("Admin deleted!");
             }
-            return BadRequest("Admin email does not exists!");
+            return BadRequest("Correo incorrecto!");
         }
 
 
@@ -179,7 +179,7 @@ namespace Expo_Management.API.Controllers
 
             if (response == null)
             {
-                return BadRequest("Check email!");
+                return BadRequest("Correo incorrecto!");
             }
             return Ok(response);
         }
@@ -194,7 +194,7 @@ namespace Expo_Management.API.Controllers
             {
                 return Ok("Student deleted!");
             }
-            return BadRequest("Student email does not exists!");
+            return BadRequest("Correo incorrecto!");
         }
     }
 }

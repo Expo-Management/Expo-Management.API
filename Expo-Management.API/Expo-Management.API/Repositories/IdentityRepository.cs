@@ -59,16 +59,16 @@ namespace Expo_Management.API.Repositories
                 Position = model.Position,
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);            
+            var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
             {
-                _logger.LogWarning("Error al registrar un usuario, contrasena incorrecta");
-                return new Response { Status = "Error", Message = "User creation failed! Password needs a special character, a number, an uppercase letter and an lowercase letter." };
+                _logger.LogWarning("Error al registrar un usuario, contraseña incorrecta");
+                return new Response { Status = "Error", Message = "Creacion de usuario fallida, contraseña ocupa una mayuscula, un caracter especial, un numero y al menos debe ser de más de 8 caracteres de largo" };
             }
 
             await _authUtils.AssignRole(user, Role);
-            _logger.LogCritical("Error al registrar un usuario, contrasena incorrecta");
+            _logger.LogCritical("Error al registrar un usuario, contraseña incorrecta");
 
             /*sending email confirmation*/
             var confirmEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -85,7 +85,7 @@ namespace Expo_Management.API.Repositories
                 url = url
             });
 
-            return new Response { Status = "Success", Message = "User created successfully!" };
+            return new Response { Status = "Success", Message = "Usuario creado existosamente!" };
         }
 
         public async Task<LoginResponse?> LoginUser(LoginModel model)
@@ -113,7 +113,8 @@ namespace Expo_Management.API.Repositories
 
                 var token = _authUtils.GetToken(authClaims);
 
-                return new LoginResponse {
+                return new LoginResponse
+                {
                     Token = new JwtSecurityTokenHandler().WriteToken(token),
                     Expiration = token.ValidTo,
                     Role = userRoleStored,
@@ -127,22 +128,24 @@ namespace Expo_Management.API.Repositories
         {
             var user = await _userManager.FindByIdAsync(userId);
 
-            if (user == null) {
+            if (user == null)
+            {
                 _logger.LogWarning("Error al encontrar usuario");
-                return new Response { Status = "Error", Message = "User not found" };
+                return new Response { Status = "Error", Message = "Usuario no encontrado" };
             }
-            
+
             //decode and validate token
             var decodeToken = WebEncoders.Base64UrlDecode(token);
             var normalToken = Encoding.UTF8.GetString(decodeToken);
 
             var result = await _userManager.ConfirmEmailAsync(user, normalToken);
 
-            if (!result.Succeeded) {
+            if (!result.Succeeded)
+            {
                 _logger.LogWarning("Error al enviar correo");
-                return new Response { Status = "Error", Message = "Email not found" };
+                return new Response { Status = "Error", Message = "Correo no encontrado" };
             }
-            return new Response { Status = "Success", Message = "Account confirmed" };
+            return new Response { Status = "Success", Message = "Cuenta confirmada" };
         }
 
         public async Task<Response> ForgetPasswordAsync(string email)
@@ -150,8 +153,10 @@ namespace Expo_Management.API.Repositories
             var user = await _userManager.FindByEmailAsync(email);
 
             if (user == null)
+            {
                 _logger.LogWarning("Error al encontrar usuario");
-                 return new Response { Status = "Error", Message = "User not found" };
+                return new Response { Status = "Error", Message = "Usuario no encontrado" };
+            }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedMailToken = Encoding.UTF8.GetBytes(token);
@@ -164,6 +169,9 @@ namespace Expo_Management.API.Repositories
                 username = user.UserName,
                 url = url
             });
+
+            return new Response { Status = "Success", Message = "Correo enviado existosamente" };
+
         }
 
         public async Task<Response> ResetPasswordAsync(ResetPasswordViewModel model)
@@ -171,22 +179,28 @@ namespace Expo_Management.API.Repositories
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
+            {
                 _logger.LogWarning("Error al encontrar usuario");
-                return new Response { Status = "Error", Message = "User not found" };
-
+                return new Response { Status = "Error", Message = "Usuario no encontrado" };
+            }
+              
             if (model.NewPassword != model.ConfirmPassword)
             {
                 _logger.LogWarning("Error durante cambio de contraseñas");
-                return new Response { Status = "Error", Message = "Passwords doesn't match" };
+                return new Response { Status = "Error", Message = "Contraseña nueva y Confirmación de contrseña nueva no son iguales" };
             }
-            
+
             var decodeToken = WebEncoders.Base64UrlDecode(model.Token);
             var normalToken = Encoding.UTF8.GetString(decodeToken);
             var result = await _userManager.ResetPasswordAsync(user, normalToken, model.NewPassword);
 
             if (!result.Succeeded)
+            {
                 _logger.LogWarning("Error al cambiar contrsaeña");
-            return new Response { Status = "Error", Message = "something went wrong" };
+                return new Response { Status = "Error", Message = "Hubo un error, por favor intentelo más tarde" };
+            }
+
+            return new Response { Status = "Success", Message = "Contraseña cambiada existosamente" };
         }
     }
 }

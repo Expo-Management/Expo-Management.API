@@ -191,6 +191,28 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        public async Task<Claim> CreateProjectClaim(NewClaim model)
+        {
+            var project = await (from p in _context.Projects
+                                 where p.Id == model.ProjectId
+                                 select p).FirstOrDefaultAsync();
+            
+            if (project == null)
+            {
+                return null;
+            }
+
+            var claim = new Claim()
+            {
+                ClaimDescription = model.ClaimDescription,
+                Project = project
+            };
+
+            await _context.Claim.AddAsync(claim);
+            await _context.SaveChangesAsync();
+            return claim;
+        }
+
         public async Task<List<ProjectDetails>> GetProjectDetails(int projectId)
         {
             try

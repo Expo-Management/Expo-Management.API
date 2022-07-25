@@ -1,4 +1,5 @@
 ﻿using Expo_Management.API.Entities;
+using Expo_Management.API.Entities.Projects;
 using Expo_Management.API.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -131,6 +132,29 @@ namespace Expo_Management.API.Controllers
                 var projectDetails = await _projectsRepository.GetProjectDetails(projectId);
                 
                 return Ok(projectDetails);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        [Route("create-claim")]
+        public async Task<IActionResult> CreateProjectClaim(NewClaim model)
+        {
+            try
+            {
+
+                var claim = await _projectsRepository.CreateProjectClaim(model);
+
+                if (claim != null)
+                {
+                    return Ok(claim);
+                }
+
+                return BadRequest("Id del proyecto o detalles icorrectos");
+                
             }
             catch (Exception ex)
             {

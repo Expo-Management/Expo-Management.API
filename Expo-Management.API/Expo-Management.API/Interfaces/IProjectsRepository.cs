@@ -15,6 +15,7 @@ namespace Expo_Management.API.Interfaces
         Task<List<ProjectModel>> GetAllCurrentProjectsAsync();
         Task<List<ProjectModel>> GetOldProjectsAsync();
         Task<List<ProjectDetails>> GetProjectDetails(int projectId);
+        Task<Claim> CreateProjectClaim(NewClaim model);
 
     }
 }

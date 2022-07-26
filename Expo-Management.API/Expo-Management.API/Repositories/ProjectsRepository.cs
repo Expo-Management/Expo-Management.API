@@ -48,9 +48,9 @@ namespace Expo_Management.API.Repositories
                     ProjectModel newProject = new ProjectModel()
                     {
                         Name = model.Name,
+                        Fair = Fair,
                         Description = model.Description,
-                        Files =  upload,
-                        Fair = Fair
+                        Files =  upload
                     };
 
                     var projectCreated = await _context.Projects.AddAsync(newProject);

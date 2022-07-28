@@ -1,5 +1,6 @@
 ﻿using Expo_Management.API.Auth;
 using Expo_Management.API.Entities;
+using Expo_Management.API.Entities.Projects;
 using Expo_Management.API.Interfaces;
 
 namespace Expo_Management.API.Utils

@@ -28,7 +28,7 @@ namespace Expo_Management.API.Controllers
 
                 if (project == null)
                 {
-                    return BadRequest("El proyecto ya existe o alguno de los usuarios ya se encuentra asignado a otro proyecto.");
+                    return BadRequest("Por favor revisar los detalles del proyecto.");
 
                 }
                 return Ok(project);

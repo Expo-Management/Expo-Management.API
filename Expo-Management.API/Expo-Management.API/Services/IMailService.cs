@@ -29,6 +29,17 @@ namespace Expo_Management.API.Services
 
             var response = await client.SendEmailAsync(msg);
         }
+
+        public async Task SendEmailToMultiplesAsync(List<EmailAddress> tos, string subject, string content)
+        {
+            var apiKey = Environment.GetEnvironmentVariable("SendGridAPIKey");
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress("noreplyexpomanagement@gmail.com", "Expo-Management Team");
+            //tos.Add(new EmailAddress( "secondperson@test.com", "secondperson")); you can add multiple email in this list 
+            var msg = MailHelper.CreateSingleEmailToMultipleRecipients(from, tos, subject, content, content);
+
+            var response = await client.SendEmailAsync(msg);
+        }
     }
 
     public class DynamicTemplate

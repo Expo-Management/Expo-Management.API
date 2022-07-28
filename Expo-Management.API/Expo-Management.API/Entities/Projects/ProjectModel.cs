@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Expo_Management.API.Entities
+namespace Expo_Management.API.Entities.Projects
 {
     public class ProjectModel
     {

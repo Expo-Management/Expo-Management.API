@@ -180,7 +180,16 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                return await _context.Files.ToListAsync();
+                var result = await (from X in _context.Files 
+                              where X.Url.Contains(@"\Files")
+                              select X).ToListAsync();
+
+                if (result != null)
+                {
+                    return result;
+                }
+
+                return null; ;
             }
             catch (Exception ex)
             {

@@ -27,6 +27,7 @@ namespace Expo_Management.API.Entities
 
         [Required(ErrorMessage = "Id del proyecto es requerido")]
         public ProjectModel Project { get; set; }
+        public bool IsLead { get; set; }
 
         public IFormFile? ProfilePicture { get; set; }
     }

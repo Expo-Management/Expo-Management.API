@@ -125,6 +125,7 @@ namespace Expo_Management.API.Repositories
             oldUser.Lastname = model.Lastname;
             oldUser.Email = model.Email;
             oldUser.PhoneNumber = model.Phone;
+            oldUser.IsLead = model.IsLead;
 
             /*if (model.ProfilePicture != null)
             {
@@ -203,6 +204,7 @@ namespace Expo_Management.API.Repositories
             oldUser.Email = model.Email;
             oldUser.PhoneNumber = model.Phone;
             oldUser.Project = model.Project;
+            oldUser.IsLead = model.IsLead;
 
             /*if (model.ProfilePicture != null)
             {

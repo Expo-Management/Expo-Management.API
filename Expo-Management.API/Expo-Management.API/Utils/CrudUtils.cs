@@ -70,9 +70,16 @@ namespace Expo_Management.API.Utils
             try
             {
                 var students = await getUsersAvailableAsync(groupOfStudents);
+                
 
                 foreach (User user in students)
                 {
+                    var isLeaderr = false;
+
+                    if (user.Email == groupOfStudents[0])
+                    {
+                        isLeaderr = true;
+                    }
                     user.Project = project;
                     var updatedUser = await _usersRepository.UpdateStudentAsync(new UpdateUser() {
                         Id = user.UserId,
@@ -81,7 +88,8 @@ namespace Expo_Management.API.Utils
                         Name = user.Name,
                         Lastname = user.Lastname,
                         Email = user.Email,
-                        Phone = user.PhoneNumber
+                        Phone = user.PhoneNumber,
+                        IsLead = isLeaderr
                     });
 
                     _context.SaveChanges();

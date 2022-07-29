@@ -287,5 +287,74 @@ namespace Expo_Management.API.Repositories
                 
             }
         }
+
+        public async Task<JudgeRecommendation> JudgeRecommendation(NewRecommendation model)
+        {
+            try
+            {
+                //verifica el juez
+                var juez = (from j in _context.User
+                            where j.Email == model.correoJuez
+                            select j).FirstOrDefault();
+
+                var project = (from p in _context.Projects
+                               where p.Id == model.IdProject
+                                select p).FirstOrDefault();
+
+                if (juez != null && project != null)
+                {
+                    var newRecommendation = new JudgeRecommendation()
+                    {
+                        project = project,
+                        user = juez,
+                        Recomendacion = model.Recommendation
+                    };
+                    await _context.JudgeRecommendation.AddAsync(newRecommendation);
+                    await _context.SaveChangesAsync();
+
+                    return newRecommendation;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            //se agrega a la base de datos
+
+        }
+        public async Task<JudgeRecommendation> GetRecommendation(int recomendacion)
+        {
+            try
+            {
+                var recommendation = await (from r in _context.JudgeRecommendation
+                                             where r.Id == recomendacion
+                                             select r).FirstOrDefaultAsync();
+                 return recommendation;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        public async Task<ProjectModel> GetProjectById(int ProjectId)
+        {
+            try
+            {
+                var project = await (from p in _context.Projects
+                                     where p.Id == ProjectId
+                                     select p).FirstAsync();
+                if (project != null)
+                {
+                    return project;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
  }

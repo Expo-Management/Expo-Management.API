@@ -26,6 +26,7 @@ builder.Services.AddScoped<IEventsRepository, EventsRepository>();
 builder.Services.AddScoped<ILogsRepository, LogsRepository>();
 builder.Services.AddScoped<IFilesUploaderRepository, FilesUploaderRepository>();
 builder.Services.AddScoped<IProjectsRepository, ProjectsRepository>();
+builder.Services.AddScoped<IFairRepository, FairRepository>();
 builder.Services.AddTransient<IMailService, SenderGridMailService>();
 
 

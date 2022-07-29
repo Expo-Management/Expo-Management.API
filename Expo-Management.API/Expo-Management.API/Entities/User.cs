@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Expo_Management.API.Entities.Projects;
+using Microsoft.AspNetCore.Identity;
 
 namespace Expo_Management.API.Entities
 {

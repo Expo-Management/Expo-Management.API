@@ -67,6 +67,11 @@ namespace Expo_Management.API.Controllers
                                 Url = items.Files.Url,
                                 uploadDateTime = items.Files.uploadDateTime
                             },
+                            category = new Category()
+                            {
+                                Id = items.category.Id,
+                                Description = items.category.Description
+                            }
                         });
                     }
                     return Ok(domainProjects);
@@ -92,7 +97,7 @@ namespace Expo_Management.API.Controllers
                 {
                     return Ok(projects);
                 }
-                return BadRequest("Hubo un error, por favor, intentelo más tarde");
+                return BadRequest("No hay proyectos antiguos");
             }
             catch (Exception ex)
             {
@@ -130,7 +135,8 @@ namespace Expo_Management.API.Controllers
             {
 
                 var projectDetails = await _projectsRepository.GetProjectDetails(projectId);
-                
+               // _projectsRepository.SendCalificationsEmails(projectId);
+
                 return Ok(projectDetails);
             }
             catch (Exception ex)

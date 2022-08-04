@@ -3,26 +3,40 @@ using Expo_Management.API.Entities;
 using Expo_Management.API.Entities.Mentions;
 using Expo_Management.API.Entities.Projects;
 using Expo_Management.API.Interfaces;
+using Expo_Management.API.Services;
 using Expo_Management.API.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace Expo_Management.API.Repositories
 {
+
     public class ProjectsRepository : IProjectsRepository
     {
 
         private readonly ApplicationDbContext _context;
         private readonly IFilesUploaderRepository _filesUploader;
+        private readonly ICategoryRepository _categoryRepository;
         private readonly IUsersRepository _usersRepository;
         private CrudUtils _crudUtils;
+        private readonly IMailService _mailService;
+        private readonly IConfiguration _configuration;
 
 
-        public ProjectsRepository(ApplicationDbContext context, IFilesUploaderRepository filesUploader, IUsersRepository usersRepository)
+        public ProjectsRepository(
+            ApplicationDbContext context, 
+            IFilesUploaderRepository filesUploader, 
+            ICategoryRepository categoryRepository,
+            IUsersRepository usersRepository, 
+            IMailService mailService, 
+            IConfiguration configuration)
         {
             _context = context;
             _filesUploader = filesUploader;
             _usersRepository = usersRepository;
+            _categoryRepository = categoryRepository;
             _crudUtils = new CrudUtils(_usersRepository, _context);
+            _mailService = mailService;
+            _configuration = configuration;
         }
 
 
@@ -38,21 +52,26 @@ namespace Expo_Management.API.Repositories
 
                 var membersOfTheGroup = await this._crudUtils.getUsersAvailableAsync(groupOfUserEmails);
                 var project = ProjectExists(model.Name);
-                
+
                 if (membersOfTheGroup != null && !project)
                 {
                     var upload = await _filesUploader.AddProjectsFile(model.Files);
                     var Fair = await GetFair(model.Fair);
+                    var category = await (from x in _context.Categories
+                                          where x.Id == model.Category
+                                          select x).FirstOrDefaultAsync();
 
                     //create new project
                     ProjectModel newProject = new ProjectModel()
                     {
+                        Files = upload,
                         Name = model.Name,
                         Fair = Fair,
                         Description = model.Description,
-                        Files =  upload
+                        category = category
                     };
 
+                    
                     var projectCreated = await _context.Projects.AddAsync(newProject);
                     await _context.SaveChangesAsync();
 
@@ -61,13 +80,12 @@ namespace Expo_Management.API.Repositories
                     var ProjectCreated = await _crudUtils.addUsersToProject(groupOfUserEmails, newProject);
 
                     return newProject;
-                    
+
                 }
                 return null;
             }
             catch (Exception ex)
             {
-                _context.Dispose();
                 return null;
             }
 
@@ -77,12 +95,14 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                return await _context.Projects.Include(x => x.Files).ToListAsync();
+                return await _context.Projects.
+                    Include(x => x.Files).
+                    Include(c => c.category).
+                    ToListAsync();
 
             }
             catch (Exception ex)
             {
-                _context.Dispose();
                 return null;
             }
         }
@@ -92,19 +112,16 @@ namespace Expo_Management.API.Repositories
             try
             {
                 var result = await (from f in _context.Fair
-                                   where f.Id == fairId
-                                   select f).FirstOrDefaultAsync();
+                                    where f.Id == fairId
+                                    select f).FirstOrDefaultAsync();
 
                 return result;
             }
             catch (Exception ex)
             {
-                _context.Dispose();
                 return null;
             }
         }
-
-       
 
         public bool ProjectExists(string name)
         {
@@ -122,13 +139,12 @@ namespace Expo_Management.API.Repositories
             }
             catch (Exception ex)
             {
-                _context.Dispose();
                 return false;
             }
 
         }
 
-        public async Task<List<Mention>> GetMentionsAsync() 
+        public async Task<List<Mention>> GetMentionsAsync()
         {
             try
             {
@@ -143,7 +159,6 @@ namespace Expo_Management.API.Repositories
             }
             catch (Exception ex)
             {
-               _context.Dispose();
                 return null;
             }
         }
@@ -164,7 +179,6 @@ namespace Expo_Management.API.Repositories
             }
             catch (Exception ex)
             {
-                _context.Dispose();
                 return null;
             }
         }
@@ -173,8 +187,9 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                var projects = await (from p in _context.Projects.
-                                      Include(x => x.Fair)
+                var projects = await (from p in _context.Projects
+                                      .Include(x => x.Fair)
+                                      .Include(c => c.category)
                                       where p.Fair.StartDate.Year < DateTime.Now.Year
                                       select p).ToListAsync();
 
@@ -186,7 +201,6 @@ namespace Expo_Management.API.Repositories
             }
             catch (Exception ex)
             {
-                _context.Dispose();
                 return null;
             }
         }
@@ -196,7 +210,7 @@ namespace Expo_Management.API.Repositories
             var project = await (from p in _context.Projects
                                  where p.Id == model.ProjectId
                                  select p).FirstOrDefaultAsync();
-            
+
             if (project == null)
             {
                 return null;
@@ -217,6 +231,11 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
+                var category = await(from x in _context.Projects
+                                          where x.Id == projectId
+                                          select x.category.Description)
+                                          .FirstOrDefaultAsync();
+
                 var projects = await (from p in _context.Projects
                                       where p.Id == projectId
                                       select new ProjectDetails()
@@ -225,7 +244,7 @@ namespace Expo_Management.API.Repositories
                                           ProjectName = p.Name,
                                           ProjectDescription = p.Description,
                                           Members = null,
-                                          Category = null,
+                                          Category = category,
                                           ProjectQualifications = null,
                                           FinalPunctuation = null,
                                       }).ToListAsync();
@@ -258,6 +277,7 @@ namespace Expo_Management.API.Repositories
 
             async Task<List<ProjectQualifications>> GetProjectQualifications(int projectId)
             {
+
                 return await (from p in _context.Projects
                               join q in _context.Qualifications on p.Id equals q.Project.Id
                               join u in _context.User on q.Judge.Id equals u.Id
@@ -271,7 +291,8 @@ namespace Expo_Management.API.Repositories
 
             async Task<int> CalculateProjectFinalPunctuation(List<ProjectQualifications> qualifications)
             {
-                if (qualifications != null && qualifications.Count() > 0) {
+                if (qualifications != null && qualifications.Count() > 0)
+                {
                     var FinalQualification = 0;
                     var counter = 0;
 
@@ -284,8 +305,47 @@ namespace Expo_Management.API.Repositories
                     return FinalQualification / counter;
                 }
                 return 0;
-                
+
             }
         }
+
+        //public async void SendCalificationsEmails(int projectId)
+        //{
+        //    var project = await (from x in _context.Projects
+        //                         where x.Id == projectId
+        //                         select x).FirstOrDefaultAsync();
+
+        //    var Leader = await (from l in _context.User
+        //                        where l.Project.Id == projectId
+        //                        select l).FirstOrDefaultAsync();
+
+        //    var judge = await (from j in _context.Users
+        //                       join q in _context.Qualifications on j.Id equals q.Judge.Id
+        //                       join p in _context.Projects on q.Project.Id equals p.Id
+        //                       where p.Id == projectId
+        //                       select j).FirstOrDefaultAsync();
+
+        //    //Email to student
+        //    dynamic ToStudentEmailTemplate = new DynamicTemplate();
+
+        //    await _mailService.SendEmailAsync(Leader.Email, "d-dac12791e045497b9d5a84dfa260f244", ToStudentEmailTemplate = new
+        //    {
+        //        student_username = Leader.UserName,
+        //        project_name = project.Name,
+        //        judge_name = judge.UserName,
+        //        url = $"{_configuration["WebUrl"]}/api/student/project/{project.Id}"
+        //    });
+
+        //    //Email to judge
+        //    dynamic ToJudgeEmailTemplate = new DynamicTemplate();
+
+        //    await _mailService.SendEmailAsync(judge.Email, "d-3d3a74d6d191448e82fbb6d59de3a683", ToJudgeEmailTemplate = new
+        //    {
+        //        judge_name = judge.UserName,
+        //        project_name = project.Name,
+        //        url = $"{_configuration["WebUrl"]}/api/judges/project-qualify/{project.Id}"
+        //    });
+        //}
+
     }
- }
+}

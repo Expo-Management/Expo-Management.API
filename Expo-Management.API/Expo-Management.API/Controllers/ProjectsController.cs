@@ -161,5 +161,29 @@ namespace Expo_Management.API.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpGet]
+        [Route("project-members")]
+        public async Task<IActionResult> GetProjectMembers()
+        {
+            try
+            {
+                var members = await _projectsRepository.GetMembers();
+
+                if(members != null)
+                {
+                    return Ok(members);
+                }
+                else
+                {
+                    return BadRequest("Id del proyecto o detalles icorrectos");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
     }
 }

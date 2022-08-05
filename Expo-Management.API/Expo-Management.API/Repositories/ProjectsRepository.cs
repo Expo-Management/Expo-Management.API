@@ -38,7 +38,7 @@ namespace Expo_Management.API.Repositories
 
                 var membersOfTheGroup = await this._crudUtils.getUsersAvailableAsync(groupOfUserEmails);
                 var project = ProjectExists(model.Name);
-                
+
                 if (membersOfTheGroup != null && !project)
                 {
                     var upload = await _filesUploader.AddProjectsFile(model.Files);
@@ -50,7 +50,7 @@ namespace Expo_Management.API.Repositories
                         Name = model.Name,
                         Fair = Fair,
                         Description = model.Description,
-                        Files =  upload
+                        Files = upload
                     };
 
                     var projectCreated = await _context.Projects.AddAsync(newProject);
@@ -61,7 +61,7 @@ namespace Expo_Management.API.Repositories
                     var ProjectCreated = await _crudUtils.addUsersToProject(groupOfUserEmails, newProject);
 
                     return newProject;
-                    
+
                 }
                 return null;
             }
@@ -92,8 +92,8 @@ namespace Expo_Management.API.Repositories
             try
             {
                 var result = await (from f in _context.Fair
-                                   where f.Id == fairId
-                                   select f).FirstOrDefaultAsync();
+                                    where f.Id == fairId
+                                    select f).FirstOrDefaultAsync();
 
                 return result;
             }
@@ -104,7 +104,7 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-       
+
 
         public bool ProjectExists(string name)
         {
@@ -128,7 +128,7 @@ namespace Expo_Management.API.Repositories
 
         }
 
-        public async Task<List<Mention>> GetMentionsAsync() 
+        public async Task<List<Mention>> GetMentionsAsync()
         {
             try
             {
@@ -143,7 +143,7 @@ namespace Expo_Management.API.Repositories
             }
             catch (Exception ex)
             {
-               _context.Dispose();
+                _context.Dispose();
                 return null;
             }
         }
@@ -196,7 +196,7 @@ namespace Expo_Management.API.Repositories
             var project = await (from p in _context.Projects
                                  where p.Id == model.ProjectId
                                  select p).FirstOrDefaultAsync();
-            
+
             if (project == null)
             {
                 return null;
@@ -271,7 +271,8 @@ namespace Expo_Management.API.Repositories
 
             async Task<int> CalculateProjectFinalPunctuation(List<ProjectQualifications> qualifications)
             {
-                if (qualifications != null && qualifications.Count() > 0) {
+                if (qualifications != null && qualifications.Count() > 0)
+                {
                     var FinalQualification = 0;
                     var counter = 0;
 
@@ -284,8 +285,37 @@ namespace Expo_Management.API.Repositories
                     return FinalQualification / counter;
                 }
                 return 0;
-                
+
+            }
+        }
+
+        public async Task<List<ProjectMembers>> GetMembers()
+        {
+            try
+            {
+                var members = await (from u in _context.User
+                                     join p in _context.Projects on u.Project.Id equals p.Id
+                                     select new ProjectMembers()
+                                     {
+                                         Name = u.Name,
+                                         LastName = u.Lastname,
+                                         Email = u.Email,
+                                         PhoneNumber = u.PhoneNumber,
+                                         ProjectId = p.Id,
+                                         ProjectName = p.Name
+                                     }).ToListAsync();
+
+                if (members.Count > 0)
+                {
+                    return members;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _context.Dispose();
+                return null;
             }
         }
     }
- }
+}

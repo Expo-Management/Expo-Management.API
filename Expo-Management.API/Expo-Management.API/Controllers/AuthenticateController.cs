@@ -62,7 +62,6 @@ namespace Expo_Management.API.Controllers
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
         {
             var response = await _identityRepository.RegisterNewUser("Admin", model);
-            _logger.LogWarning("Error al registrar un usuario");
 
             try
             {
@@ -131,7 +130,7 @@ namespace Expo_Management.API.Controllers
         }
 
         [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordViewModel model)
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (ModelState.IsValid)
             {

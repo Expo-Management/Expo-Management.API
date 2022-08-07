@@ -4,6 +4,7 @@ using Expo_Management.API.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220802222115_addCategoriesToDb")]
+    partial class addCategoriesToDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -125,33 +127,6 @@ namespace Expo_Management.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Files");
-                });
-
-            modelBuilder.Entity("Expo_Management.API.Entities.JudgeRecommendation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Recomendacion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("projectId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("userId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("projectId");
-
-                    b.HasIndex("userId");
-
-                    b.ToTable("JudgeRecommendation");
                 });
 
             modelBuilder.Entity("Expo_Management.API.Entities.Logs.Logs", b =>
@@ -298,28 +273,6 @@ namespace Expo_Management.API.Migrations
                     b.HasIndex("categoryId");
 
                     b.ToTable("Projects");
-                });
-
-            modelBuilder.Entity("Expo_Management.API.Entities.Projects.Claim", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ClaimDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("Claim");
                 });
 
             modelBuilder.Entity("Expo_Management.API.Entities.Projects.Qualifications", b =>
@@ -648,23 +601,6 @@ namespace Expo_Management.API.Migrations
                     b.Navigation("Fair");
                 });
 
-            modelBuilder.Entity("Expo_Management.API.Entities.JudgeRecommendation", b =>
-                {
-                    b.HasOne("Expo_Management.API.Entities.ProjectModel", "project")
-                        .WithMany()
-                        .HasForeignKey("projectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expo_Management.API.Entities.User", "user")
-                        .WithMany()
-                        .HasForeignKey("userId");
-
-                    b.Navigation("project");
-
-                    b.Navigation("user");
-                });
-
             modelBuilder.Entity("Expo_Management.API.Entities.News.New", b =>
                 {
                     b.HasOne("Expo_Management.API.Entities.Fair", "Fair")
@@ -718,17 +654,6 @@ namespace Expo_Management.API.Migrations
                     b.Navigation("Files");
 
                     b.Navigation("category");
-                });
-
-            modelBuilder.Entity("Expo_Management.API.Entities.Projects.Claim", b =>
-                {
-                    b.HasOne("Expo_Management.API.Entities.ProjectModel", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("Expo_Management.API.Entities.Projects.Qualifications", b =>

@@ -7,6 +7,5 @@
         public string Comments { get; set; }
         public User Judge { get; set; }
         public ProjectModel Project { get; set; }
-
     }
 }

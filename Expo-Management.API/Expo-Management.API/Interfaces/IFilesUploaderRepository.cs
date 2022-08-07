@@ -16,5 +16,9 @@ namespace Expo_Management.API.Repositories
 
         Task<FilesModel> deleteFiles(string file);
 
+        Task<FilesModel> getProjectFile(int id);
+
+        Task<FilesModel> getFileAsync(int id);
+
     }
 }

@@ -194,7 +194,52 @@ namespace Expo_Management.API.Repositories
             catch (Exception ex)
             {
 
-                throw ex;
+                return null;
+            }
+        }
+
+        public async Task<FilesModel> getProjectFile(int id)
+        {
+            try
+            {
+                var result = await (from x in _context.Files
+                                    join p in _context.Projects on x.Id equals p.Files.Id
+                                    where p.Id == id
+                                    select x).FirstOrDefaultAsync();
+
+                if (result != null)
+                {
+                    return result;
+                }
+
+                return null; ;
+            }
+            catch (Exception ex)
+            {
+
+                return null;
+            }
+        }
+
+        public async Task<FilesModel> getFileAsync(int id)
+        {
+            try
+            {
+                var result = await (from x in _context.Files
+                                   where x.Id == id && x.Url.Contains(@"\Files")
+                                    select x).FirstOrDefaultAsync();
+
+                if (result != null)
+                {
+                    return result;
+                }
+
+                return null; ;
+            }
+            catch (Exception ex)
+            {
+
+                return null;
             }
         }
     }

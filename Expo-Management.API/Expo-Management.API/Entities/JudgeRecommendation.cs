@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Expo_Management.API.Entities.Projects;
+using System.ComponentModel.DataAnnotations;
 
 namespace Expo_Management.API.Entities
 {

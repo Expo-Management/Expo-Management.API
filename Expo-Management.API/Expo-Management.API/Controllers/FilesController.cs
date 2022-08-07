@@ -41,6 +41,50 @@ namespace UploadFiles.Controllers
             return BadRequest("Hubo un error por favor intentelo más tarde.");
         }
 
+        [HttpGet]
+        [Route("download-project-file")]
+        public async Task<FileResult> DownladProjectFile(int id)
+        {
+            var file = await _filesUploaderRepository.getProjectFile(id);
+
+            if (file != null)
+            {
+                var path = Environment.GetEnvironmentVariable("resourcesPath") + file.Url;
+                var bytes = System.IO.File.ReadAllBytes(path);
+
+                if (file.Name.EndsWith(".pdf"))
+                {
+                    return File(bytes, "application/pdf", file.Name);
+
+                }
+                return File(bytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", file.Name);
+            }
+
+            return null;
+        }
+
+        [HttpGet]
+        [Route("download-file")]
+        public async Task<IActionResult> DownloadFile(int id)
+        {
+            var file = await _filesUploaderRepository.getFileAsync(id);
+
+            if (file != null)
+            {
+                var path = Environment.GetEnvironmentVariable("resourcesPath") + file.Url;
+                var bytes = System.IO.File.ReadAllBytes(path);
+
+                if (file.Name.EndsWith(".pdf"))
+                {
+                    return File(bytes, "application/pdf", file.Name);
+
+                }
+                return File(bytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", file.Name);
+            }
+
+            return null;
+        }
+
         //[HttpPost]
         //[Route("upload-pf")]
         //public async Task<IActionResult> UploadProfilePicture(IFormFile file)

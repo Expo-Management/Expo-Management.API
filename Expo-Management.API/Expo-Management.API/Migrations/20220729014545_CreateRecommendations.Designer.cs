@@ -4,6 +4,7 @@ using Expo_Management.API.Auth;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220729014545_CreateRecommendations")]
+    partial class CreateRecommendations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,23 +23,6 @@ namespace Expo_Management.API.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("Expo_Management.API.Entities.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Categories");
-                });
 
             modelBuilder.Entity("Expo_Management.API.Entities.Event", b =>
                 {
@@ -242,29 +227,7 @@ namespace Expo_Management.API.Migrations
                     b.ToTable("New");
                 });
 
-            modelBuilder.Entity("Expo_Management.API.Entities.Projects.Claim", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ClaimDescription")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("Claim");
-                });
-
-            modelBuilder.Entity("Expo_Management.API.Entities.Projects.ProjectModel", b =>
+            modelBuilder.Entity("Expo_Management.API.Entities.ProjectModel", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -286,16 +249,11 @@ namespace Expo_Management.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("categoryId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FairId");
 
                     b.HasIndex("FilesId");
-
-                    b.HasIndex("categoryId");
 
                     b.ToTable("Projects");
                 });
@@ -682,18 +640,7 @@ namespace Expo_Management.API.Migrations
                     b.Navigation("Publisher");
                 });
 
-            modelBuilder.Entity("Expo_Management.API.Entities.Projects.Claim", b =>
-                {
-                    b.HasOne("Expo_Management.API.Entities.Projects.ProjectModel", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("Expo_Management.API.Entities.Projects.ProjectModel", b =>
+            modelBuilder.Entity("Expo_Management.API.Entities.ProjectModel", b =>
                 {
                     b.HasOne("Expo_Management.API.Entities.Fair", "Fair")
                         .WithMany()
@@ -707,17 +654,9 @@ namespace Expo_Management.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Expo_Management.API.Entities.Category", "category")
-                        .WithMany()
-                        .HasForeignKey("categoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Fair");
 
                     b.Navigation("Files");
-
-                    b.Navigation("category");
                 });
 
             modelBuilder.Entity("Expo_Management.API.Entities.Projects.Claim", b =>
@@ -737,7 +676,7 @@ namespace Expo_Management.API.Migrations
                         .WithMany()
                         .HasForeignKey("JudgeId");
 
-                    b.HasOne("Expo_Management.API.Entities.Projects.ProjectModel", "Project")
+                    b.HasOne("Expo_Management.API.Entities.ProjectModel", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -767,7 +706,7 @@ namespace Expo_Management.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Expo_Management.API.Entities.Projects.ProjectModel", null)
+                    b.HasOne("Expo_Management.API.Entities.ProjectModel", null)
                         .WithMany()
                         .HasForeignKey("ProjectsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -831,7 +770,7 @@ namespace Expo_Management.API.Migrations
                         .WithMany()
                         .HasForeignKey("ProfilePictureId");
 
-                    b.HasOne("Expo_Management.API.Entities.Projects.ProjectModel", "Project")
+                    b.HasOne("Expo_Management.API.Entities.ProjectModel", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId");
 

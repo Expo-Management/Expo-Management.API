@@ -1,6 +1,7 @@
 ﻿using Expo_Management.API.Entities;
 using Expo_Management.API.Entities.Projects;
 using Expo_Management.API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -165,6 +166,44 @@ namespace Expo_Management.API.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        [Route("recommendation")]
+        //[Authorize(Roles = "Judge")]
+        public async Task<IActionResult> postRecommendation([FromBody] NewRecommendation model)
+        {
+            try
+            {
+                var recommendation = await _projectsRepository.JudgeRecommendation(model);
+                if (recommendation != null)
+                {
+                    return Ok(recommendation);
+                }
+                return BadRequest("Hubo un error interno, por favor intentelo mas tarde");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        [HttpGet]
+        [Route("getRecommendation")]
+        public async Task<IActionResult> getRecommendation(int recomendacion)
+        {
+            try
+            {
+                var recommendation = await _projectsRepository.GetRecommendation(recomendacion);
+                if (recommendation != null)
+                {
+                    return Ok(recommendation);
+                }
+                return BadRequest("Hubo un error interno, por favor intentelo mas tarde");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }

@@ -86,12 +86,12 @@ namespace Expo_Management.API.Repositories
             return null;
         }
 
-        public async Task<FilesModel> deleteFiles(string file)
+        public async Task<FilesModel> deleteFiles(int id)
         {
             try
             {
                 var result = await (from X in _context.Files
-                                    where X.Name == file
+                                    where X.Id == id
                                     select X).FirstOrDefaultAsync();
 
                 if (result != null)

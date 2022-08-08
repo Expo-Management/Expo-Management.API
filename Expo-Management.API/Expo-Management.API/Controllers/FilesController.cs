@@ -112,13 +112,13 @@ namespace UploadFiles.Controllers
 
         [HttpDelete]
         [Route("file")]
-        public async Task<IActionResult> DeleteFile(string file)
+        public async Task<IActionResult> DeleteFile(int id)
         {
-            var result = await _filesUploaderRepository.deleteFiles(file);
+            var result = await _filesUploaderRepository.deleteFiles(id);
 
                 if (result != null)
                 {
-                    return Ok($"Documento borrado exitosamente!");
+                    return Ok("Documento borrado exitosamente!");
                 }            
 
             return BadRequest("Documento no existe.");
@@ -140,6 +140,7 @@ namespace UploadFiles.Controllers
                 {
                     domainFiles.Add(new FilesModel()
                     {
+                        Id = items.Id,
                         Name = items.Name,
                         Url = items.Url,
                         Size = (items.Size*(8) / (8*1000)),

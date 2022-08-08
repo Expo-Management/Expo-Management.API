@@ -14,7 +14,7 @@ namespace Expo_Management.API.Repositories
 
         public bool fileExist(string name);
 
-        Task<FilesModel> deleteFiles(string file);
+        Task<FilesModel> deleteFiles(int id);
 
         Task<FilesModel> getProjectFile(int id);
 

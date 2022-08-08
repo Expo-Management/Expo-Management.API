@@ -5,31 +5,32 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Expo_Management.API.Repositories
 {
-    public class FairRepository : IFairRepository
+    public class CategoryRepository : ICategoryRepository
     {
         private readonly ApplicationDbContext _context;
 
-        public FairRepository(ApplicationDbContext context)
+        public CategoryRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public async Task<Fair> CreateFairAsync(NewFair model)
+        public async Task<Category> CreateCategoryAsync(NewCategory model)
         {
             try
             {
-                if(model != null)
+                if (model != null)
                 {
-                    var newFair = new Fair()
+                    
+                    var newCategory = new Category()
                     {
-                        StartDate = model.StartDate,
-                        EndDate = model.EndDate,
-                        Description = "Expo Ingeniería " + model.StartDate.Year,
+
+                        Description = model.Description,
                     };
-                    if (await _context.Fair.AddAsync(newFair) != null)
+
+                    if (await _context.Categories.AddAsync(newCategory) != null)
                     {
                         await _context.SaveChangesAsync();
-                        return newFair;
+                        return newCategory;
                     }
                 }
                 return null;
@@ -40,17 +41,17 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-        public async Task<bool> DeleteFairAsync(int id)
+        public async Task<bool> DeleteCategoryAsync(int id)
         {
             try
             {
-                var result = await (from x in _context.Fair
+                var result = await (from x in _context.Categories
                                     where x.Id == id
                                     select x).FirstOrDefaultAsync();
 
-                if (result != null)
+                if(result != null)
                 {
-                    _context.Fair.Remove(result);
+                    _context.Categories.Remove(result);
                     _context.SaveChanges();
                     return true;
                 }
@@ -64,11 +65,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-        public async Task<List<Fair>> GetAllFairsAsync()
+        public async Task<List<Category>> GetAllCategoriesAsync()
         {
             try
             {
-                return await _context.Fair.ToListAsync();
+                return await _context.Categories.ToListAsync();
 
             }
             catch (Exception ex)
@@ -77,24 +78,25 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-        public async Task<int> GetCurrentFairIdAsync()
+        public async Task<Category> GetCategoryAsync(int id)
         {
             try
             {
-                var currentFair = await (from x in _context.Fair
-                                         where x.StartDate.Year == DateTime.Now.Year
-                                         select x.Id).FirstOrDefaultAsync();
+                var result = await (from x in _context.Categories
+                                   where x.Id == id
+                                   select x).FirstOrDefaultAsync();
 
-                if(currentFair != null)
+                if (result != null)
                 {
-                    return currentFair;
+                    return result;
                 }
-                return 0;
 
+                return null;
             }
             catch (Exception ex)
             {
-                return 0;
+
+                return null;
             }
         }
     }

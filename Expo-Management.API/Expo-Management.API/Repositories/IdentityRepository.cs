@@ -162,7 +162,7 @@ namespace Expo_Management.API.Repositories
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedMailToken = Encoding.UTF8.GetBytes(token);
             var validToken = WebEncoders.Base64UrlEncode(encodedMailToken);
-            string url = $"{_configuration["WebUrl"]}/ResetPassword?email={email}&token={validToken}";
+            string url = $"{_configuration["WebUrl"]}/administrator/reset-password?email={email}&token={validToken}";
             dynamic ForgetPasswordTemplate = new DynamicTemplate();
 
             await _mailService.SendEmailAsync(email, "d-9b96ec3a9bb846dd99b1d3c09903e90c", ForgetPasswordTemplate = new

@@ -25,5 +25,6 @@ namespace Expo_Management.API.Auth
         public DbSet<SecurityProtocols> SecurityProtocols { get; set; }
         public DbSet<Qualifications> Qualifications { get; set; }
         public DbSet<Claim> Claim { get; set; }
+        public DbSet<JudgeRecommendation> JudgeRecommendation { get; set; }
     }
 }

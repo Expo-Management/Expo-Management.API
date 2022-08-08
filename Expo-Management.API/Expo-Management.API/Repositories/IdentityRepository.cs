@@ -119,6 +119,7 @@ namespace Expo_Management.API.Repositories
                     Expiration = token.ValidTo,
                     Role = userRoleStored,
                     EmailConfirmed = user.EmailConfirmed,
+                    Email = user.Email
                 };
             }
             return null;

@@ -16,7 +16,10 @@ namespace Expo_Management.API.Interfaces
         Task<List<ProjectModel>> GetOldProjectsAsync();
         Task<List<ProjectDetails>> GetProjectDetails(int projectId);
         Task<Claim> CreateProjectClaim(NewClaim model);
+        Task<JudgeRecommendation> JudgeRecommendation(NewRecommendation model);
+        Task<ProjectModel> GetProjectById(int ProjectId);
+        Task<JudgeRecommendation> GetRecommendation(int recomendacion);
         Task<List<ProjectMembers>> GetMembers();
-
+        Task<List<MembersEmails>> GetMembersEmail(int projectId);
     }
 }

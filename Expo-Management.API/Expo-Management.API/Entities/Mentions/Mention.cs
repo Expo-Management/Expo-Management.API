@@ -1,4 +1,6 @@
-﻿namespace Expo_Management.API.Entities.Mentions
+﻿using Expo_Management.API.Entities.Projects;
+
+namespace Expo_Management.API.Entities.Mentions
 {
     public class Mention
     {

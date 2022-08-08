@@ -1,6 +1,7 @@
 ﻿using Expo_Management.API.Entities;
 using Expo_Management.API.Entities.Projects;
 using Expo_Management.API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -153,13 +154,51 @@ namespace Expo_Management.API.Controllers
                     return Ok(claim);
                 }
 
-                return BadRequest("Id del proyecto o detalles icorrectos");
+                return BadRequest("Id del proyecto o detalles incorrectos");
                 
             }
             catch (Exception ex)
             {
                 return StatusCode(500);
             }
+        }
+
+        [HttpPost]
+        [Route("recommendation")]
+        //[Authorize(Roles = "Judge")]
+        public async Task<IActionResult> postRecommendation([FromBody] NewRecommendation model)
+        {
+            try
+            {
+                var recommendation = await _projectsRepository.JudgeRecommendation(model);
+                if (recommendation != null)
+                {
+                    return Ok(recommendation);
+                }
+                return BadRequest("Hubo un error interno, por favor intentelo mas tarde");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet]
+        [Route("getRecommendation")]
+        public async Task<IActionResult> getRecommendation(int recomendacion)
+        {
+            try
+            {
+                var recommendation = await _projectsRepository.GetRecommendation(recomendacion);
+                if (recommendation != null)
+                {
+                    return Ok(recommendation);
+                }
+                return BadRequest("Hubo un error interno, por favor intentelo mas tarde");
+            }
+            catch (Exception ex)
+            {
+                throw ex;            }
         }
 
         [HttpGet]
@@ -170,13 +209,37 @@ namespace Expo_Management.API.Controllers
             {
                 var members = await _projectsRepository.GetMembers();
 
-                if(members != null)
+                if (members != null)
                 {
                     return Ok(members);
                 }
                 else
                 {
-                    return BadRequest("Id del proyecto o detalles icorrectos");
+                    return BadRequest("Algo salio mal");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("members-emails")]
+        public async Task<IActionResult> GetMembersEmail(int projectId)
+        {
+            try
+            {
+                var emails = await _projectsRepository.GetMembersEmail(projectId);
+
+                if (emails != null)
+                {
+                    return Ok(emails);
+                }
+                else
+                {
+                    return BadRequest("Id del proyecto o detalles incorrectos");
                 }
 
             }

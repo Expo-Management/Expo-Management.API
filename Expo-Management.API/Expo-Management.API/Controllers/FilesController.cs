@@ -97,6 +97,7 @@ namespace UploadFiles.Controllers
                     domainFiles.Add(new FilesModel()
                     {
                         Name = items.Name,
+                        Url = items.Url,
                         Size = (items.Size*(8) / (8*1000)),
                         uploadDateTime = items.uploadDateTime
 

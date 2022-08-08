@@ -6,18 +6,18 @@ namespace Expo_Management.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FairContoller : ControllerBase
+    public class FairsController : ControllerBase
     {
         private readonly IFairRepository _fairRepository;
 
-        public FairContoller(IFairRepository fairRepository)
+        public FairsController(IFairRepository fairRepository)
         {
             _fairRepository = fairRepository;
         }
 
         [HttpPost]
         [Route("fair")]
-        public async Task<IActionResult> AddFair([FromForm] NewFair model)
+        public async Task<IActionResult> AddFair([FromBody] NewFair model)
         {
             try
             {
@@ -48,10 +48,11 @@ namespace Expo_Management.API.Controllers
                 {
                     return Ok(currentFair);
                 }
-                return BadRequest("Hubo un error, por favor, intentelo más tarde.");
+                return Ok(0);
             }
             catch (Exception ex)
             {
+                return BadRequest("Hubo un error, por favor, intentelo más tarde.");
                 throw ex;
             }
         }

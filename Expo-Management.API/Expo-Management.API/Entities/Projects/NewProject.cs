@@ -25,5 +25,8 @@ namespace Expo_Management.API.Entities.Projects
         [Required(ErrorMessage = "Id de la feria del proyecto es requerido")]
         public int Fair { get; set; }
 
+        [Required(ErrorMessage = "Id de la categoría del proyecto es requerido")]
+        public int Category { get; set; }
+
     }
 }

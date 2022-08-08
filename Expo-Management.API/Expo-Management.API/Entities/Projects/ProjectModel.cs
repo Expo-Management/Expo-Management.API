@@ -21,5 +21,7 @@ namespace Expo_Management.API.Entities.Projects
         public virtual ICollection<Mention> Mentions { get; set; }
 
         public Fair Fair { get; set; }
+
+        public Category category { get; set; }
     }
 }

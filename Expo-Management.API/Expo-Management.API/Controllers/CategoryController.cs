@@ -9,56 +9,87 @@ namespace Expo_Management.API.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
+        private readonly ICategoryRepository _categoryRepository;
+
+        public CategoryController(ICategoryRepository categoryRepository)
+        {
+            _categoryRepository = categoryRepository;
+        }
+
+        [HttpPost]
+        [Route("category")]
+        public async Task<IActionResult> CreateCategoryAsync([FromBody] NewCategory model)
+        {
+            try
+            {
+                var category = await _categoryRepository.CreateCategoryAsync(model);
+
+                if (category == null)
+                {
+                    return BadRequest("La categoria ya existe.");
+
+                }
+                return Ok(category);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         [HttpGet]
         [Route("category")]
-        public async Task<IActionResult> GetCategoriesAvailable()
+        public async Task<IActionResult> GetCategoryAsync(int id)
         {
-
-           // var category = await categoryRepository.GetCategoriesAvailable();
-            List<Category> category =
-                new List<Category>
-                {
-                new Category{Id = 1, Description = "Robotica"},
-                new Category{Id = 2, Description = "Software"},
-                new Category{Id = 3, Description = "Mecatronica"},
-
-                };
+            var category = await _categoryRepository.GetCategoryAsync(id);
 
             if (category != null)
             {
-                var domainCategory = new List<Category>();
+                return Ok(category);
+            }
+            return BadRequest("Hubo un error, por favor, intentelo más tarde.");
+        }
 
+            [HttpGet]
+        [Route("categories")]
+        public async Task<IActionResult> GetAllCategoriesAsync()
+        {
 
+           var categories = await _categoryRepository.GetAllCategoriesAsync();
 
-                foreach (var items in category)
+            if (categories != null)
+            {
+                var domainCategories = new List<Category>();
+
+                foreach (var items in categories)
                 {
-                    domainCategory.Add(new Category()
+                    domainCategories.Add(new Category()
                     {
                         Id = items.Id,
                         Description = items.Description
                     });
                 }
-                return Ok(domainCategory);
+                return Ok(domainCategories);
             }
 
-            /* List<SelectListItem> list = new List<SelectListItem>(); //inicia la variable
+            return BadRequest("Hubo un error, por favor, intentelo más tarde.");
+        }
 
-                foreach (var item in category)
-                {
-                    list.Add(new SelectListItem
-                    {
-                        Value = item.Id.ToString(), //id
-                        Text = item.Description.ToString() //Description
-                    });
-                }
-            }*/
+        [HttpDelete]
+        [Route("category")]
+        public async Task<IActionResult> DeleteCategoryAsync(int id)
+        {
+            var category = await _categoryRepository.DeleteCategoryAsync(id);
 
-            return BadRequest("There was an error.");
+            if(category)
+            {
+                return Ok("Categoría eliminada");
+            }
+            return BadRequest("Hubo un error, por favor, intentelo más tarde.");
+
         }
 
     }
-
 }
 
 

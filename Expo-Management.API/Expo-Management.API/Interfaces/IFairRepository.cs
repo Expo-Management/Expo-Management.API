@@ -7,7 +7,7 @@ namespace Expo_Management.API.Interfaces
     {
         Task<Fair> CreateFairAsync(NewFair model);
         Task<int> GetCurrentFairIdAsync();
-        Task<Fair> DeleteFairAsync();
+        public Task<bool> DeleteFairAsync(int id);
         Task<List<Fair>> GetAllFairsAsync();
     }
 }

@@ -68,11 +68,7 @@ namespace Expo_Management.API.Repositories
                         Name = model.Name,
                         Fair = Fair,
                         Description = model.Description,
-<<<<<<< HEAD
-                        Files = upload
-=======
                         category = category
->>>>>>> 0d8d4c54fce2956fa1a2411731ebf5c212b87454
                     };
 
                     

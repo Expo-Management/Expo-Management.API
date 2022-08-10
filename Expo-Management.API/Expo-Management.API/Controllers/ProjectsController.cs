@@ -254,5 +254,25 @@ namespace Expo_Management.API.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpGet]
+        [Route("recommendation-by-project")]
+        public async Task<IActionResult> getRecommendationByProjectId(int projectId)
+        {
+            try
+            {
+                var recommendations = await _projectsRepository.GetRecommendationByProjectId(projectId);
+
+                if (recommendations.Any())
+                {
+                    return Ok(recommendations);
+                }
+                return BadRequest("No hay recomendaciones para el proyecto.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
     }
 }

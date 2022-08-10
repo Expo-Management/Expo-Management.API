@@ -95,10 +95,11 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                return await _context.Projects.
-                    Include(x => x.Files).
-                    Include(c => c.category).
-                    ToListAsync();
+                return await (from p in _context.Projects
+                              select p)
+                              .Include(x => x.Files)
+                              .Include(c => c.category)
+                              .ToListAsync();
 
             }
             catch (Exception ex)
@@ -397,6 +398,25 @@ namespace Expo_Management.API.Repositories
                 return null;
             }
         }
+
+        public async Task<List<JudgeRecommendation>> GetRecommendationByProjectId(int projectId)
+        {
+            try
+            {
+                var recommendations = await (from r in _context.JudgeRecommendation
+                                            where r.project.Id == projectId
+                                            select r)
+                                            .Include(p => p.user)
+                                            .ToListAsync();
+                return recommendations;
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public async Task<ProjectModel> GetProjectById(int ProjectId)
         {
             try

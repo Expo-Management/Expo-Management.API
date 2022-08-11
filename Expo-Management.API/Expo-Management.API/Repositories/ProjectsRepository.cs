@@ -359,7 +359,7 @@ namespace Expo_Management.API.Repositories
 
                 var project = (from p in _context.Projects
                                where p.Id == model.IdProject
-                                select p).FirstOrDefault();
+                               select p).FirstOrDefault();
 
                 if (juez != null && project != null)
                 {
@@ -388,9 +388,9 @@ namespace Expo_Management.API.Repositories
             try
             {
                 var recommendation = await (from r in _context.JudgeRecommendation
-                                             where r.Id == recomendacion
-                                             select r).FirstOrDefaultAsync();
-                 return recommendation;
+                                            where r.Id == recomendacion
+                                            select r).FirstOrDefaultAsync();
+                return recommendation;
 
             }
             catch (Exception ex)
@@ -433,6 +433,53 @@ namespace Expo_Management.API.Repositories
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        public async Task<List<ProjectMembers>> GetMembers()
+        {
+            try
+            {
+                var members = await (from u in _context.User
+                                     join p in _context.Projects on u.Project.Id equals p.Id
+                                     select new ProjectMembers()
+                                     {
+                                         Name = u.Name,
+                                         LastName = u.Lastname,
+                                         Email = u.Email,
+                                         PhoneNumber = u.PhoneNumber,
+                                         ProjectId = p.Id,
+                                         ProjectName = p.Name
+                                     }).ToListAsync();
+
+                if (members.Count > 0)
+                {
+                    return members;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _context.Dispose();
+                return null;
+            }
+        }
+
+        public async Task<List<User>> GetMembersEmail(int projectId)
+        {
+            try
+            {
+                var emails = await (from u in _context.User
+                                    where u.Project.Id == projectId
+                                    select u)
+                                    .Include(p => p.Project)
+                                    .ToListAsync();
+
+                return emails;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }

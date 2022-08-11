@@ -435,5 +435,42 @@ namespace Expo_Management.API.Repositories
                 return null;
             }
         }
+
+        public async Task<Qualifications> QualifyProject(QualifyProject model)
+        {
+            try
+            {
+                var judge = await (from u in _context.Users
+                                   where u.Email == model.JudgeEmail
+                                   select u).FirstAsync();
+
+                var project = await (from p in _context.Projects
+                                   where p.Id == model.ProjectId
+                                   select p).FirstAsync();
+
+                if (project == null || judge == null)
+                {
+                    return null;
+                }
+
+                var qualification = new Qualifications()
+                {
+                    Punctuation = model.Punctuation,
+                    Comments = model.Comments,
+                    Judge = (User)judge,
+                    Project = project
+                };
+
+                await _context.Qualifications.AddAsync(qualification);
+                await _context.SaveChangesAsync();
+
+                return qualification;
+                
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
     }
 }

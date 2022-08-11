@@ -57,6 +57,7 @@ namespace Expo_Management.API.Repositories
                 {
                     var upload = await _filesUploader.AddProjectsFile(model.Files);
                     var Fair = await GetFair(model.Fair);
+
                     var category = await (from x in _context.Categories
                                           where x.Id == model.Category
                                           select x).FirstOrDefaultAsync();
@@ -152,7 +153,7 @@ namespace Expo_Management.API.Repositories
                 var mentions = await (from m in _context.Mention
                                       select m).ToListAsync();
 
-                if (mentions != null && mentions.Count > 0)
+                if (mentions != null && mentions.Any())
                 {
                     return mentions;
                 }
@@ -172,7 +173,7 @@ namespace Expo_Management.API.Repositories
                                       where p.Fair.StartDate.Year == DateTime.Now.Year
                                       select p).ToListAsync();
 
-                if (projects != null && projects.Count > 0)
+                if (projects != null && projects.Any())
                 {
                     return projects;
                 }
@@ -194,7 +195,7 @@ namespace Expo_Management.API.Repositories
                                       where p.Fair.StartDate.Year < DateTime.Now.Year
                                       select p).ToListAsync();
 
-                if (projects != null && projects.Count > 0)
+                if (projects != null && projects.Any())
                 {
                     return projects;
                 }
@@ -359,7 +360,7 @@ namespace Expo_Management.API.Repositories
 
                 var project = (from p in _context.Projects
                                where p.Id == model.IdProject
-                                select p).FirstOrDefault();
+                               select p).FirstOrDefault();
 
                 if (juez != null && project != null)
                 {
@@ -388,9 +389,9 @@ namespace Expo_Management.API.Repositories
             try
             {
                 var recommendation = await (from r in _context.JudgeRecommendation
-                                             where r.Id == recomendacion
-                                             select r).FirstOrDefaultAsync();
-                 return recommendation;
+                                            where r.Id == recomendacion
+                                            select r).FirstOrDefaultAsync();
+                return recommendation;
 
             }
             catch (Exception ex)
@@ -440,13 +441,13 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                var judge = await (from u in _context.Users
+                var judge = await (from u in _context.User
                                    where u.Email == model.JudgeEmail
                                    select u).FirstAsync();
 
                 var project = await (from p in _context.Projects
-                                   where p.Id == model.ProjectId
-                                   select p).FirstAsync();
+                                     where p.Id == model.ProjectId
+                                     select p).FirstAsync();
 
                 if (project == null || judge == null)
                 {
@@ -465,11 +466,57 @@ namespace Expo_Management.API.Repositories
                 await _context.SaveChangesAsync();
 
                 return qualification;
-                
+
             }
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        public async Task<List<ProjectMembers>> GetMembers()
+        {
+            try
+            {
+                var members = await (from u in _context.User
+                                     join p in _context.Projects on u.Project.Id equals p.Id
+                                     select new ProjectMembers()
+                                     {
+                                         Name = u.Name,
+                                         LastName = u.Lastname,
+                                         Email = u.Email,
+                                         PhoneNumber = u.PhoneNumber,
+                                         ProjectId = p.Id,
+                                         ProjectName = p.Name
+                                     }).ToListAsync();
+
+                if (members.Any())
+                {
+                    return members;
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<User>> GetMembersEmail(int projectId)
+        {
+            try
+            {
+                var emails = await (from u in _context.User
+                                    where u.Project.Id == projectId
+                                    select u)
+                                    .Include(p => p.Project)
+                                    .ToListAsync();
+
+                return emails;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }

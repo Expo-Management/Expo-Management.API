@@ -159,9 +159,7 @@ namespace Expo_Management.API.Controllers
                 {
                     return Ok(claim);
                 }
-
                 return BadRequest("Id del proyecto o detalles icorrectos");
-
             }
             catch (Exception ex)
             {
@@ -204,7 +202,54 @@ namespace Expo_Management.API.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ex;            }
+        }
+
+        [HttpGet]
+        [Route("project-members")]
+        public async Task<IActionResult> GetProjectMembers()
+        {
+            try
+            {
+                var members = await _projectsRepository.GetMembers();
+
+                if (members != null)
+                {
+                    return Ok(members);
+                }
+                else
+                {
+                    return BadRequest("Algo salio mal");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("members-emails")]
+        public async Task<IActionResult> GetMembersEmail(int projectId)
+        {
+            try
+            {
+                var emails = await _projectsRepository.GetMembersEmail(projectId);
+
+                if (emails != null)
+                {
+                    return Ok(emails);
+                }
+                else
+                {
+                    return BadRequest("Id del proyecto o detalles incorrectos");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
             }
         }
 

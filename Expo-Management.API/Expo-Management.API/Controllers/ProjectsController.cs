@@ -136,7 +136,7 @@ namespace Expo_Management.API.Controllers
             {
 
                 var projectDetails = await _projectsRepository.GetProjectDetails(projectId);
-               // _projectsRepository.SendCalificationsEmails(projectId);
+                // _projectsRepository.SendCalificationsEmails(projectId);
 
                 return Ok(projectDetails);
             }
@@ -161,7 +161,7 @@ namespace Expo_Management.API.Controllers
                 }
 
                 return BadRequest("Id del proyecto o detalles icorrectos");
-                
+
             }
             catch (Exception ex)
             {
@@ -221,6 +221,26 @@ namespace Expo_Management.API.Controllers
                     return Ok(recommendations);
                 }
                 return BadRequest("No hay recomendaciones para el proyecto.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpPost]
+        [Route("qualify-project")]
+        public async Task<IActionResult> qualifyProject(QualifyProject model)
+        {
+            try
+            {
+                var result = await _projectsRepository.QualifyProject(model);
+
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                return BadRequest("Los datos ingresados son incorrectos.");
             }
             catch (Exception ex)
             {

@@ -465,23 +465,17 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-        public async Task<List<MembersEmails>> GetMembersEmail(int projectId)
+        public async Task<List<User>> GetMembersEmail(int projectId)
         {
             try
             {
-                var emails = await (from u in _context.User where u.Project.Id == projectId
-                                    select new MembersEmails()
-                                    {
-                                        ProjectId = u.Project.Id,
-                                        UserId = u.UserId,
-                                        Email = u.Email
-                                    }).ToListAsync();
+                var emails = await (from u in _context.User
+                                    where u.Project.Id == projectId
+                                    select u)
+                                    .Include(p => p.Project)
+                                    .ToListAsync();
 
-                if(emails != null){
-                    return emails;
-                }
-
-                return null;
+                return emails;
             }
             catch (Exception ex)
             {

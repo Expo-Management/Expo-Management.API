@@ -1,9 +1,13 @@
 ﻿using Expo_Management.API.Entities;
+using Expo_Management.API.Entities.Projects;
 
 namespace Expo_Management.API.Interfaces
 {
     public interface IUsersRepository
     {
+        Task<User> UpdateStudetProjectAsync(UpdateUserProject model);
+        Task<String> GetUserFullName(string email);
+
         Task<List<User>> GetJudgesAsync();
         Task<User> GetJudgeAsync(string email);
         Task<User> UpdateJudgeAsync(UpdateUser model);

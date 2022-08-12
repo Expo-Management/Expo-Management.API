@@ -16,6 +16,22 @@ namespace Expo_Management.API.Controllers
             _userRepository = userRepository;
         }
 
+        [HttpGet]
+        [Route("get-user-fullname")]
+        public async Task<IActionResult> GetUserFullname(string email)
+        {
+            var response = await _userRepository.GetUserFullName(email);
+
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
+
         //Judges
 
         [HttpGet]
@@ -51,7 +67,7 @@ namespace Expo_Management.API.Controllers
 
         [HttpPut]
         [Route("judge")]
-        public async Task<IActionResult> UpdateJudgeAsync([FromForm] UpdateUser model)
+        public async Task<IActionResult> UpdateJudgeAsync([FromBody] UpdateUser model)
         {
             var response = await _userRepository.UpdateJudgeAsync(model);
 

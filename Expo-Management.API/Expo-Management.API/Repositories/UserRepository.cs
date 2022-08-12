@@ -1,5 +1,6 @@
 ﻿using Expo_Management.API.Auth;
 using Expo_Management.API.Entities;
+using Expo_Management.API.Entities.Projects;
 using Expo_Management.API.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,20 @@ namespace Expo_Management.API.Repositories
         {
             _context = context;
             _userManager = userManager;
+        }
+
+        public async Task<String> GetUserFullName(string email) 
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user != null)
+            {
+                return user.Name + ' ' + user.Lastname;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         //Judges
@@ -53,7 +68,6 @@ namespace Expo_Management.API.Repositories
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);
 
-            oldUser.UserId = model.Id;
             oldUser.UserName = model.UserName;
             oldUser.Name = model.Name;
             oldUser.Lastname = model.Lastname;
@@ -119,13 +133,11 @@ namespace Expo_Management.API.Repositories
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);
 
-            oldUser.UserId = model.Id;
             oldUser.UserName = model.UserName;
             oldUser.Name = model.Name;
             oldUser.Lastname = model.Lastname;
             oldUser.Email = model.Email;
             oldUser.PhoneNumber = model.Phone;
-            oldUser.IsLead = model.IsLead;
 
             /*if (model.ProfilePicture != null)
             {
@@ -197,14 +209,11 @@ namespace Expo_Management.API.Repositories
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);
 
-            oldUser.UserId = model.Id;
             oldUser.UserName = model.UserName;
             oldUser.Name = model.Name;
             oldUser.Lastname = model.Lastname;
             oldUser.Email = model.Email;
             oldUser.PhoneNumber = model.Phone;
-            oldUser.Project = model.Project;
-            oldUser.IsLead = model.IsLead;
 
             /*if (model.ProfilePicture != null)
             {
@@ -239,6 +248,35 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-        
+        public async Task<User> UpdateStudetProjectAsync(UpdateUserProject model)
+        {
+            var oldUser = await _userManager.FindByEmailAsync(model.Email);
+
+            oldUser.UserId = model.UserId;
+            oldUser.Name = model.Name;
+            oldUser.Lastname = model.Last;
+            oldUser.Email = model.Email;
+            oldUser.UserName = model.Username;
+            oldUser.PhoneNumber = model.Phone;
+            oldUser.Project = model.Project;
+            oldUser.IsLead = model.IsLead;
+
+            /*if (model.ProfilePicture != null)
+            {
+                var upload = await _filesUploaderRepository.AddProfilePicture(model.ProfilePicture);
+                oldUser.ProfilePicture = upload;
+            }*/
+
+            var result = await _userManager.UpdateAsync(oldUser);
+
+            if (result.Succeeded)
+            {
+                return oldUser;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

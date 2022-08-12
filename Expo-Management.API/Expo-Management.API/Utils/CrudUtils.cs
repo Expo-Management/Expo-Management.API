@@ -81,13 +81,14 @@ namespace Expo_Management.API.Utils
                     {
                         isLeaderr = true;
                     }
+
                     user.Project = project;
-                    var updatedUser = await _usersRepository.UpdateStudentAsync(new UpdateUser() {
-                        Id = user.UserId,
-                        UserName = user.UserName,
+                    var updatedUser = await _usersRepository.UpdateStudetProjectAsync(new UpdateUserProject() {
+                        UserId = user.Id,
+                        Username = user.UserName,
                         Project = project,
                         Name = user.Name,
-                        Lastname = user.Lastname,
+                        Last = user.Lastname,
                         Email = user.Email,
                         Phone = user.PhoneNumber,
                         IsLead = isLeaderr

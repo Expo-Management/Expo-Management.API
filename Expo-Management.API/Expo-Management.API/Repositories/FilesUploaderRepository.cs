@@ -113,7 +113,6 @@ namespace Expo_Management.API.Repositories
             }
             catch (Exception ex)
             {
-                _context.Dispose();
                 return null;
             }
 

@@ -311,44 +311,6 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-        //public async void SendCalificationsEmails(int projectId)
-        //{
-        //    var project = await (from x in _context.Projects
-        //                         where x.Id == projectId
-        //                         select x).FirstOrDefaultAsync();
-
-        //    var Leader = await (from l in _context.User
-        //                        where l.Project.Id == projectId
-        //                        select l).FirstOrDefaultAsync();
-
-        //    var judge = await (from j in _context.Users
-        //                       join q in _context.Qualifications on j.Id equals q.Judge.Id
-        //                       join p in _context.Projects on q.Project.Id equals p.Id
-        //                       where p.Id == projectId
-        //                       select j).FirstOrDefaultAsync();
-
-        //    //Email to student
-        //    dynamic ToStudentEmailTemplate = new DynamicTemplate();
-
-        //    await _mailService.SendEmailAsync(Leader.Email, "d-dac12791e045497b9d5a84dfa260f244", ToStudentEmailTemplate = new
-        //    {
-        //        student_username = Leader.UserName,
-        //        project_name = project.Name,
-        //        judge_name = judge.UserName,
-        //        url = $"{_configuration["WebUrl"]}/api/student/project/{project.Id}"
-        //    });
-
-        //    //Email to judge
-        //    dynamic ToJudgeEmailTemplate = new DynamicTemplate();
-
-        //    await _mailService.SendEmailAsync(judge.Email, "d-3d3a74d6d191448e82fbb6d59de3a683", ToJudgeEmailTemplate = new
-        //    {
-        //        judge_name = judge.UserName,
-        //        project_name = project.Name,
-        //        url = $"{_configuration["WebUrl"]}/api/judges/project-qualify/{project.Id}"
-        //    });
-        //}
-
         public async Task<JudgeRecommendation> JudgeRecommendation(NewRecommendation model)
         {
             try
@@ -437,6 +399,36 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        public async void SendCalificationsEmails(ProjectModel project, User judge)
+        {
+
+            var Leader = await (from l in _context.User
+                                where l.Project.Id == project.Id && l.IsLead == true
+                                select l).FirstOrDefaultAsync();
+
+
+            //Email to student
+            dynamic ToStudentEmailTemplate = new DynamicTemplate();
+
+            await _mailService.SendEmailAsync(Leader.Email, "d-dac12791e045497b9d5a84dfa260f244", ToStudentEmailTemplate = new
+            {
+                student_username = Leader.UserName,
+                project_name = project.Name,
+                judge_name = judge.UserName,
+                url = $"{_configuration["WebUrl"]}/student/project/{project.Id}"
+            });
+
+            //Email to judge
+            dynamic ToJudgeEmailTemplate = new DynamicTemplate();
+
+            await _mailService.SendEmailAsync(judge.Email, "d-3d3a74d6d191448e82fbb6d59de3a683", ToJudgeEmailTemplate = new
+            {
+                judge_name = judge.UserName,
+                project_name = project.Name,
+                url = $"{_configuration["WebUrl"]}/judges/project-qualify/{project.Id}"
+            });
+        }
+
         public async Task<Qualifications> QualifyProject(QualifyProject model)
         {
             try
@@ -461,6 +453,9 @@ namespace Expo_Management.API.Repositories
                     Judge = (User)judge,
                     Project = project
                 };
+
+                //send emails 
+                SendCalificationsEmails(project, judge);
 
                 await _context.Qualifications.AddAsync(qualification);
                 await _context.SaveChangesAsync();

@@ -136,7 +136,6 @@ namespace Expo_Management.API.Controllers
             {
 
                 var projectDetails = await _projectsRepository.GetProjectDetails(projectId);
-                // _projectsRepository.SendCalificationsEmails(projectId);
 
                 return Ok(projectDetails);
             }

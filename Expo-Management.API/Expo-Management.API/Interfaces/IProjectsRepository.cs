@@ -16,7 +16,7 @@ namespace Expo_Management.API.Interfaces
         Task<List<ProjectModel>> GetOldProjectsAsync();
         Task<List<ProjectDetails>> GetProjectDetails(int projectId);
         Task<Claim> CreateProjectClaim(NewClaim model);
-        //void SendCalificationsEmails(int projectId);
+        void SendCalificationsEmails(ProjectModel project, User judge);
         Task<JudgeRecommendation> JudgeRecommendation(NewRecommendation model);
         Task<ProjectModel> GetProjectById(int ProjectId);
         Task<JudgeRecommendation> GetRecommendation(int recomendacion);

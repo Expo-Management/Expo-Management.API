@@ -291,5 +291,27 @@ namespace Expo_Management.API.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpGet]
+        [Route("project-qualifications")]
+        public async Task<IActionResult> GetProjectQualifications(int projectId)
+        {
+            try
+            {
+                var qualifications = await _projectsRepository.GetProjectQualifications(projectId);
+
+                if (qualifications.Any())
+                {
+
+
+                    return Ok(qualifications);
+                }
+                return BadRequest("No hay calificaciones para el proyecto.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
     }
 }

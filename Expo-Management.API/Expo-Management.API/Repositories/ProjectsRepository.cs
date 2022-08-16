@@ -233,9 +233,9 @@ namespace Expo_Management.API.Repositories
         {
             try
             {
-                var category = await(from x in _context.Projects
-                                          where x.Id == projectId
-                                          select x.category.Description)
+                var category = await (from x in _context.Projects
+                                      where x.Id == projectId
+                                      select x.category.Description)
                                           .FirstOrDefaultAsync();
 
                 var projects = await (from p in _context.Projects
@@ -276,21 +276,7 @@ namespace Expo_Management.API.Repositories
                               where p.Id == projectId
                               select u.Name + " " + u.Lastname).ToListAsync();
             }
-
-            async Task<List<ProjectQualifications>> GetProjectQualifications(int projectId)
-            {
-
-                return await (from p in _context.Projects
-                              join q in _context.Qualifications on p.Id equals q.Project.Id
-                              join u in _context.User on q.Judge.Id equals u.Id
-                              where p.Id == projectId
-                              select new ProjectQualifications()
-                              {
-                                  Punctuation = q.Punctuation,
-                                  JudgeName = u.Name + " " + u.Lastname
-                              }).ToListAsync();
-            }
-
+        
             async Task<int> CalculateProjectFinalPunctuation(List<ProjectQualifications> qualifications)
             {
                 if (qualifications != null && qualifications.Count() > 0)
@@ -468,8 +454,7 @@ namespace Expo_Management.API.Repositories
                 return null;
             }
         }
-
-        public async Task<List<ProjectMembers>> GetMembers()
+            public async Task<List<ProjectMembers>> GetMembers()
         {
             try
             {
@@ -514,5 +499,30 @@ namespace Expo_Management.API.Repositories
                 throw ex;
             }
         }
+
+
+        public async Task<List<ProjectQualifications>> GetProjectQualifications(int projectId)
+        {
+
+            try
+            {
+                return await (from p in _context.Projects
+                              join q in _context.Qualifications on p.Id equals q.Project.Id
+                              join u in _context.User on q.Judge.Id equals u.Id
+                              where p.Id == projectId
+                              select new ProjectQualifications()
+                              {
+                                  Punctuation = q.Punctuation,
+                                  JudgeName = u.Name + " " + u.Lastname
+                              }).ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+
     }
 }

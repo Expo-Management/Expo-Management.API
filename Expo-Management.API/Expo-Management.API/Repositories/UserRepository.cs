@@ -11,14 +11,17 @@ namespace Expo_Management.API.Repositories
     {
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
+        private readonly IFilesUploaderRepository _filesRepository;
 
         public UserRepository(
             UserManager<User> userManager,
-            ApplicationDbContext context
+            ApplicationDbContext context,
+            IFilesUploaderRepository filesRepository
             ) 
         {
             _context = context;
             _userManager = userManager;
+            _filesRepository = filesRepository;
         }
 
         public async Task<String> GetUserFullName(string email) 
@@ -73,6 +76,12 @@ namespace Expo_Management.API.Repositories
             oldUser.Lastname = model.Lastname;
             oldUser.Email = model.Email;
             oldUser.PhoneNumber = model.Phone;
+
+            // if (model.ProfilePicture != null)
+            // {
+            //     var upload = await _filesRepository.AddProfilePicture(model.ProfilePicture);
+            //     oldUser.ProfilePicture = upload;
+            // }
 
             var result = await _userManager.UpdateAsync(oldUser);
 
@@ -139,11 +148,11 @@ namespace Expo_Management.API.Repositories
             oldUser.Email = model.Email;
             oldUser.PhoneNumber = model.Phone;
 
-            /*if (model.ProfilePicture != null)
-            {
-                var upload = await _filesUploaderRepository.AddProfilePicture(model.ProfilePicture);
-                oldUser.ProfilePicture = upload;
-            }*/
+            // if (model.ProfilePicture != null)
+            // {
+            //     var upload = await _filesRepository.AddProfilePicture(model.ProfilePicture);
+            //     oldUser.ProfilePicture = upload;
+            // }
 
             var result = await _userManager.UpdateAsync(oldUser);
 
@@ -215,11 +224,11 @@ namespace Expo_Management.API.Repositories
             oldUser.Email = model.Email;
             oldUser.PhoneNumber = model.Phone;
 
-            /*if (model.ProfilePicture != null)
-            {
-                var upload = await _filesUploaderRepository.AddProfilePicture(model.ProfilePicture);
-                oldUser.ProfilePicture = upload;
-            }*/
+            // if (model.ProfilePicture != null)
+            // {
+            //     var upload = await _filesRepository.AddProfilePicture(model.ProfilePicture);
+            //     oldUser.ProfilePicture = upload;
+            // }
 
             var result = await _userManager.UpdateAsync(oldUser);
 
@@ -260,12 +269,6 @@ namespace Expo_Management.API.Repositories
             oldUser.PhoneNumber = model.Phone;
             oldUser.Project = model.Project;
             oldUser.IsLead = model.IsLead;
-
-            /*if (model.ProfilePicture != null)
-            {
-                var upload = await _filesUploaderRepository.AddProfilePicture(model.ProfilePicture);
-                oldUser.ProfilePicture = upload;
-            }*/
 
             var result = await _userManager.UpdateAsync(oldUser);
 

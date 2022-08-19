@@ -49,8 +49,11 @@ namespace UploadFiles.Controllers
 
             if (file != null)
             {
-                var path = Environment.GetEnvironmentVariable("resourcesPath") + file.Url;
-                var bytes = System.IO.File.ReadAllBytes(path);
+                string startupPath = System.IO.Directory.GetCurrentDirectory();
+                startupPath = Environment.CurrentDirectory + file.Url;
+
+                var bytes = System.IO.File.ReadAllBytes(startupPath);
+
 
                 if (file.Name.EndsWith(".pdf"))
                 {
@@ -71,8 +74,10 @@ namespace UploadFiles.Controllers
 
             if (file != null)
             {
-                var path = Environment.GetEnvironmentVariable("resourcesPath") + file.Url;
-                var bytes = System.IO.File.ReadAllBytes(path);
+                string startupPath = System.IO.Directory.GetCurrentDirectory();
+                startupPath = Environment.CurrentDirectory + file.Url;
+
+                var bytes = System.IO.File.ReadAllBytes(startupPath);
 
                 if (file.Name.EndsWith(".pdf"))
                 {

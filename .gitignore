@@ -654,3 +654,8 @@ Thumbs.db
 *.wmv
 
 Expo-Management.API/Expo-Management.API/Resources/
+Expo-Management.API/Expo-Management.API/.config/dotnet-tools.json
+Expo-Management.API/Expo-Management.API/Properties/serviceDependencies.ExpoManagementAPI2 - Web Deploy.json
+Expo-Management.API/Expo-Management.API/Properties/serviceDependencies.json
+Expo-Management.API/Expo-Management.API/Properties/ServiceDependencies/ExpoManagementAPI2 - Web Deploy/mssql1.arm.json
+Expo-Management.API/Expo-Management.API/Properties/ServiceDependencies/ExpoManagementAPI2 - Web Deploy/profile.arm.json

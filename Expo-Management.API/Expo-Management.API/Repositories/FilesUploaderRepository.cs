@@ -86,6 +86,30 @@ namespace Expo_Management.API.Repositories
             return null;
         }
 
+        // get profile picture
+        // public async Task<FilesModel> getProfilePictureAsync(string userId)
+        // {
+        //     try
+        //     {
+        //         var result = await (from u in _context.User
+        //                             where u.Id == userId
+        //                             select u.ProfilePicture).FirstOrDefaultAsync();
+
+        //         if (result != null)
+        //         {
+        //             return result;
+        //         }
+
+        //         return null;
+        //     }
+        //     catch (Exception)
+        //     {
+
+        //         return null;
+        //     }
+        // }
+
+
         public async Task<FilesModel> deleteFiles(int id)
         {
             try
@@ -113,7 +137,6 @@ namespace Expo_Management.API.Repositories
             }
             catch (Exception ex)
             {
-                _context.Dispose();
                 return null;
             }
 

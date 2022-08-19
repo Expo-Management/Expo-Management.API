@@ -136,7 +136,6 @@ namespace Expo_Management.API.Controllers
             {
 
                 var projectDetails = await _projectsRepository.GetProjectDetails(projectId);
-                // _projectsRepository.SendCalificationsEmails(projectId);
 
                 return Ok(projectDetails);
             }
@@ -286,6 +285,28 @@ namespace Expo_Management.API.Controllers
                     return Ok(result);
                 }
                 return BadRequest("Los datos ingresados son incorrectos.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("project-qualifications")]
+        public async Task<IActionResult> GetProjectQualifications(int projectId)
+        {
+            try
+            {
+                var qualifications = await _projectsRepository.GetProjectQualifications(projectId);
+
+                if (qualifications.Any())
+                {
+
+
+                    return Ok(qualifications);
+                }
+                return BadRequest("No hay calificaciones para el proyecto.");
             }
             catch (Exception ex)
             {

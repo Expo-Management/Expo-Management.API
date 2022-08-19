@@ -73,10 +73,10 @@ namespace UploadFiles.Controllers
 
             if (file != null)
             {
-                string path = System.IO.Directory.GetCurrentDirectory();
-                path = Environment.CurrentDirectory + file.Url;
+                string startupPath = System.IO.Directory.GetCurrentDirectory();
+                startupPath = Environment.CurrentDirectory + file.Url;
 
-                var bytes = System.IO.File.ReadAllBytes(path);
+                var bytes = System.IO.File.ReadAllBytes(startupPath);
 
                 if (file.Name.EndsWith(".pdf"))
                 {

@@ -85,32 +85,46 @@ namespace UploadFiles.Controllers
             return null;
         }
 
-        //[HttpPost]
-        //[Route("upload-pf")]
-        //public async Task<IActionResult> UploadProfilePicture(IFormFile file)
-        //{
+        // [HttpGet]
+        // [Route("profile-picture")]
+        // public async Task<IActionResult> getProfilePicture(string userId)
+        // {
+        //     var profilePicture = await _filesUploaderRepository.getProfilePictureAsync(userId);
 
-        //    if (file != null)
-        //    {
-        //        var existFile = _filesUploaderRepository.fileExist(file.FileName);
-        //        if (existFile == false)
-        //        {
-        //            if (file.ContentType == "image/jpeg" || file.ContentType == "image/png" || file.ContentType == "image/jpg")
-        //            {
-        //                await _filesUploaderRepository.Add(file);
-        //                return Ok($"Profile picture upload succesfully!");
-        //            }
+        //     if (profilePicture != null)
+        //     {
+        //             return Ok(profilePicture);
+        //     }
 
-        //            return BadRequest("Profile picture must be only JPEG or PNG");
+        //     return BadRequest("Usuario no posee foto de perfil");
+        // }
 
-        //        }
-        //        return BadRequest("File already exists.");
-        //    }
+            //[HttpPost]
+            //[Route("upload-pf")]
+            //public async Task<IActionResult> UploadProfilePicture(IFormFile file)
+            //{
 
-        //    return BadRequest("There was an error.");
-        //}
+            //    if (file != null)
+            //    {
+            //        var existFile = _filesUploaderRepository.fileExist(file.FileName);
+            //        if (existFile == false)
+            //        {
+            //            if (file.ContentType == "image/jpeg" || file.ContentType == "image/png" || file.ContentType == "image/jpg")
+            //            {
+            //                await _filesUploaderRepository.Add(file);
+            //                return Ok($"Profile picture upload succesfully!");
+            //            }
 
-        [HttpDelete]
+            //            return BadRequest("Profile picture must be only JPEG or PNG");
+
+            //        }
+            //        return BadRequest("File already exists.");
+            //    }
+
+            //    return BadRequest("There was an error.");
+            //}
+
+            [HttpDelete]
         [Route("file")]
         public async Task<IActionResult> DeleteFile(int id)
         {

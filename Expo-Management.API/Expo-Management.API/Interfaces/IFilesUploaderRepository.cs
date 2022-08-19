@@ -20,5 +20,6 @@ namespace Expo_Management.API.Repositories
 
         Task<FilesModel> getFileAsync(int id);
 
+     //   Task<FilesModel> getProfilePictureAsync(string userId);
     }
 }

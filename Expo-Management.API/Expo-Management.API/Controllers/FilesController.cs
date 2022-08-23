@@ -54,7 +54,6 @@ namespace UploadFiles.Controllers
 
                 var bytes = System.IO.File.ReadAllBytes(startupPath);
 
-
                 if (file.Name.EndsWith(".pdf"))
                 {
                     return File(bytes, "application/pdf", file.Name);

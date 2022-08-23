@@ -45,7 +45,7 @@ namespace Expo_Management.API.Repositories
                 _logger.LogWarning("Error al registrar un usuario, ya existe");
                 return new Response { Status = "Error", Message = "User already exists!" };
             }
-           var password = _authUtils.GeneratePassword(true, true, true, true, 10);
+            var password = _authUtils.GeneratePassword(true, true, true, true, 10);
 
             User user = new()
             {
@@ -82,7 +82,7 @@ namespace Expo_Management.API.Repositories
             await _mailService.SendEmailAsync(user.Email, "d-d4e02abcdd534a81a5cd6e3f581eff0f", ConfirmEmailTemplate = new
             {
                 email = user.UserName,
-                password =password,
+                password = password,
                 url = url
             });
 
@@ -185,7 +185,7 @@ namespace Expo_Management.API.Repositories
                 _logger.LogWarning("Error al encontrar usuario");
                 return new Response { Status = "Error", Message = "Usuario no encontrado" };
             }
-              
+
             if (model.NewPassword != model.ConfirmPassword)
             {
                 _logger.LogWarning("Error durante cambio de contraseñas");

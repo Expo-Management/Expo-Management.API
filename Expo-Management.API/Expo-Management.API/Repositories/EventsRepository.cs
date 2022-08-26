@@ -7,16 +7,28 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Expo_Management.API.Repositories
 {
+    /// <summary>
+    /// Repositorio de eventos
+    /// </summary>
     public class EventsRepository : IEventsRepository
     {
 
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Constructor del repositorio de eventos
+        /// </summary>
+        /// <param name="context"></param>
         public EventsRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Metodo para crear eventos
+        /// </summary>
+        /// <param name="Event"></param>
+        /// <returns></returns>
         public async Task<Event>? CreateEventAsync(EventInput Event)
         {
             var fair = (from f in _context.Fair
@@ -48,6 +60,11 @@ namespace Expo_Management.API.Repositories
             return null;
         }
 
+        /// <summary>
+        /// Metodo para eliminar eventos
+        /// </summary>
+        /// <param name="EventId"></param>
+        /// <returns></returns>
         public async Task<bool> DeleteEventAsync(int EventId)
         {
             var result = (from e in _context.Event
@@ -65,6 +82,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener un evento
+        /// </summary>
+        /// <param name="EventId"></param>
+        /// <returns></returns>
         public async Task<Event>? GetEventAsync(int EventId)
         {
             var results = (from e in _context.Event
@@ -78,6 +100,10 @@ namespace Expo_Management.API.Repositories
             return null;
         }
 
+        /// <summary>
+        /// Metodo para obtener eventos
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Event>>? GetEventsAsync()
         {
             var results = (from e in _context.Event
@@ -90,6 +116,11 @@ namespace Expo_Management.API.Repositories
             return null;
         }
 
+        /// <summary>
+        /// Metodo para actualizar eventos
+        /// </summary>
+        /// <param name="Event"></param>
+        /// <returns></returns>
         public async Task<Event>? UpdateEventAsync(EventUpdate Event)
         {
             var result = (from e in _context.Event
@@ -111,6 +142,11 @@ namespace Expo_Management.API.Repositories
 
         }
 
+        /// <summary>
+        /// Metodo para obtener las noticias de la feria
+        /// </summary>
+        /// <param name="FairId"></param>
+        /// <returns></returns>
         public async Task<List<New>> GetNewsByFairIdAsync(int FairId) 
         {
             var results = await (from n in _context.New
@@ -124,6 +160,11 @@ namespace Expo_Management.API.Repositories
             return null;
         }
 
+        /// <summary>
+        /// Metodo para obtener los protocolos de seguridad
+        /// </summary>
+        /// <param name="FairId"></param>
+        /// <returns></returns>
         public async Task<List<SecurityProtocols>> GetGetSecurityProtocols(int FairId)
         {
             var results = await (from sp in _context.SecurityProtocols

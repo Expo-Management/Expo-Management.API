@@ -12,6 +12,9 @@ using System.Text;
 
 namespace Expo_Management.API.Repositories
 {
+    /// <summary>
+    /// Repositorio de IdentityUser
+    /// </summary>
     public class IdentityRepository : IIdentityRepository
     {
         private readonly UserManager<User> _userManager;
@@ -21,6 +24,14 @@ namespace Expo_Management.API.Repositories
         private AuthUtils _authUtils;
         private readonly IMailService _mailService;
 
+        /// <summary>
+        /// Constructor del repositorio de IdentityUser
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <param name="roleManager"></param>
+        /// <param name="logger"></param>
+        /// <param name="configuration"></param>
+        /// <param name="mailService"></param>
         public IdentityRepository(
             UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
@@ -37,6 +48,12 @@ namespace Expo_Management.API.Repositories
             _mailService = mailService;
         }
 
+        /// <summary>
+        /// Metodo para registrar usuarios
+        /// </summary>
+        /// <param name="Role"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<Response> RegisterNewUser(string Role, RegisterModel model)
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
@@ -89,6 +106,11 @@ namespace Expo_Management.API.Repositories
             return new Response { Status = "Success", Message = "Usuario creado existosamente!" };
         }
 
+        /// <summary>
+        /// Metodo para logear usuarios
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<LoginResponse?> LoginUser(LoginModel model)
         {
             var userRoleStored = "";
@@ -126,6 +148,12 @@ namespace Expo_Management.API.Repositories
             return null;
         }
 
+        /// <summary>
+        /// Metodo para confirmar la cuenta por medio de un correo electronico
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public async Task<Response> ConfirmEmailAsync(string userId, string token)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -150,6 +178,11 @@ namespace Expo_Management.API.Repositories
             return new Response { Status = "Success", Message = "Cuenta confirmada" };
         }
 
+        /// <summary>
+        /// Metodo para la recuperacion de contraseña
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<Response> ForgetPasswordAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -176,6 +209,11 @@ namespace Expo_Management.API.Repositories
 
         }
 
+        /// <summary>
+        /// Metodo para resetear la contraseña
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<Response> ResetPasswordAsync(ResetPasswordViewModel model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email);

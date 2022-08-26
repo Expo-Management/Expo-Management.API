@@ -7,12 +7,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Expo_Management.API.Repositories
 {
+    /// <summary>
+    /// Repositorio de usuarios
+    /// </summary>
     public class UserRepository: IUsersRepository
     {
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly IFilesUploaderRepository _filesRepository;
 
+        /// <summary>
+        /// Constructor del repositorio usuarios
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <param name="context"></param>
+        /// <param name="filesRepository"></param>
         public UserRepository(
             UserManager<User> userManager,
             ApplicationDbContext context,
@@ -24,6 +33,11 @@ namespace Expo_Management.API.Repositories
             _filesRepository = filesRepository;
         }
 
+        /// <summary>
+        /// Metodo para obtener el nombre completo del usuario
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<String> GetUserFullName(string email) 
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -38,8 +52,10 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-        //Judges
-
+        /// <summary>
+        /// Metodo para obetner los jueces del sistema
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<User>> GetJudgesAsync()
         {
             List<User> judges = (List<User>)await _userManager.GetUsersInRoleAsync("Judge");
@@ -53,6 +69,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obetner los jueces del sistema
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<User> GetJudgeAsync(string email)
         {
             User judge = await _userManager.FindByEmailAsync(email);
@@ -67,6 +88,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para actualizar jueces
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<User> UpdateJudgeAsync(UpdateUser model)
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);
@@ -95,6 +121,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para eliminar jueces
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<bool> DeleteJudgeAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -109,7 +140,10 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-
+        /// <summary>
+        /// Metodo para los administradores del sistema
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<User>> GetAdminsAsync()
         {
             List<User> admins = (List<User>)await _userManager.GetUsersInRoleAsync("Admin");
@@ -124,6 +158,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener un administrador en el sistema
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<User> GetAdminAsync(string email)
         {
             User admin = await _userManager.FindByEmailAsync(email);
@@ -138,6 +177,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para actualizar administradores
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<User> UpdateAdminAsync(UpdateUser model)
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);
@@ -166,6 +210,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para eliminar un administrador
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<bool> DeleteAdminAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -181,8 +230,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-        //Students
-
+        
+        /// <summary>
+        /// Metodo para obtener todos los estudiantes
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<User>> GetStudentsAsync()
         {
             List<User> students = (List<User>)await _userManager.GetUsersInRoleAsync("User");
@@ -197,6 +249,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obetner un estudiante
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<User> GetStudentAsync(string email)
         {
             var student = await (from u in _context.User
@@ -213,7 +270,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-
+        /// <summary>
+        /// Metodo para actualizar un estudiante
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<User> UpdateStudentAsync(UpdateUser model)
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);
@@ -242,6 +303,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para eliminar un estudiante
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         public async Task<bool> DeleteStudentAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -257,6 +323,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para actualizar el proyecto de un estudiante
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<User> UpdateStudetProjectAsync(UpdateUserProject model)
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);

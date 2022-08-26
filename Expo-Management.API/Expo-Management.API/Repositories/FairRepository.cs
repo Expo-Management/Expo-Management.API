@@ -5,15 +5,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Expo_Management.API.Repositories
 {
+    /// <summary>
+    /// Repositorio de ferias
+    /// </summary>
     public class FairRepository : IFairRepository
     {
         private readonly ApplicationDbContext _context;
 
+        /// <summary>
+        /// Constructor del repositorio de ferias
+        /// </summary>
+        /// <param name="context"></param>
         public FairRepository(ApplicationDbContext context)
         {
             _context = context;
         }
 
+        /// <summary>
+        /// Metodo para crear ferias
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<Fair> CreateFairAsync(NewFair model)
         {
             try
@@ -40,6 +52,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para eliminar ferias
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<bool> DeleteFairAsync(int id)
         {
             try
@@ -64,6 +81,10 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener todas las ferias
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Fair>> GetAllFairsAsync()
         {
             try
@@ -77,6 +98,10 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener las ferias actuales
+        /// </summary>
+        /// <returns></returns>
         public async Task<int> GetCurrentFairIdAsync()
         {
             try

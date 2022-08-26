@@ -11,6 +11,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Expo_Management.API.Repositories
 {
 
+    /// <summary>
+    /// Repositorio de projectos
+    /// </summary>
     public class ProjectsRepository : IProjectsRepository
     {
         private readonly UserManager<User> _userManager;
@@ -22,7 +25,16 @@ namespace Expo_Management.API.Repositories
         private readonly IMailService _mailService;
         private readonly IConfiguration _configuration;
 
-
+        /// <summary>
+        /// Constructor del repositorio de proyetos
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="filesUploader"></param>
+        /// <param name="categoryRepository"></param>
+        /// <param name="usersRepository"></param>
+        /// <param name="mailService"></param>
+        /// <param name="userManager"></param>
+        /// <param name="configuration"></param>
         public ProjectsRepository(
             ApplicationDbContext context,
             IFilesUploaderRepository filesUploader,
@@ -42,7 +54,11 @@ namespace Expo_Management.API.Repositories
             _userManager = userManager;
         }
 
-
+        /// <summary>
+        /// Metodo para crear un proyecto
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<ProjectModel> CreateProject(NewProject model)
         {
             try
@@ -95,6 +111,10 @@ namespace Expo_Management.API.Repositories
 
         }
 
+        /// <summary>
+        /// Metodo para obtener todos los proyectos
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<ProjectModel>> GetAllProjectsAsync()
         {
             try
@@ -112,6 +132,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener la feria
+        /// </summary>
+        /// <param name="fairId"></param>
+        /// <returns></returns>
         public async Task<Fair> GetFair(int fairId)
         {
             try
@@ -128,6 +153,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para verificar si el proyecto existe
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public bool ProjectExists(string name)
         {
             try
@@ -149,6 +179,10 @@ namespace Expo_Management.API.Repositories
 
         }
 
+        /// <summary>
+        /// Metodo para obtener las menciones
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Mention>> GetMentionsAsync()
         {
             try
@@ -168,6 +202,10 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener los proyectos actuales
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<ProjectModel>> GetAllCurrentProjectsAsync()
         {
             try
@@ -188,6 +226,10 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener los proyectos antiguos
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<ProjectModel>> GetOldProjectsAsync()
         {
             try
@@ -210,6 +252,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para crear los claims del proyecto
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<Claim> CreateProjectClaim(NewClaim model)
         {
             var project = await (from p in _context.Projects
@@ -232,6 +279,11 @@ namespace Expo_Management.API.Repositories
             return claim;
         }
 
+        /// <summary>
+        /// Metodo para obtener los detalles del proyecto
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         public async Task<List<ProjectDetails>> GetProjectDetails(int projectId)
         {
             try
@@ -300,6 +352,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener las recomendaciones del juez
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<JudgeRecommendation> JudgeRecommendation(NewRecommendation model)
         {
             try
@@ -335,6 +392,12 @@ namespace Expo_Management.API.Repositories
             //se agrega a la base de datos
 
         }
+
+        /// <summary>
+        /// Metodo para obtener las recomendaciones
+        /// </summary>
+        /// <param name="recomendacion"></param>
+        /// <returns></returns>
         public async Task<JudgeRecommendation> GetRecommendation(int recomendacion)
         {
             try
@@ -351,6 +414,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Obtener las recomendaciones de un proyecto
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         public async Task<List<JudgeRecommendation>> GetRecommendationByProjectId(int projectId)
         {
             try
@@ -369,6 +437,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener un proyecto en especifico
+        /// </summary>
+        /// <param name="ProjectId"></param>
+        /// <returns></returns>
         public async Task<ProjectModel> GetProjectById(int ProjectId)
         {
             try
@@ -388,6 +461,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para enviar la calificacion por email
+        /// </summary>
+        /// <param name="project"></param>
+        /// <param name="judge"></param>
         public async void SendCalificationsEmails(ProjectModel project, User judge)
         {
 
@@ -418,6 +496,11 @@ namespace Expo_Management.API.Repositories
             });
         }
 
+        /// <summary>
+        /// Metodo para calificar proyecto
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<Qualifications> QualifyProject(QualifyProject model)
         {
             try
@@ -457,6 +540,11 @@ namespace Expo_Management.API.Repositories
                 return null;
             }
         }
+
+        /// <summary>
+        /// Metodo para obtener los miembros de un proyecto
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<ProjectMembers>> GetMembers()
         {
             try
@@ -485,6 +573,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener los correos de los miembros de un proyecto
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         public async Task<List<User>> GetMembersEmail(int projectId)
         {
             try
@@ -503,7 +596,11 @@ namespace Expo_Management.API.Repositories
             }
         }
 
-
+        /// <summary>
+        /// Metodo para obtener las calificaciones de un proyecto
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         public async Task<List<ProjectQualifications>> GetProjectQualifications(int projectId)
         {
 
@@ -526,6 +623,10 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener los proyectos de cada año
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<ProjectQuantity>> GetProjectsByYear()
         {
 
@@ -546,6 +647,10 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener las categorias por los proyectos
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<ProjectQuantity>> GetProjectsByCategory()
         {
 
@@ -566,6 +671,10 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener las calificaciones por proyectos
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<ProjectQuantity>> GetProjectsByQualifications()
         {
 
@@ -586,6 +695,10 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener los los usuarios por los proyectos
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<ProjectQuantity>> GetUsersByProject()
         {
 

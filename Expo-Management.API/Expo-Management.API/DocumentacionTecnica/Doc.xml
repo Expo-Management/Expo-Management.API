@@ -1,0 +1,481 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Expo-Management.API</name>
+    </assembly>
+    <members>
+        <member name="T:Expo_Management.API.Repositories.CategoryRepository">
+            <summary>
+            Repositorio de categorias
+            </summary>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.CategoryRepository.#ctor(Expo_Management.API.Auth.ApplicationDbContext)">
+            <summary>
+            Constructor del repositorio de categorias
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.CategoryRepository.CreateCategoryAsync(Expo_Management.API.Entities.NewCategory)">
+            <summary>
+            Metodo para crear categorias
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.CategoryRepository.DeleteCategoryAsync(System.Int32)">
+            <summary>
+            Metodo para eliminar categorias
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.CategoryRepository.GetAllCategoriesAsync">
+            <summary>
+            Metodo para obtener todas las categorias
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.CategoryRepository.GetCategoryAsync(System.Int32)">
+            <summary>
+            Metodo para obtener una categoria
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Expo_Management.API.Repositories.EventsRepository">
+            <summary>
+            Repositorio de eventos
+            </summary>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.EventsRepository.#ctor(Expo_Management.API.Auth.ApplicationDbContext)">
+            <summary>
+            Constructor del repositorio de eventos
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.EventsRepository.CreateEventAsync(Expo_Management.API.Entities.Events.EventInput)">
+            <summary>
+            Metodo para crear eventos
+            </summary>
+            <param name="Event"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.EventsRepository.DeleteEventAsync(System.Int32)">
+            <summary>
+            Metodo para eliminar eventos
+            </summary>
+            <param name="EventId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.EventsRepository.GetEventAsync(System.Int32)">
+            <summary>
+            Metodo para obtener un evento
+            </summary>
+            <param name="EventId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.EventsRepository.GetEventsAsync">
+            <summary>
+            Metodo para obtener eventos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.EventsRepository.UpdateEventAsync(Expo_Management.API.Entities.Events.EventUpdate)">
+            <summary>
+            Metodo para actualizar eventos
+            </summary>
+            <param name="Event"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.EventsRepository.GetNewsByFairIdAsync(System.Int32)">
+            <summary>
+            Metodo para obtener las noticias de la feria
+            </summary>
+            <param name="FairId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.EventsRepository.GetGetSecurityProtocols(System.Int32)">
+            <summary>
+            Metodo para obtener los protocolos de seguridad
+            </summary>
+            <param name="FairId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Expo_Management.API.Repositories.FairRepository">
+            <summary>
+            Repositorio de ferias
+            </summary>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.FairRepository.#ctor(Expo_Management.API.Auth.ApplicationDbContext)">
+            <summary>
+            Constructor del repositorio de ferias
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.FairRepository.CreateFairAsync(Expo_Management.API.Entities.NewFair)">
+            <summary>
+            Metodo para crear ferias
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.FairRepository.DeleteFairAsync(System.Int32)">
+            <summary>
+            Metodo para eliminar ferias
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.FairRepository.GetAllFairsAsync">
+            <summary>
+            Metodo para obtener todas las ferias
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.FairRepository.GetCurrentFairIdAsync">
+            <summary>
+            Metodo para obtener las ferias actuales
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Expo_Management.API.Repositories.IdentityRepository">
+            <summary>
+            Repositorio de IdentityUser
+            </summary>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.IdentityRepository.#ctor(Microsoft.AspNetCore.Identity.UserManager{Expo_Management.API.Entities.User},Microsoft.AspNetCore.Identity.RoleManager{Microsoft.AspNetCore.Identity.IdentityRole},Microsoft.Extensions.Logging.ILogger{Expo_Management.API.Repositories.IdentityRepository},Microsoft.Extensions.Configuration.IConfiguration,Expo_Management.API.Services.IMailService)">
+            <summary>
+            Constructor del repositorio de IdentityUser
+            </summary>
+            <param name="userManager"></param>
+            <param name="roleManager"></param>
+            <param name="logger"></param>
+            <param name="configuration"></param>
+            <param name="mailService"></param>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.IdentityRepository.RegisterNewUser(System.String,Expo_Management.API.Entities.Auth.RegisterModel)">
+            <summary>
+            Metodo para registrar usuarios
+            </summary>
+            <param name="Role"></param>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.IdentityRepository.LoginUser(Expo_Management.API.Entities.Auth.LoginModel)">
+            <summary>
+            Metodo para logear usuarios
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.IdentityRepository.ConfirmEmailAsync(System.String,System.String)">
+            <summary>
+            Metodo para confirmar la cuenta por medio de un correo electronico
+            </summary>
+            <param name="userId"></param>
+            <param name="token"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.IdentityRepository.ForgetPasswordAsync(System.String)">
+            <summary>
+            Metodo para la recuperacion de contraseña
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.IdentityRepository.ResetPasswordAsync(Expo_Management.API.Entities.Auth.ResetPasswordViewModel)">
+            <summary>
+            Metodo para resetear la contraseña
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Expo_Management.API.Repositories.LogsRepository">
+            <summary>
+            Repositorio de logs
+            </summary>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.LogsRepository.#ctor(Expo_Management.API.Auth.ApplicationDbContext)">
+            <summary>
+            Constructor del repositorio de logs
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.LogsRepository.Expo_Management#API#Interfaces#ILogsRepository#GetLogsAsync">
+            <summary>
+            Metodo para obtener los logs del sistema
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Expo_Management.API.Repositories.ProjectsRepository">
+            <summary>
+            Repositorio de projectos
+            </summary>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.#ctor(Expo_Management.API.Auth.ApplicationDbContext,Expo_Management.API.Repositories.IFilesUploaderRepository,Expo_Management.API.Interfaces.ICategoryRepository,Expo_Management.API.Interfaces.IUsersRepository,Expo_Management.API.Services.IMailService,Microsoft.AspNetCore.Identity.UserManager{Expo_Management.API.Entities.User},Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Constructor del repositorio de proyetos
+            </summary>
+            <param name="context"></param>
+            <param name="filesUploader"></param>
+            <param name="categoryRepository"></param>
+            <param name="usersRepository"></param>
+            <param name="mailService"></param>
+            <param name="userManager"></param>
+            <param name="configuration"></param>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.CreateProject(Expo_Management.API.Entities.Projects.NewProject)">
+            <summary>
+            Metodo para crear un proyecto
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetAllProjectsAsync">
+            <summary>
+            Metodo para obtener todos los proyectos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetFair(System.Int32)">
+            <summary>
+            Metodo para obtener la feria
+            </summary>
+            <param name="fairId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.ProjectExists(System.String)">
+            <summary>
+            Metodo para verificar si el proyecto existe
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetMentionsAsync">
+            <summary>
+            Metodo para obtener las menciones
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetAllCurrentProjectsAsync">
+            <summary>
+            Metodo para obtener los proyectos actuales
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetOldProjectsAsync">
+            <summary>
+            Metodo para obtener los proyectos antiguos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.CreateProjectClaim(Expo_Management.API.Entities.Projects.NewClaim)">
+            <summary>
+            Metodo para crear los claims del proyecto
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetProjectDetails(System.Int32)">
+            <summary>
+            Metodo para obtener los detalles del proyecto
+            </summary>
+            <param name="projectId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.JudgeRecommendation(Expo_Management.API.Entities.Projects.NewRecommendation)">
+            <summary>
+            Metodo para obtener las recomendaciones del juez
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetRecommendation(System.Int32)">
+            <summary>
+            Metodo para obtener las recomendaciones
+            </summary>
+            <param name="recomendacion"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetRecommendationByProjectId(System.Int32)">
+            <summary>
+            Obtener las recomendaciones de un proyecto
+            </summary>
+            <param name="projectId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetProjectById(System.Int32)">
+            <summary>
+            Metodo para obtener un proyecto en especifico
+            </summary>
+            <param name="ProjectId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.SendCalificationsEmails(Expo_Management.API.Entities.Projects.ProjectModel,Expo_Management.API.Entities.User)">
+            <summary>
+            Metodo para enviar la calificacion por email
+            </summary>
+            <param name="project"></param>
+            <param name="judge"></param>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.QualifyProject(Expo_Management.API.Entities.Projects.QualifyProject)">
+            <summary>
+            Metodo para calificar proyecto
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetMembers">
+            <summary>
+            Metodo para obtener los miembros de un proyecto
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetMembersEmail(System.Int32)">
+            <summary>
+            Metodo para obtener los correos de los miembros de un proyecto
+            </summary>
+            <param name="projectId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetProjectQualifications(System.Int32)">
+            <summary>
+            Metodo para obtener las calificaciones de un proyecto
+            </summary>
+            <param name="projectId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetProjectsByYear">
+            <summary>
+            Metodo para obtener los proyectos de cada año
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetProjectsByCategory">
+            <summary>
+            Metodo para obtener las categorias por los proyectos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetProjectsByQualifications">
+            <summary>
+            Metodo para obtener las calificaciones por proyectos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetUsersByProject">
+            <summary>
+            Metodo para obtener los los usuarios por los proyectos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Expo_Management.API.Repositories.UserRepository">
+            <summary>
+            Repositorio de usuarios
+            </summary>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.#ctor(Microsoft.AspNetCore.Identity.UserManager{Expo_Management.API.Entities.User},Expo_Management.API.Auth.ApplicationDbContext,Expo_Management.API.Repositories.IFilesUploaderRepository)">
+            <summary>
+            Constructor del repositorio usuarios
+            </summary>
+            <param name="userManager"></param>
+            <param name="context"></param>
+            <param name="filesRepository"></param>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.GetUserFullName(System.String)">
+            <summary>
+            Metodo para obtener el nombre completo del usuario
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.GetJudgesAsync">
+            <summary>
+            Metodo para obetner los jueces del sistema
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.GetJudgeAsync(System.String)">
+            <summary>
+            Metodo para obetner los jueces del sistema
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.UpdateJudgeAsync(Expo_Management.API.Entities.UpdateUser)">
+            <summary>
+            Metodo para actualizar jueces
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.DeleteJudgeAsync(System.String)">
+            <summary>
+            Metodo para eliminar jueces
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.GetAdminsAsync">
+            <summary>
+            Metodo para los administradores del sistema
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.GetAdminAsync(System.String)">
+            <summary>
+            Metodo para obtener un administrador en el sistema
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.UpdateAdminAsync(Expo_Management.API.Entities.UpdateUser)">
+            <summary>
+            Metodo para actualizar administradores
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.DeleteAdminAsync(System.String)">
+            <summary>
+            Metodo para eliminar un administrador
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.GetStudentsAsync">
+            <summary>
+            Metodo para obtener todos los estudiantes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.GetStudentAsync(System.String)">
+            <summary>
+            Metodo para obetner un estudiante
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.UpdateStudentAsync(Expo_Management.API.Entities.UpdateUser)">
+            <summary>
+            Metodo para actualizar un estudiante
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.DeleteStudentAsync(System.String)">
+            <summary>
+            Metodo para eliminar un estudiante
+            </summary>
+            <param name="email"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Repositories.UserRepository.UpdateStudetProjectAsync(Expo_Management.API.Entities.Projects.UpdateUserProject)">
+            <summary>
+            Metodo para actualizar el proyecto de un estudiante
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

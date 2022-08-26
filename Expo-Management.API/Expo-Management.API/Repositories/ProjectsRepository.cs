@@ -5,6 +5,7 @@ using Expo_Management.API.Entities.Projects;
 using Expo_Management.API.Interfaces;
 using Expo_Management.API.Services;
 using Expo_Management.API.Utils;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Expo_Management.API.Repositories
@@ -12,7 +13,7 @@ namespace Expo_Management.API.Repositories
 
     public class ProjectsRepository : IProjectsRepository
     {
-
+        private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly IFilesUploaderRepository _filesUploader;
         private readonly ICategoryRepository _categoryRepository;
@@ -23,12 +24,13 @@ namespace Expo_Management.API.Repositories
 
 
         public ProjectsRepository(
-            ApplicationDbContext context, 
-            IFilesUploaderRepository filesUploader, 
+            ApplicationDbContext context,
+            IFilesUploaderRepository filesUploader,
             ICategoryRepository categoryRepository,
-            IUsersRepository usersRepository, 
-            IMailService mailService, 
-            IConfiguration configuration)
+            IUsersRepository usersRepository,
+            IMailService mailService,
+            UserManager<User> userManager,
+        IConfiguration configuration)
         {
             _context = context;
             _filesUploader = filesUploader;
@@ -37,6 +39,7 @@ namespace Expo_Management.API.Repositories
             _crudUtils = new CrudUtils(_usersRepository, _context);
             _mailService = mailService;
             _configuration = configuration;
+            _userManager = userManager;
         }
 
 
@@ -72,7 +75,7 @@ namespace Expo_Management.API.Repositories
                         category = category
                     };
 
-                    
+
                     var projectCreated = await _context.Projects.AddAsync(newProject);
                     await _context.SaveChangesAsync();
 
@@ -276,7 +279,7 @@ namespace Expo_Management.API.Repositories
                               where p.Id == projectId
                               select u.Name + " " + u.Lastname).ToListAsync();
             }
-        
+
             async Task<int> CalculateProjectFinalPunctuation(List<ProjectQualifications> qualifications)
             {
                 if (qualifications != null && qualifications.Count() > 0)
@@ -353,8 +356,8 @@ namespace Expo_Management.API.Repositories
             try
             {
                 var recommendations = await (from r in _context.JudgeRecommendation
-                                            where r.project.Id == projectId
-                                            select r)
+                                             where r.project.Id == projectId
+                                             select r)
                                             .Include(p => p.user)
                                             .ToListAsync();
                 return recommendations;
@@ -454,7 +457,7 @@ namespace Expo_Management.API.Repositories
                 return null;
             }
         }
-            public async Task<List<ProjectMembers>> GetMembers()
+        public async Task<List<ProjectMembers>> GetMembers()
         {
             try
             {
@@ -523,6 +526,85 @@ namespace Expo_Management.API.Repositories
             }
         }
 
+        public async Task<List<ProjectQuantity>> GetProjectsByYear()
+        {
 
+            try
+            {
+                return await _context.Projects
+                .GroupBy(x => x.Fair.StartDate.Year)
+                .Select(x => new ProjectQuantity
+                {
+                    name = x.Select(x => x.Fair.Description).First(),
+                    value = x.Count()
+                }).ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+        public async Task<List<ProjectQuantity>> GetProjectsByCategory()
+        {
+
+            try
+            {
+                return await _context.Projects
+                .GroupBy(x => x.category.Id)
+                .Select(x => new ProjectQuantity
+                {
+                    name = x.Select(x => x.category.Description).First(),
+                    value = x.Count()
+                }).ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+        public async Task<List<ProjectQuantity>> GetProjectsByQualifications()
+        {
+
+            try
+            {
+                return await _context.Qualifications
+                    .GroupBy(x => x.Project.Id)
+                    .Select(x => new ProjectQuantity
+                    {
+                        name = x.Select(x => x.Project.Name).First(),
+                        value = x.Count()
+                    }).ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+        public async Task<List<ProjectQuantity>> GetUsersByProject()
+        {
+
+            try
+            {
+                return await _context.User
+                    .Where(x => x.Project.Name != null)
+                    .GroupBy(x => x.Project.Id)
+                    .Select(x => new ProjectQuantity
+                    {
+                        name = x.Select(x => x.Project.Name).First(),
+                        value = x.Count()
+                    }).ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
     }
 }

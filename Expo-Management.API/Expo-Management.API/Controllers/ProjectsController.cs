@@ -313,5 +313,93 @@ namespace Expo_Management.API.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpGet]
+        [Route("project-by-year")]
+        public async Task<IActionResult> GetProjectsByYear()
+        {
+            try
+            {
+                var projects = await _projectsRepository.GetProjectsByYear();
+
+                if (projects.Any())
+                {
+
+
+                    return Ok(projects);
+                }
+                return BadRequest("No hay proyectos registrados.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("project-by-category")]
+        public async Task<IActionResult> GetProjectsByCategory()
+        {
+            try
+            {
+                var projects = await _projectsRepository.GetProjectsByCategory();
+
+                if (projects.Any())
+                {
+
+
+                    return Ok(projects);
+                }
+                return BadRequest("No hay proyectos registrados.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("project-by-qualifications")]
+        public async Task<IActionResult> GetProjectsByQualifications()
+        {
+            try
+            {
+                var projects = await _projectsRepository.GetProjectsByQualifications();
+
+                if (projects.Any())
+                {
+
+
+                    return Ok(projects);
+                }
+                return BadRequest("No hay proyectos registrados.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [HttpGet]
+        [Route("users-per-project")]
+        public async Task<IActionResult> GetUsersPerProject()
+        {
+            try
+            {
+                var projects = await _projectsRepository.GetUsersByProject();
+
+                if (projects.Any())
+                {
+
+
+                    return Ok(projects);
+                }
+                return BadRequest("No hay proyectos registrados.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
     }
 }

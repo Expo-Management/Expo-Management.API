@@ -25,6 +25,9 @@ namespace Expo_Management.API.Interfaces
         Task<List<JudgeRecommendation>> GetRecommendationByProjectId(int recomendacion);
         Task<Qualifications> QualifyProject(QualifyProject model);
         Task<List<ProjectQualifications>> GetProjectQualifications(int projectId);
-
+        Task<List<ProjectQuantity>> GetProjectsByYear();
+        Task<List<ProjectQuantity>> GetProjectsByCategory();
+        Task<List<ProjectQuantity>> GetUsersByProject();
+        Task<List<ProjectQuantity>> GetProjectsByQualifications();
     }
 }

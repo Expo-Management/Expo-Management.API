@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expo_Management.API.Controllers
 {
+    /// <summary>
+    /// Controlador para proyectos
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectsController : ControllerBase

@@ -9,7 +9,7 @@ namespace Expo_Management.API.Interfaces
 
         Task<ProjectModel> CreateProject(NewProject model);
         bool ProjectExists(string lider);
-        Task<List<ProjectModel>> GetAllProjectsAsync();
+        Task<List<ProjectModel>?> GetAllProjectsAsync();
         Task<Fair> GetFair(int project);
         Task<List<Mention>> GetMentionsAsync();
         Task<List<ProjectModel>> GetAllCurrentProjectsAsync();

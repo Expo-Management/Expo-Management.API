@@ -4,6 +4,11 @@
         <name>Expo-Management.API</name>
     </assembly>
     <members>
+        <member name="T:Expo_Management.API.Controllers.ProjectsController">
+            <summary>
+            Controlador para proyectos
+            </summary>
+        </member>
         <member name="T:Expo_Management.API.Repositories.CategoryRepository">
             <summary>
             Repositorio de categorias

@@ -115,7 +115,7 @@ namespace Expo_Management.API.Repositories
         /// Metodo para obtener todos los proyectos
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProjectModel>> GetAllProjectsAsync()
+        public async Task<List<ProjectModel>?> GetAllProjectsAsync()
         {
             try
             {

@@ -1,5 +1,6 @@
-﻿using Expo_Management.API.Entities;
-using Expo_Management.API.Interfaces;
+﻿using Expo_Management.API.Domain.Models.Entities;
+using Expo_Management.API.Domain.Models.InputModels;
+using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expo_Management.API.Controllers
@@ -17,7 +18,7 @@ namespace Expo_Management.API.Controllers
 
         [HttpPost]
         [Route("fair")]
-        public async Task<IActionResult> AddFair([FromBody] NewFair model)
+        public async Task<IActionResult> AddFair([FromBody] NewFairInputModel model)
         {
             try
             {
@@ -30,9 +31,9 @@ namespace Expo_Management.API.Controllers
                 }
                 return Ok(fair);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -50,10 +51,10 @@ namespace Expo_Management.API.Controllers
                 }
                 return Ok(0);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest("Hubo un error, por favor, intentelo más tarde.");
-                throw ex;
+                throw;
             }
         }
 
@@ -84,9 +85,9 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest("Hubo un error, por favor, intentelo más tarde.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
     }

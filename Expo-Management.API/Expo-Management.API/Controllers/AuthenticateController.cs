@@ -1,6 +1,6 @@
-﻿using Expo_Management.API.Entities.Auth;
-using Expo_Management.API.Interfaces;
-using Expo_Management.API.Utils;
+﻿using Expo_Management.API.Domain.Models.InputModels;
+using Expo_Management.API.Domain.Models.ViewModels;
+using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -17,17 +17,21 @@ namespace Expo_Management.API.Controllers
         private readonly IIdentityRepository _identityRepository;
         private readonly ILogger<AuthenticateController> _logger;
         private readonly IConfiguration _Configuration;
+
         public AuthenticateController(
-            IIdentityRepository identityRepository, 
-            IConfiguration configuration)
+            IIdentityRepository identityRepository,
+            IConfiguration configuration,
+            ILogger<AuthenticateController> logger
+            )
         {
             _identityRepository = identityRepository;
             _Configuration = configuration;
+            _logger = logger;
         }
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
         {
             var response = await _identityRepository.LoginUser(model);
 
@@ -35,7 +39,7 @@ namespace Expo_Management.API.Controllers
             {
                 return Unauthorized();
             }
-            else 
+            else
             {
                 return Ok(response);
             }
@@ -43,7 +47,7 @@ namespace Expo_Management.API.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterInputModel model)
         {
             var response = await _identityRepository.RegisterNewUser("User", model);
 
@@ -59,7 +63,7 @@ namespace Expo_Management.API.Controllers
 
         [HttpPost]
         [Route("register-admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterInputModel model)
         {
             var response = await _identityRepository.RegisterNewUser("Admin", model);
 
@@ -83,7 +87,7 @@ namespace Expo_Management.API.Controllers
 
         [HttpPost]
         [Route("register-judge")]
-        public async Task<IActionResult> RegisterJudge([FromBody] RegisterModel model)
+        public async Task<IActionResult> RegisterJudge([FromBody] RegisterInputModel model)
         {
             var response = await _identityRepository.RegisterNewUser("Judge", model);
 

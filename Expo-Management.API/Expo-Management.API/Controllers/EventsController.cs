@@ -1,5 +1,5 @@
-﻿using Expo_Management.API.Entities.Events;
-using Expo_Management.API.Interfaces;
+﻿using Expo_Management.API.Domain.Models.InputModels;
+using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expo_Management.API.Controllers
@@ -50,7 +50,7 @@ namespace Expo_Management.API.Controllers
 
         [HttpPost]
         [Route("event")]
-        public async Task<IActionResult> CreateEvent([FromBody] EventInput model)
+        public async Task<IActionResult> CreateEvent([FromBody] EventInputModel model)
         {
             var response = await _eventsRepository.CreateEventAsync(model);
 
@@ -66,7 +66,7 @@ namespace Expo_Management.API.Controllers
 
         [HttpPut]
         [Route("event")]
-        public async Task<IActionResult> UpdateEvent([FromBody] EventUpdate model)
+        public async Task<IActionResult> UpdateEvent([FromBody] EventUpdateInputModel model)
         {
             var response = await _eventsRepository.UpdateEventAsync(model);
 

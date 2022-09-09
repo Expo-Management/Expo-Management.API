@@ -1,6 +1,9 @@
-﻿using Expo_Management.API.Entities;
-using Expo_Management.API.Interfaces;
+﻿using Expo_Management.API.Domain.Models.InputModels;
+using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Expo_Management.API.Infraestructure.Data;
+using Expo_Management.API.Domain.Models.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Expo_Management.API.Controllers
 {
@@ -8,12 +11,19 @@ namespace Expo_Management.API.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        readonly UserManager<User> _userManager;
         private readonly IUsersRepository _userRepository;
+        private readonly ILogger<UsersController> _logger;
 
         public UsersController(
-            IUsersRepository userRepository)
+            UserManager<User> userManager,
+            IUsersRepository userRepository,
+            ILogger<UsersController> logger
+            )
         {
+            _userManager = userManager;
             _userRepository = userRepository;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -44,9 +54,11 @@ namespace Expo_Management.API.Controllers
             {
                 return NotFound();
             }
-            else {
+            else
+            {
                 return Ok(response);
             }
+
         }
 
         [HttpGet]
@@ -55,19 +67,20 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _userRepository.GetJudgeAsync(email);
 
-            if (response == null)
-            {
-                return NotFound();
-            }
-            else
+            if (response != null)
             {
                 return Ok(response);
             }
+            else
+            {
+                return NotFound();
+            }
+
         }
 
         [HttpPut]
         [Route("judge")]
-        public async Task<IActionResult> UpdateJudgeAsync([FromBody] UpdateUser model)
+        public async Task<IActionResult> UpdateJudgeAsync([FromBody] UpdateUserInputModel model)
         {
             var response = await _userRepository.UpdateJudgeAsync(model);
 
@@ -75,7 +88,11 @@ namespace Expo_Management.API.Controllers
             {
                 return BadRequest("Hubo un error, por favor, intentelo más tarde!");
             }
-            return Ok(response);
+            else
+            {
+                return Ok(response);
+            }
+
         }
 
         [HttpDelete]
@@ -88,7 +105,11 @@ namespace Expo_Management.API.Controllers
             {
                 return Ok("Judge deleted!");
             }
-            return BadRequest("Correo incorrecto!");
+            else
+            {
+                return BadRequest("Correo incorrecto!");
+            }
+
         }
 
 
@@ -128,7 +149,7 @@ namespace Expo_Management.API.Controllers
 
         [HttpPut]
         [Route("admin")]
-        public async Task<IActionResult> UpdateAdminAsync([FromBody] UpdateUser model)
+        public async Task<IActionResult> UpdateAdminAsync([FromBody] UpdateUserInputModel model)
         {
             var response = await _userRepository.UpdateAdminAsync(model);
 
@@ -189,7 +210,7 @@ namespace Expo_Management.API.Controllers
 
         [HttpPut]
         [Route("student")]
-        public async Task<IActionResult> UpdateStudentAsync([FromBody] UpdateUser model)
+        public async Task<IActionResult> UpdateStudentAsync([FromBody] UpdateUserInputModel model)
         {
             var response = await _userRepository.UpdateStudentAsync(model);
 

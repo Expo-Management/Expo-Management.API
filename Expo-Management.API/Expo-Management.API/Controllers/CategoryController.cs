@@ -1,5 +1,6 @@
-﻿using Expo_Management.API.Entities;
-using Expo_Management.API.Interfaces;
+﻿using Expo_Management.API.Domain.Models.Entities;
+using Expo_Management.API.Domain.Models.InputModels;
+using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,7 @@ namespace Expo_Management.API.Controllers
 
         [HttpPost]
         [Route("category")]
-        public async Task<IActionResult> CreateCategoryAsync([FromBody] NewCategory model)
+        public async Task<IActionResult> CreateCategoryAsync([FromBody] NewCategoryInputModel model)
         {
             try
             {
@@ -31,9 +32,9 @@ namespace Expo_Management.API.Controllers
                 }
                 return Ok(category);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
@@ -50,12 +51,12 @@ namespace Expo_Management.API.Controllers
             return BadRequest("Hubo un error, por favor, intentelo más tarde.");
         }
 
-            [HttpGet]
+        [HttpGet]
         [Route("categories")]
         public async Task<IActionResult> GetAllCategoriesAsync()
         {
 
-           var categories = await _categoryRepository.GetAllCategoriesAsync();
+            var categories = await _categoryRepository.GetAllCategoriesAsync();
 
             if (categories != null)
             {
@@ -81,7 +82,7 @@ namespace Expo_Management.API.Controllers
         {
             var category = await _categoryRepository.DeleteCategoryAsync(id);
 
-            if(category)
+            if (category)
             {
                 return Ok("Categoría eliminada");
             }

@@ -1,6 +1,5 @@
-﻿
-using Expo_Management.API.Entities;
-using Expo_Management.API.Repositories;
+﻿using Expo_Management.API.Application.Contracts.Repositories;
+using Expo_Management.API.Domain.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UploadFiles.Controllers
@@ -26,7 +25,7 @@ namespace UploadFiles.Controllers
             if (file != null)
             {
                 var existFile = _filesUploaderRepository.fileExist(file.FileName);
-                if(existFile == false)
+                if (existFile == false)
                 {
                     if (file.ContentType == "application/pdf" || file.ContentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
                     {
@@ -43,7 +42,7 @@ namespace UploadFiles.Controllers
 
         [HttpGet]
         [Route("download-project-file")]
-        public async Task<FileResult> DownladProjectFile(int id)
+        public async Task<FileResult?> DownladProjectFile(int id)
         {
             var file = await _filesUploaderRepository.getProjectFile(id);
 
@@ -67,7 +66,7 @@ namespace UploadFiles.Controllers
 
         [HttpGet]
         [Route("download-file")]
-        public async Task<IActionResult> DownloadFile(int id)
+        public async Task<IActionResult?> DownloadFile(int id)
         {
             var file = await _filesUploaderRepository.getFileAsync(id);
 
@@ -103,41 +102,41 @@ namespace UploadFiles.Controllers
         //     return BadRequest("Usuario no posee foto de perfil");
         // }
 
-            //[HttpPost]
-            //[Route("upload-pf")]
-            //public async Task<IActionResult> UploadProfilePicture(IFormFile file)
-            //{
+        //[HttpPost]
+        //[Route("upload-pf")]
+        //public async Task<IActionResult> UploadProfilePicture(IFormFile file)
+        //{
 
-            //    if (file != null)
-            //    {
-            //        var existFile = _filesUploaderRepository.fileExist(file.FileName);
-            //        if (existFile == false)
-            //        {
-            //            if (file.ContentType == "image/jpeg" || file.ContentType == "image/png" || file.ContentType == "image/jpg")
-            //            {
-            //                await _filesUploaderRepository.Add(file);
-            //                return Ok($"Profile picture upload succesfully!");
-            //            }
+        //    if (file != null)
+        //    {
+        //        var existFile = _filesUploaderRepository.fileExist(file.FileName);
+        //        if (existFile == false)
+        //        {
+        //            if (file.ContentType == "image/jpeg" || file.ContentType == "image/png" || file.ContentType == "image/jpg")
+        //            {
+        //                await _filesUploaderRepository.Add(file);
+        //                return Ok($"Profile picture upload succesfully!");
+        //            }
 
-            //            return BadRequest("Profile picture must be only JPEG or PNG");
+        //            return BadRequest("Profile picture must be only JPEG or PNG");
 
-            //        }
-            //        return BadRequest("File already exists.");
-            //    }
+        //        }
+        //        return BadRequest("File already exists.");
+        //    }
 
-            //    return BadRequest("There was an error.");
-            //}
+        //    return BadRequest("There was an error.");
+        //}
 
-            [HttpDelete]
+        [HttpDelete]
         [Route("file")]
         public async Task<IActionResult> DeleteFile(int id)
         {
             var result = await _filesUploaderRepository.deleteFiles(id);
 
-                if (result != null)
-                {
-                    return Ok("Documento borrado exitosamente!");
-                }            
+            if (result != null)
+            {
+                return Ok("Documento borrado exitosamente!");
+            }
 
             return BadRequest("Documento no existe.");
         }
@@ -152,16 +151,16 @@ namespace UploadFiles.Controllers
 
             if (files != null)
             {
-                var domainFiles = new List<FilesModel>();
+                var domainFiles = new List<Files>();
 
                 foreach (var items in files)
                 {
-                    domainFiles.Add(new FilesModel()
+                    domainFiles.Add(new Files()
                     {
                         Id = items.Id,
                         Name = items.Name,
                         Url = items.Url,
-                        Size = (items.Size*(8) / (8*1000)),
+                        Size = (items.Size * (8) / (8 * 1000)),
                         uploadDateTime = items.uploadDateTime
 
                     });

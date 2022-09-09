@@ -1,4 +1,6 @@
-﻿using Expo_Management.API.Interfaces;
+﻿using Expo_Management.API.Application.Contracts.Repositories;
+using Expo_Management.API.Domain.Models.Entities;
+using Expo_Management.API.Infraestructure.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expo_Management.API.Controllers
@@ -20,7 +22,7 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _logs.GetLogsAsync();
 
-            if(response == null)
+            if (response == null)
             {
                 return NotFound();
             }

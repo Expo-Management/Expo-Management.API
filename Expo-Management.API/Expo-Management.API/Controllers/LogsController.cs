@@ -5,17 +5,28 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expo_Management.API.Controllers
 {
+    /// <summary>
+    /// Controlador de logs
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class LogsController : ControllerBase
     {
         private readonly ILogsRepository _logs;
 
+        /// <summary>
+        /// Constructor del controlador de logs
+        /// </summary>
+        /// <param name="logs"></param>
         public LogsController(ILogsRepository logs)
         {
             _logs = logs;
         }
 
+        /// <summary>
+        /// Endpoint para obtener los logs
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("logs")]
         public async Task<IActionResult> GetLogs()

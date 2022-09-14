@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace UploadFiles.Controllers
 {
+    /// <summary>
+    /// Controlador de archivos
+    /// </summary>
+
     [Route("api/[controller]")]
     [ApiController]
     public class FilesController : Controller
@@ -11,12 +15,20 @@ namespace UploadFiles.Controllers
 
         private readonly IFilesUploaderRepository _filesUploaderRepository;
 
-
+        /// <summary>
+        /// Constructor del controlador de archivos
+        /// </summary>
+        /// <param name="filesUploaderRepository"></param>
         public FilesController(IFilesUploaderRepository filesUploaderRepository)
         {
             _filesUploaderRepository = filesUploaderRepository;
         }
 
+        /// <summary>
+        /// Endpoint para subir un archivo
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("file")]
         public async Task<IActionResult> UploadFile(IFormFile file)
@@ -40,6 +52,11 @@ namespace UploadFiles.Controllers
             return BadRequest("Hubo un error por favor intentelo más tarde.");
         }
 
+        /// <summary>
+        /// Endpoint para descargar un archivo del proyecto
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("download-project-file")]
         public async Task<FileResult?> DownladProjectFile(int id)
@@ -64,6 +81,11 @@ namespace UploadFiles.Controllers
             return null;
         }
 
+        /// <summary>
+        /// Endpoint para descargar un archivo
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("download-file")]
         public async Task<IActionResult?> DownloadFile(int id)
@@ -127,6 +149,11 @@ namespace UploadFiles.Controllers
         //    return BadRequest("There was an error.");
         //}
 
+        /// <summary>
+        /// Endpoint para eliminar un archivo
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("file")]
         public async Task<IActionResult> DeleteFile(int id)
@@ -141,7 +168,10 @@ namespace UploadFiles.Controllers
             return BadRequest("Documento no existe.");
         }
 
-
+        /// <summary>
+        /// Endpoint para ver los archivos
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("files")]
         public async Task<IActionResult> ShowFiles()

@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Expo_Management.API.Controllers
 {
+    /// <summary>
+    /// Controlador de usuarios
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
@@ -15,6 +18,12 @@ namespace Expo_Management.API.Controllers
         private readonly IUsersRepository _userRepository;
         private readonly ILogger<UsersController> _logger;
 
+        /// <summary>
+        /// Constructor del controlador de usuarios
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <param name="userRepository"></param>
+        /// <param name="logger"></param>
         public UsersController(
             UserManager<User> userManager,
             IUsersRepository userRepository,
@@ -26,6 +35,11 @@ namespace Expo_Management.API.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Endopoint para obtener el nombre completo del usuario
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("get-user-fullname")]
         public async Task<IActionResult> GetUserFullname(string email)
@@ -44,6 +58,10 @@ namespace Expo_Management.API.Controllers
 
         //Judges
 
+        /// <summary>
+        /// Endpoint para obtener los jueces
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("judges")]
         public async Task<IActionResult> GetJudgesAsync()
@@ -61,6 +79,11 @@ namespace Expo_Management.API.Controllers
 
         }
 
+        /// <summary>
+        /// Endpoint para obtener un juez por el email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("judge")]
         public async Task<IActionResult> GetJudgeAsync(string email)
@@ -78,6 +101,11 @@ namespace Expo_Management.API.Controllers
 
         }
 
+        /// <summary>
+        /// Endpoint para actualizar un juez
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("judge")]
         public async Task<IActionResult> UpdateJudgeAsync([FromBody] UpdateUserInputModel model)
@@ -95,6 +123,11 @@ namespace Expo_Management.API.Controllers
 
         }
 
+        /// <summary>
+        /// Endpoint para eliminar un juez
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("judge")]
         public async Task<IActionResult> DeleteJudgeAsync(string email)
@@ -115,6 +148,10 @@ namespace Expo_Management.API.Controllers
 
         //Admins
 
+        /// <summary>
+        /// Endpoint para obtener los profesores
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("admins")]
         public async Task<IActionResult> GetAdminsAsync()
@@ -131,6 +168,11 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener un profesor por el email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("admin")]
         public async Task<IActionResult> GetAdminAsync(string email)
@@ -147,6 +189,11 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para actualizar un profesor
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("admin")]
         public async Task<IActionResult> UpdateAdminAsync([FromBody] UpdateUserInputModel model)
@@ -160,6 +207,11 @@ namespace Expo_Management.API.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Endpoint para eliminar un profesor
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("admin")]
         public async Task<IActionResult> DeleteAdminAsync(string email)
@@ -176,6 +228,10 @@ namespace Expo_Management.API.Controllers
 
         //Students
 
+        /// <summary>
+        /// Endpoint para obtener los estudiantes
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("students")]
         public async Task<IActionResult> GetStudentsAsync()
@@ -192,6 +248,11 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener un estudiante por el correo
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("student")]
         public async Task<IActionResult> GetStudentAsync(string email)
@@ -208,6 +269,11 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para actualizar un estudiante
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("student")]
         public async Task<IActionResult> UpdateStudentAsync([FromBody] UpdateUserInputModel model)
@@ -221,6 +287,11 @@ namespace Expo_Management.API.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Endpoint para eliminar un estudiante
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("student")]
         public async Task<IActionResult> DeleteStudentAsync(string email)

@@ -10,6 +10,9 @@ using System.Text;
 
 namespace Expo_Management.API.Controllers
 {
+    /// <summary>
+    /// Controlador de autenticación
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticateController : ControllerBase
@@ -18,6 +21,12 @@ namespace Expo_Management.API.Controllers
         private readonly ILogger<AuthenticateController> _logger;
         private readonly IConfiguration _Configuration;
 
+        /// <summary>
+        /// Constructor del controlador de autenticación
+        /// </summary>
+        /// <param name="identityRepository"></param>
+        /// <param name="configuration"></param>
+        /// <param name="logger"></param>
         public AuthenticateController(
             IIdentityRepository identityRepository,
             IConfiguration configuration,
@@ -29,6 +38,11 @@ namespace Expo_Management.API.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Endpoint para logearse en el sistema
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginViewModel model)
@@ -45,6 +59,11 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para registrarse en el sistema
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterInputModel model)
@@ -61,6 +80,11 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Enpoint para registrar un profesor en el sistema
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterInputModel model)
@@ -85,6 +109,11 @@ namespace Expo_Management.API.Controllers
             return StatusCode(StatusCodes.Status500InternalServerError, response);
         }
 
+        /// <summary>
+        /// Endpoint para registrar un juez en el sistema
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("register-judge")]
         public async Task<IActionResult> RegisterJudge([FromBody] RegisterInputModel model)
@@ -101,6 +130,12 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para confirmar el emailToken
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         [HttpGet("confirmEmailToken")]
         public async Task<IActionResult> confirmEmailToken(string userId, string token)
         {
@@ -118,6 +153,11 @@ namespace Expo_Management.API.Controllers
             return BadRequest("Se acaba de dar un error, por favor intentelo más tarde");
         }
 
+        /// <summary>
+        /// Endpoint para solicitar un cambio de contraseña
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpPost("ForgetPassword")]
         public async Task<IActionResult> ForgetPassword(string email)
         {
@@ -133,6 +173,11 @@ namespace Expo_Management.API.Controllers
             return BadRequest(result);
         }
 
+        /// <summary>
+        /// Endpoint para cambiar la contraseña
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {

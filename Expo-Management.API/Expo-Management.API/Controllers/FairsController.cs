@@ -5,17 +5,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Expo_Management.API.Controllers
 {
+    /// <summary>
+    /// Controlador de ferias
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class FairsController : ControllerBase
     {
         private readonly IFairRepository _fairRepository;
 
+        /// <summary>
+        /// Constructor del controlador de ferias
+        /// </summary>
+        /// <param name="fairRepository"></param>
         public FairsController(IFairRepository fairRepository)
         {
             _fairRepository = fairRepository;
         }
 
+        /// <summary>
+        /// Metodo para añadir una feria
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("fair")]
         public async Task<IActionResult> AddFair([FromBody] NewFairInputModel model)
@@ -37,6 +49,10 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Metodo para obetener la feria actual
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("current-fair")]
         public async Task<IActionResult> GetCurrentFair()
@@ -58,6 +74,10 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener todas las ferias
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("fairs")]
         public async Task<IActionResult> ShowFairs()

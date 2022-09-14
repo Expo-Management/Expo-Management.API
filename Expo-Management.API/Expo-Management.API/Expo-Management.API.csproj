@@ -5,6 +5,8 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Expo_Management.API</RootNamespace>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DocumentationFile>TechDoc\Doc.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,6 +29,12 @@
     <Folder Include="Resources\Files\" />
     <Folder Include="Resources\ProfilePictures\" />
     <Folder Include="Resources\ProjectsFiles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Expo-Management.API.Application\Expo-Management.API.Application.csproj" />
+    <ProjectReference Include="..\Expo-Management.API.Domain\Expo-Management.API.Domain.csproj" />
+    <ProjectReference Include="..\Expo-Management.API.Infraestructure\Expo-Management.API.Infraestructure.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

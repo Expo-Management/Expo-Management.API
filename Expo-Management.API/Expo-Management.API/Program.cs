@@ -1,39 +1,28 @@
-using Expo_Management.API.Auth;
-using Expo_Management.API.Entities;
-using Expo_Management.API.Interfaces;
-using Expo_Management.API.Repositories;
-using Expo_Management.API.Services;
+using Expo_Management.API.Infraestructure.Data;
+using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using Expo_Management.API.Infraestructure.Repositories;
+using Expo_Management.API.Infraestructure.Services;
+using Expo_Management.API.Application;
+using Expo_Management.API.Infraestructure;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
 // Add services to the container.
 
-Log.Logger = new LoggerConfiguration().CreateBootstrapLogger();
-builder.Host.UseSerilog(((ctx, lc) => lc.ReadFrom.Configuration(ctx.Configuration)));
+configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true).Build();
 
-builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlServer(configuration.GetConnectionString("ConnectionString")), ServiceLifetime.Transient);
+Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(configuration).CreateLogger();
 
-builder.Services.AddScoped<IIdentityRepository, IdentityRepository>();
-builder.Services.AddScoped<IUsersRepository, UserRepository>();
-builder.Services.AddScoped<IEventsRepository, EventsRepository>();
-builder.Services.AddScoped<ILogsRepository, LogsRepository>();
-builder.Services.AddScoped<IFilesUploaderRepository, FilesUploaderRepository>();
-builder.Services.AddScoped<IProjectsRepository, ProjectsRepository>();
-builder.Services.AddScoped<IFairRepository, FairRepository>();
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddTransient<IMailService, SenderGridMailService>();
+builder.Host.UseSerilog();
 
-
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.RegisterApplicationServices(configuration);
+builder.Services.RegisterInfraestructureServices(configuration);
 
 builder.Services.AddAuthentication(options =>
 {

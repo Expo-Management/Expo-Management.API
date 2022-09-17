@@ -1,21 +1,45 @@
-﻿using Expo_Management.API.Entities;
-using Expo_Management.API.Interfaces;
+﻿using Expo_Management.API.Domain.Models.InputModels;
+using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Expo_Management.API.Infraestructure.Data;
+using Expo_Management.API.Domain.Models.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Expo_Management.API.Controllers
 {
+    /// <summary>
+    /// Controlador de usuarios
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
+        readonly UserManager<User> _userManager;
         private readonly IUsersRepository _userRepository;
+        private readonly ILogger<UsersController> _logger;
 
+        /// <summary>
+        /// Constructor del controlador de usuarios
+        /// </summary>
+        /// <param name="userManager"></param>
+        /// <param name="userRepository"></param>
+        /// <param name="logger"></param>
         public UsersController(
-            IUsersRepository userRepository)
+            UserManager<User> userManager,
+            IUsersRepository userRepository,
+            ILogger<UsersController> logger
+            )
         {
+            _userManager = userManager;
             _userRepository = userRepository;
+            _logger = logger;
         }
 
+        /// <summary>
+        /// Endopoint para obtener el nombre completo del usuario
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("get-user-fullname")]
         public async Task<IActionResult> GetUserFullname(string email)
@@ -34,6 +58,10 @@ namespace Expo_Management.API.Controllers
 
         //Judges
 
+        /// <summary>
+        /// Endpoint para obtener los jueces
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("judges")]
         public async Task<IActionResult> GetJudgesAsync()
@@ -44,30 +72,43 @@ namespace Expo_Management.API.Controllers
             {
                 return NotFound();
             }
-            else {
+            else
+            {
                 return Ok(response);
             }
+
         }
 
+        /// <summary>
+        /// Endpoint para obtener un juez por el email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("judge")]
         public async Task<IActionResult> GetJudgeAsync(string email)
         {
             var response = await _userRepository.GetJudgeAsync(email);
 
-            if (response == null)
-            {
-                return NotFound();
-            }
-            else
+            if (response != null)
             {
                 return Ok(response);
             }
+            else
+            {
+                return NotFound();
+            }
+
         }
 
+        /// <summary>
+        /// Endpoint para actualizar un juez
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("judge")]
-        public async Task<IActionResult> UpdateJudgeAsync([FromBody] UpdateUser model)
+        public async Task<IActionResult> UpdateJudgeAsync([FromBody] UpdateUserInputModel model)
         {
             var response = await _userRepository.UpdateJudgeAsync(model);
 
@@ -75,9 +116,18 @@ namespace Expo_Management.API.Controllers
             {
                 return BadRequest("Hubo un error, por favor, intentelo más tarde!");
             }
-            return Ok(response);
+            else
+            {
+                return Ok(response);
+            }
+
         }
 
+        /// <summary>
+        /// Endpoint para eliminar un juez
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("judge")]
         public async Task<IActionResult> DeleteJudgeAsync(string email)
@@ -88,12 +138,20 @@ namespace Expo_Management.API.Controllers
             {
                 return Ok("Judge deleted!");
             }
-            return BadRequest("Correo incorrecto!");
+            else
+            {
+                return BadRequest("Correo incorrecto!");
+            }
+
         }
 
 
         //Admins
 
+        /// <summary>
+        /// Endpoint para obtener los profesores
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("admins")]
         public async Task<IActionResult> GetAdminsAsync()
@@ -110,6 +168,11 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener un profesor por el email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("admin")]
         public async Task<IActionResult> GetAdminAsync(string email)
@@ -126,9 +189,14 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para actualizar un profesor
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("admin")]
-        public async Task<IActionResult> UpdateAdminAsync([FromBody] UpdateUser model)
+        public async Task<IActionResult> UpdateAdminAsync([FromBody] UpdateUserInputModel model)
         {
             var response = await _userRepository.UpdateAdminAsync(model);
 
@@ -139,6 +207,11 @@ namespace Expo_Management.API.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Endpoint para eliminar un profesor
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("admin")]
         public async Task<IActionResult> DeleteAdminAsync(string email)
@@ -155,6 +228,10 @@ namespace Expo_Management.API.Controllers
 
         //Students
 
+        /// <summary>
+        /// Endpoint para obtener los estudiantes
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("students")]
         public async Task<IActionResult> GetStudentsAsync()
@@ -171,6 +248,11 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener un estudiante por el correo
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("student")]
         public async Task<IActionResult> GetStudentAsync(string email)
@@ -187,9 +269,14 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para actualizar un estudiante
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("student")]
-        public async Task<IActionResult> UpdateStudentAsync([FromBody] UpdateUser model)
+        public async Task<IActionResult> UpdateStudentAsync([FromBody] UpdateUserInputModel model)
         {
             var response = await _userRepository.UpdateStudentAsync(model);
 
@@ -200,6 +287,11 @@ namespace Expo_Management.API.Controllers
             return Ok(response);
         }
 
+        /// <summary>
+        /// Endpoint para eliminar un estudiante
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("student")]
         public async Task<IActionResult> DeleteStudentAsync(string email)

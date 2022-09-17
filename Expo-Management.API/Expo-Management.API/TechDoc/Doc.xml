@@ -4,482 +4,490 @@
         <name>Expo-Management.API</name>
     </assembly>
     <members>
-        <member name="T:Expo_Management.API.Controllers.ProjectsController">
+        <member name="T:Expo_Management.API.Controllers.AdminController">
             <summary>
-            Controlador para proyectos
+            Controlador de administrador
             </summary>
         </member>
-        <member name="T:Expo_Management.API.Repositories.CategoryRepository">
+        <member name="M:Expo_Management.API.Controllers.AdminController.ShutDownSystem">
             <summary>
-            Repositorio de categorias
-            </summary>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.CategoryRepository.#ctor(Expo_Management.API.Auth.ApplicationDbContext)">
-            <summary>
-            Constructor del repositorio de categorias
-            </summary>
-            <param name="context"></param>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.CategoryRepository.CreateCategoryAsync(Expo_Management.API.Entities.NewCategory)">
-            <summary>
-            Metodo para crear categorias
-            </summary>
-            <param name="model"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.CategoryRepository.DeleteCategoryAsync(System.Int32)">
-            <summary>
-            Metodo para eliminar categorias
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.CategoryRepository.GetAllCategoriesAsync">
-            <summary>
-            Metodo para obtener todas las categorias
+            Endpoint para dar de baja el sistema.
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.CategoryRepository.GetCategoryAsync(System.Int32)">
+        <member name="T:Expo_Management.API.Controllers.AuthenticateController">
             <summary>
-            Metodo para obtener una categoria
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Expo_Management.API.Repositories.EventsRepository">
-            <summary>
-            Repositorio de eventos
+            Controlador de autenticación
             </summary>
         </member>
-        <member name="M:Expo_Management.API.Repositories.EventsRepository.#ctor(Expo_Management.API.Auth.ApplicationDbContext)">
+        <member name="M:Expo_Management.API.Controllers.AuthenticateController.#ctor(Expo_Management.API.Application.Contracts.Repositories.IIdentityRepository,Microsoft.Extensions.Configuration.IConfiguration,Microsoft.Extensions.Logging.ILogger{Expo_Management.API.Controllers.AuthenticateController})">
             <summary>
-            Constructor del repositorio de eventos
+            Constructor del controlador de autenticación
             </summary>
-            <param name="context"></param>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.EventsRepository.CreateEventAsync(Expo_Management.API.Entities.Events.EventInput)">
-            <summary>
-            Metodo para crear eventos
-            </summary>
-            <param name="Event"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.EventsRepository.DeleteEventAsync(System.Int32)">
-            <summary>
-            Metodo para eliminar eventos
-            </summary>
-            <param name="EventId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.EventsRepository.GetEventAsync(System.Int32)">
-            <summary>
-            Metodo para obtener un evento
-            </summary>
-            <param name="EventId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.EventsRepository.GetEventsAsync">
-            <summary>
-            Metodo para obtener eventos
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.EventsRepository.UpdateEventAsync(Expo_Management.API.Entities.Events.EventUpdate)">
-            <summary>
-            Metodo para actualizar eventos
-            </summary>
-            <param name="Event"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.EventsRepository.GetNewsByFairIdAsync(System.Int32)">
-            <summary>
-            Metodo para obtener las noticias de la feria
-            </summary>
-            <param name="FairId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.EventsRepository.GetGetSecurityProtocols(System.Int32)">
-            <summary>
-            Metodo para obtener los protocolos de seguridad
-            </summary>
-            <param name="FairId"></param>
-            <returns></returns>
-        </member>
-        <member name="T:Expo_Management.API.Repositories.FairRepository">
-            <summary>
-            Repositorio de ferias
-            </summary>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.FairRepository.#ctor(Expo_Management.API.Auth.ApplicationDbContext)">
-            <summary>
-            Constructor del repositorio de ferias
-            </summary>
-            <param name="context"></param>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.FairRepository.CreateFairAsync(Expo_Management.API.Entities.NewFair)">
-            <summary>
-            Metodo para crear ferias
-            </summary>
-            <param name="model"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.FairRepository.DeleteFairAsync(System.Int32)">
-            <summary>
-            Metodo para eliminar ferias
-            </summary>
-            <param name="id"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.FairRepository.GetAllFairsAsync">
-            <summary>
-            Metodo para obtener todas las ferias
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.FairRepository.GetCurrentFairIdAsync">
-            <summary>
-            Metodo para obtener las ferias actuales
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:Expo_Management.API.Repositories.IdentityRepository">
-            <summary>
-            Repositorio de IdentityUser
-            </summary>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.IdentityRepository.#ctor(Microsoft.AspNetCore.Identity.UserManager{Expo_Management.API.Entities.User},Microsoft.AspNetCore.Identity.RoleManager{Microsoft.AspNetCore.Identity.IdentityRole},Microsoft.Extensions.Logging.ILogger{Expo_Management.API.Repositories.IdentityRepository},Microsoft.Extensions.Configuration.IConfiguration,Expo_Management.API.Services.IMailService)">
-            <summary>
-            Constructor del repositorio de IdentityUser
-            </summary>
-            <param name="userManager"></param>
-            <param name="roleManager"></param>
-            <param name="logger"></param>
+            <param name="identityRepository"></param>
             <param name="configuration"></param>
-            <param name="mailService"></param>
+            <param name="logger"></param>
         </member>
-        <member name="M:Expo_Management.API.Repositories.IdentityRepository.RegisterNewUser(System.String,Expo_Management.API.Entities.Auth.RegisterModel)">
+        <member name="M:Expo_Management.API.Controllers.AuthenticateController.Login(Expo_Management.API.Domain.Models.ViewModels.LoginViewModel)">
             <summary>
-            Metodo para registrar usuarios
-            </summary>
-            <param name="Role"></param>
-            <param name="model"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.IdentityRepository.LoginUser(Expo_Management.API.Entities.Auth.LoginModel)">
-            <summary>
-            Metodo para logear usuarios
+            Endpoint para logearse en el sistema
             </summary>
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.IdentityRepository.ConfirmEmailAsync(System.String,System.String)">
+        <member name="M:Expo_Management.API.Controllers.AuthenticateController.Register(Expo_Management.API.Domain.Models.InputModels.RegisterInputModel)">
             <summary>
-            Metodo para confirmar la cuenta por medio de un correo electronico
+            Endpoint para registrarse en el sistema
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.AuthenticateController.RegisterAdmin(Expo_Management.API.Domain.Models.InputModels.RegisterInputModel)">
+            <summary>
+            Enpoint para registrar un profesor en el sistema
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.AuthenticateController.RegisterJudge(Expo_Management.API.Domain.Models.InputModels.RegisterInputModel)">
+            <summary>
+            Endpoint para registrar un juez en el sistema
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.AuthenticateController.confirmEmailToken(System.String,System.String)">
+            <summary>
+            Endpoint para confirmar el emailToken
             </summary>
             <param name="userId"></param>
             <param name="token"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.IdentityRepository.ForgetPasswordAsync(System.String)">
+        <member name="M:Expo_Management.API.Controllers.AuthenticateController.ForgetPassword(System.String)">
             <summary>
-            Metodo para la recuperacion de contraseña
+            Endpoint para solicitar un cambio de contraseña
             </summary>
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.IdentityRepository.ResetPasswordAsync(Expo_Management.API.Entities.Auth.ResetPasswordViewModel)">
+        <member name="M:Expo_Management.API.Controllers.AuthenticateController.ResetPassword(Expo_Management.API.Domain.Models.ViewModels.ResetPasswordViewModel)">
             <summary>
-            Metodo para resetear la contraseña
+            Endpoint para cambiar la contraseña
             </summary>
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="T:Expo_Management.API.Repositories.LogsRepository">
+        <member name="T:Expo_Management.API.Controllers.CategoryController">
             <summary>
-            Repositorio de logs
+            Controlador de categorias
             </summary>
         </member>
-        <member name="M:Expo_Management.API.Repositories.LogsRepository.#ctor(Expo_Management.API.Auth.ApplicationDbContext)">
+        <member name="M:Expo_Management.API.Controllers.CategoryController.#ctor(Expo_Management.API.Application.Contracts.Repositories.ICategoryRepository)">
             <summary>
-            Constructor del repositorio de logs
+            Constructor del controlador de categorias
             </summary>
-            <param name="context"></param>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.LogsRepository.Expo_Management#API#Interfaces#ILogsRepository#GetLogsAsync">
-            <summary>
-            Metodo para obtener los logs del sistema
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="T:Expo_Management.API.Repositories.ProjectsRepository">
-            <summary>
-            Repositorio de projectos
-            </summary>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.#ctor(Expo_Management.API.Auth.ApplicationDbContext,Expo_Management.API.Repositories.IFilesUploaderRepository,Expo_Management.API.Interfaces.ICategoryRepository,Expo_Management.API.Interfaces.IUsersRepository,Expo_Management.API.Services.IMailService,Microsoft.AspNetCore.Identity.UserManager{Expo_Management.API.Entities.User},Microsoft.Extensions.Configuration.IConfiguration)">
-            <summary>
-            Constructor del repositorio de proyetos
-            </summary>
-            <param name="context"></param>
-            <param name="filesUploader"></param>
             <param name="categoryRepository"></param>
-            <param name="usersRepository"></param>
-            <param name="mailService"></param>
-            <param name="userManager"></param>
-            <param name="configuration"></param>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.CreateProject(Expo_Management.API.Entities.Projects.NewProject)">
+        <member name="M:Expo_Management.API.Controllers.CategoryController.CreateCategoryAsync(Expo_Management.API.Domain.Models.InputModels.NewCategoryInputModel)">
             <summary>
-            Metodo para crear un proyecto
+            Endpoinr para crear categorias
             </summary>
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetAllProjectsAsync">
+        <member name="M:Expo_Management.API.Controllers.CategoryController.GetCategoryAsync(System.Int32)">
             <summary>
-            Metodo para obtener todos los proyectos
+            Endpoint para obtener una categoria por su id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.CategoryController.GetAllCategoriesAsync">
+            <summary>
+            Endpoint para obtener todas las categorias
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetFair(System.Int32)">
+        <member name="M:Expo_Management.API.Controllers.CategoryController.DeleteCategoryAsync(System.Int32)">
             <summary>
-            Metodo para obtener la feria
+            Endpoint para eliminar una categoria
             </summary>
-            <param name="fairId"></param>
+            <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.ProjectExists(System.String)">
+        <member name="T:Expo_Management.API.Controllers.EventsController">
             <summary>
-            Metodo para verificar si el proyecto existe
+            Controlador de eventos
             </summary>
-            <param name="name"></param>
-            <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetMentionsAsync">
+        <member name="M:Expo_Management.API.Controllers.EventsController.#ctor(Expo_Management.API.Application.Contracts.Repositories.IEventsRepository)">
             <summary>
-            Metodo para obtener las menciones
+            Constructor del controlador de eventos
             </summary>
-            <returns></returns>
+            <param name="eventsRepository"></param>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetAllCurrentProjectsAsync">
+        <member name="M:Expo_Management.API.Controllers.EventsController.GetEvents">
             <summary>
-            Metodo para obtener los proyectos actuales
+            Endpoint para obtener los eventos
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetOldProjectsAsync">
+        <member name="M:Expo_Management.API.Controllers.EventsController.GetEvents(System.Int32)">
             <summary>
-            Metodo para obtener los proyectos antiguos
+            Endpoint para obtener un solo evento
             </summary>
+            <param name="EventId"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.CreateProjectClaim(Expo_Management.API.Entities.Projects.NewClaim)">
+        <member name="M:Expo_Management.API.Controllers.EventsController.CreateEvent(Expo_Management.API.Domain.Models.InputModels.EventInputModel)">
             <summary>
-            Metodo para crear los claims del proyecto
+            Endpoint para crear un evento
             </summary>
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetProjectDetails(System.Int32)">
+        <member name="M:Expo_Management.API.Controllers.EventsController.UpdateEvent(Expo_Management.API.Domain.Models.InputModels.EventUpdateInputModel)">
             <summary>
-            Metodo para obtener los detalles del proyecto
+            Endpoint para actualizar un evento
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.EventsController.DeleteEvent(System.Int32)">
+            <summary>
+            Endpoint para eliminar un evento
+            </summary>
+            <param name="EventId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.EventsController.GetNews(System.Int32)">
+            <summary>
+            Endpoint para obtener las noticias de la feria
+            </summary>
+            <param name="FairId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.EventsController.GetSecurityProtocols(System.Int32)">
+            <summary>
+            Endpoint para obtener los protocolos de seguridad de la feria
+            </summary>
+            <param name="FairId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Expo_Management.API.Controllers.FairsController">
+            <summary>
+            Controlador de ferias
+            </summary>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.FairsController.#ctor(Expo_Management.API.Application.Contracts.Repositories.IFairRepository)">
+            <summary>
+            Constructor del controlador de ferias
+            </summary>
+            <param name="fairRepository"></param>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.FairsController.AddFair(Expo_Management.API.Domain.Models.InputModels.NewFairInputModel)">
+            <summary>
+            Metodo para añadir una feria
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.FairsController.GetCurrentFair">
+            <summary>
+            Metodo para obetener la feria actual
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.FairsController.ShowFairs">
+            <summary>
+            Metodo para obtener todas las ferias
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Expo_Management.API.Controllers.LogsController">
+            <summary>
+            Controlador de logs
+            </summary>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.LogsController.#ctor(Expo_Management.API.Application.Contracts.Repositories.ILogsRepository)">
+            <summary>
+            Constructor del controlador de logs
+            </summary>
+            <param name="logs"></param>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.LogsController.GetLogs">
+            <summary>
+            Endpoint para obtener los logs
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Expo_Management.API.Controllers.ProjectsController">
+            <summary>
+            Controlador para proyectos
+            </summary>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.#ctor(Expo_Management.API.Application.Contracts.Repositories.IProjectsRepository)">
+            <summary>
+            Constructor del controlador de proyectos
+            </summary>
+            <param name="projectsRepository"></param>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.AddProjects(Expo_Management.API.Domain.Models.InputModels.NewProjectInputModel)">
+            <summary>
+            Endpoint para añadir proyectos
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.ShowProjects">
+            <summary>
+            Endpoint para mostrar proyectos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.showOldProjects">
+            <summary>
+            Endpoint para mostrar los proyectos antiguos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.showMentions">
+            <summary>
+            Endpoint para mostrar las menciones
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.getProjectQualificationAsync(System.Int32)">
+            <summary>
+            Endpoint para obtener las calificaciones de los proyectos
             </summary>
             <param name="projectId"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.JudgeRecommendation(Expo_Management.API.Entities.Projects.NewRecommendation)">
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.CreateProjectClaim(Expo_Management.API.Domain.Models.InputModels.NewClaimInputModel)">
             <summary>
-            Metodo para obtener las recomendaciones del juez
+            Endpoint para crear los reclamos
             </summary>
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetRecommendation(System.Int32)">
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.postRecommendation(Expo_Management.API.Domain.Models.InputModels.NewRecommendationInputModel)">
             <summary>
-            Metodo para obtener las recomendaciones
+            Endpoint para crear las recomendaciones
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.getRecommendation(System.Int32)">
+            <summary>
+            Endpoint para obtener las recomendaciones
             </summary>
             <param name="recomendacion"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetRecommendationByProjectId(System.Int32)">
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.GetProjectMembers">
             <summary>
-            Obtener las recomendaciones de un proyecto
+            Endpoint para obtener los miembros del proyecto
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.GetMembersEmail(System.Int32)">
+            <summary>
+            Endpoint para obtener los correos de los miembros de un proyecto
             </summary>
             <param name="projectId"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetProjectById(System.Int32)">
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.getRecommendationByProjectId(System.Int32)">
             <summary>
-            Metodo para obtener un proyecto en especifico
+            Endpoint para obtener la recomendacion de un proyecto
             </summary>
-            <param name="ProjectId"></param>
+            <param name="projectId"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.SendCalificationsEmails(Expo_Management.API.Entities.Projects.ProjectModel,Expo_Management.API.Entities.User)">
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.qualifyProject(Expo_Management.API.Domain.Models.InputModels.QualifyProjectInputModel)">
             <summary>
-            Metodo para enviar la calificacion por email
-            </summary>
-            <param name="project"></param>
-            <param name="judge"></param>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.QualifyProject(Expo_Management.API.Entities.Projects.QualifyProject)">
-            <summary>
-            Metodo para calificar proyecto
+            Endpoint para calificar proyectos
             </summary>
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetMembers">
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.GetProjectQualifications(System.Int32)">
             <summary>
-            Metodo para obtener los miembros de un proyecto
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetMembersEmail(System.Int32)">
-            <summary>
-            Metodo para obtener los correos de los miembros de un proyecto
+            Endpoint para obtener las calificaciones del proyecto
             </summary>
             <param name="projectId"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetProjectQualifications(System.Int32)">
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.GetProjectsByYear">
             <summary>
-            Metodo para obtener las calificaciones de un proyecto
-            </summary>
-            <param name="projectId"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetProjectsByYear">
-            <summary>
-            Metodo para obtener los proyectos de cada año
+            Endpoint para obtener los proyectos por año
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetProjectsByCategory">
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.GetProjectsByCategory">
             <summary>
-            Metodo para obtener las categorias por los proyectos
+            Endpoint para obtener los proyectos por categoria
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetProjectsByQualifications">
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.GetProjectsByQualifications">
             <summary>
-            Metodo para obtener las calificaciones por proyectos
+            Endpoint para obtener los proyectos por las calificaciones
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.ProjectsRepository.GetUsersByProject">
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.GetUsersPerProject">
             <summary>
-            Metodo para obtener los los usuarios por los proyectos
+            Endpoint para obtener los usurios por los proyectos
             </summary>
             <returns></returns>
         </member>
-        <member name="T:Expo_Management.API.Repositories.UserRepository">
+        <member name="T:Expo_Management.API.Controllers.UsersController">
             <summary>
-            Repositorio de usuarios
+            Controlador de usuarios
             </summary>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.#ctor(Microsoft.AspNetCore.Identity.UserManager{Expo_Management.API.Entities.User},Expo_Management.API.Auth.ApplicationDbContext,Expo_Management.API.Repositories.IFilesUploaderRepository)">
+        <member name="M:Expo_Management.API.Controllers.UsersController.#ctor(Microsoft.AspNetCore.Identity.UserManager{Expo_Management.API.Domain.Models.Entities.User},Expo_Management.API.Application.Contracts.Repositories.IUsersRepository,Microsoft.Extensions.Logging.ILogger{Expo_Management.API.Controllers.UsersController})">
             <summary>
-            Constructor del repositorio usuarios
+            Constructor del controlador de usuarios
             </summary>
             <param name="userManager"></param>
-            <param name="context"></param>
-            <param name="filesRepository"></param>
+            <param name="userRepository"></param>
+            <param name="logger"></param>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.GetUserFullName(System.String)">
+        <member name="M:Expo_Management.API.Controllers.UsersController.GetUserFullname(System.String)">
             <summary>
-            Metodo para obtener el nombre completo del usuario
+            Endopoint para obtener el nombre completo del usuario
             </summary>
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.GetJudgesAsync">
+        <member name="M:Expo_Management.API.Controllers.UsersController.GetJudgesAsync">
             <summary>
-            Metodo para obetner los jueces del sistema
+            Endpoint para obtener los jueces
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.GetJudgeAsync(System.String)">
+        <member name="M:Expo_Management.API.Controllers.UsersController.GetJudgeAsync(System.String)">
             <summary>
-            Metodo para obetner los jueces del sistema
+            Endpoint para obtener un juez por el email
             </summary>
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.UpdateJudgeAsync(Expo_Management.API.Entities.UpdateUser)">
+        <member name="M:Expo_Management.API.Controllers.UsersController.UpdateJudgeAsync(Expo_Management.API.Domain.Models.InputModels.UpdateUserInputModel)">
             <summary>
-            Metodo para actualizar jueces
+            Endpoint para actualizar un juez
             </summary>
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.DeleteJudgeAsync(System.String)">
+        <member name="M:Expo_Management.API.Controllers.UsersController.DeleteJudgeAsync(System.String)">
             <summary>
-            Metodo para eliminar jueces
+            Endpoint para eliminar un juez
             </summary>
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.GetAdminsAsync">
+        <member name="M:Expo_Management.API.Controllers.UsersController.GetAdminsAsync">
             <summary>
-            Metodo para los administradores del sistema
+            Endpoint para obtener los profesores
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.GetAdminAsync(System.String)">
+        <member name="M:Expo_Management.API.Controllers.UsersController.GetAdminAsync(System.String)">
             <summary>
-            Metodo para obtener un administrador en el sistema
+            Endpoint para obtener un profesor por el email
             </summary>
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.UpdateAdminAsync(Expo_Management.API.Entities.UpdateUser)">
+        <member name="M:Expo_Management.API.Controllers.UsersController.UpdateAdminAsync(Expo_Management.API.Domain.Models.InputModels.UpdateUserInputModel)">
             <summary>
-            Metodo para actualizar administradores
+            Endpoint para actualizar un profesor
             </summary>
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.DeleteAdminAsync(System.String)">
+        <member name="M:Expo_Management.API.Controllers.UsersController.DeleteAdminAsync(System.String)">
             <summary>
-            Metodo para eliminar un administrador
+            Endpoint para eliminar un profesor
             </summary>
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.GetStudentsAsync">
+        <member name="M:Expo_Management.API.Controllers.UsersController.GetStudentsAsync">
             <summary>
-            Metodo para obtener todos los estudiantes
+            Endpoint para obtener los estudiantes
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.GetStudentAsync(System.String)">
+        <member name="M:Expo_Management.API.Controllers.UsersController.GetStudentAsync(System.String)">
             <summary>
-            Metodo para obetner un estudiante
+            Endpoint para obtener un estudiante por el correo
             </summary>
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.UpdateStudentAsync(Expo_Management.API.Entities.UpdateUser)">
+        <member name="M:Expo_Management.API.Controllers.UsersController.UpdateStudentAsync(Expo_Management.API.Domain.Models.InputModels.UpdateUserInputModel)">
             <summary>
-            Metodo para actualizar un estudiante
+            Endpoint para actualizar un estudiante
             </summary>
             <param name="model"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.DeleteStudentAsync(System.String)">
+        <member name="M:Expo_Management.API.Controllers.UsersController.DeleteStudentAsync(System.String)">
             <summary>
-            Metodo para eliminar un estudiante
+            Endpoint para eliminar un estudiante
             </summary>
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Repositories.UserRepository.UpdateStudetProjectAsync(Expo_Management.API.Entities.Projects.UpdateUserProject)">
+        <member name="T:UploadFiles.Controllers.FilesController">
             <summary>
-            Metodo para actualizar el proyecto de un estudiante
+            Controlador de archivos
             </summary>
-            <param name="model"></param>
+        </member>
+        <member name="M:UploadFiles.Controllers.FilesController.#ctor(Expo_Management.API.Application.Contracts.Repositories.IFilesUploaderRepository)">
+            <summary>
+            Constructor del controlador de archivos
+            </summary>
+            <param name="filesUploaderRepository"></param>
+        </member>
+        <member name="M:UploadFiles.Controllers.FilesController.UploadFile(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>
+            Endpoint para subir un archivo
+            </summary>
+            <param name="file"></param>
+            <returns></returns>
+        </member>
+        <member name="M:UploadFiles.Controllers.FilesController.DownladProjectFile(System.Int32)">
+            <summary>
+            Endpoint para descargar un archivo del proyecto
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:UploadFiles.Controllers.FilesController.DownloadFile(System.Int32)">
+            <summary>
+            Endpoint para descargar un archivo
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:UploadFiles.Controllers.FilesController.DeleteFile(System.Int32)">
+            <summary>
+            Endpoint para eliminar un archivo
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:UploadFiles.Controllers.FilesController.ShowFiles">
+            <summary>
+            Endpoint para ver los archivos
+            </summary>
             <returns></returns>
         </member>
     </members>

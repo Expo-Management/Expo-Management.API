@@ -1,23 +1,36 @@
-﻿using Expo_Management.API.Entities;
-using Expo_Management.API.Interfaces;
+﻿using Expo_Management.API.Domain.Models.Entities;
+using Expo_Management.API.Domain.Models.InputModels;
+using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expo_Management.API.Controllers
 {
+    /// <summary>
+    /// Controlador de ferias
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class FairsController : ControllerBase
     {
         private readonly IFairRepository _fairRepository;
 
+        /// <summary>
+        /// Constructor del controlador de ferias
+        /// </summary>
+        /// <param name="fairRepository"></param>
         public FairsController(IFairRepository fairRepository)
         {
             _fairRepository = fairRepository;
         }
 
+        /// <summary>
+        /// Metodo para añadir una feria
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("fair")]
-        public async Task<IActionResult> AddFair([FromBody] NewFair model)
+        public async Task<IActionResult> AddFair([FromBody] NewFairInputModel model)
         {
             try
             {
@@ -30,12 +43,16 @@ namespace Expo_Management.API.Controllers
                 }
                 return Ok(fair);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Metodo para obetener la feria actual
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("current-fair")]
         public async Task<IActionResult> GetCurrentFair()
@@ -50,13 +67,17 @@ namespace Expo_Management.API.Controllers
                 }
                 return Ok(0);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest("Hubo un error, por favor, intentelo más tarde.");
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener todas las ferias
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("fairs")]
         public async Task<IActionResult> ShowFairs()
@@ -84,9 +105,9 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest("Hubo un error, por favor, intentelo más tarde.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
     }

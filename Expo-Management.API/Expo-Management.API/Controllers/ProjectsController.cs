@@ -1,6 +1,6 @@
-﻿using Expo_Management.API.Entities;
-using Expo_Management.API.Entities.Projects;
-using Expo_Management.API.Interfaces;
+﻿using Expo_Management.API.Domain.Models.Entities;
+using Expo_Management.API.Domain.Models.InputModels;
+using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,14 +17,24 @@ namespace Expo_Management.API.Controllers
 
         private readonly IProjectsRepository _projectsRepository;
 
+
+        /// <summary>
+        /// Constructor del controlador de proyectos
+        /// </summary>
+        /// <param name="projectsRepository"></param>
         public ProjectsController(IProjectsRepository projectsRepository)
         {
             _projectsRepository = projectsRepository;
         }
 
+        /// <summary>
+        /// Endpoint para añadir proyectos
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("projects")]
-        public async Task<IActionResult> AddProjects([FromForm] NewProject model)
+        public async Task<IActionResult> AddProjects([FromForm] NewProjectInputModel model)
         {
             try
             {
@@ -37,12 +47,16 @@ namespace Expo_Management.API.Controllers
                 }
                 return Ok(project);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Endpoint para mostrar proyectos
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("projects")]
         public async Task<IActionResult> ShowProjects()
@@ -53,17 +67,17 @@ namespace Expo_Management.API.Controllers
 
                 if (projects != null)
                 {
-                    var domainProjects = new List<ProjectModel>();
+                    var domainProjects = new List<Project>();
 
                     foreach (var items in projects)
                     {
-                        domainProjects.Add(new ProjectModel()
+                        domainProjects.Add(new Project()
                         {
                             Id = items.Id,
                             Name = items.Name,
                             Description = items.Description,
                             Fair = items.Fair,
-                            Files = new FilesModel()
+                            Files = new Files()
                             {
                                 Id = items.Files.Id,
                                 Name = items.Files.Name,
@@ -82,13 +96,16 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest("Hubo un error, por favor, intentelo más tarde.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Endpoint para mostrar los proyectos antiguos
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("old-projects")]
         public async Task<IActionResult> showOldProjects()
@@ -103,13 +120,16 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest("No hay proyectos antiguos");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Endpoint para mostrar las menciones
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("mentions")]
         public async Task<IActionResult> showMentions()
@@ -122,15 +142,19 @@ namespace Expo_Management.API.Controllers
                 {
                     return Ok(mentions);
                 }
-                return NotFound("No hay menciones creadas aun.");
+                return NotFound("Aún no hay menciones creadas.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener las calificaciones de los proyectos
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("project")]
         public async Task<IActionResult> getProjectQualificationAsync(int projectId)
@@ -142,15 +166,20 @@ namespace Expo_Management.API.Controllers
 
                 return Ok(projectDetails);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
         }
 
+        /// <summary>
+        /// Endpoint para crear los reclamos
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("create-claim")]
-        public async Task<IActionResult> CreateProjectClaim(NewClaim model)
+        public async Task<IActionResult> CreateProjectClaim(NewClaimInputModel model)
         {
             try
             {
@@ -163,16 +192,21 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest("Id del proyecto o detalles icorrectos");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
         }
 
+        /// <summary>
+        /// Endpoint para crear las recomendaciones
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("recommendation")]
         //[Authorize(Roles = "Judge")]
-        public async Task<IActionResult> postRecommendation([FromBody] NewRecommendation model)
+        public async Task<IActionResult> postRecommendation([FromBody] NewRecommendationInputModel model)
         {
             try
             {
@@ -183,12 +217,17 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest("Hubo un error interno, por favor intentelo mas tarde");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener las recomendaciones
+        /// </summary>
+        /// <param name="recomendacion"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("getRecommendation")]
         public async Task<IActionResult> getRecommendation(int recomendacion)
@@ -202,11 +241,15 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest("Hubo un error interno, por favor intentelo mas tarde");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;            }
+                throw;            }
         }
 
+        /// <summary>
+        /// Endpoint para obtener los miembros del proyecto
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("project-members")]
         public async Task<IActionResult> GetProjectMembers()
@@ -225,12 +268,17 @@ namespace Expo_Management.API.Controllers
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener los correos de los miembros de un proyecto
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("members-emails")]
         public async Task<IActionResult> GetMembersEmail(int projectId)
@@ -249,12 +297,17 @@ namespace Expo_Management.API.Controllers
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener la recomendacion de un proyecto
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("recommendation-by-project")]
         public async Task<IActionResult> getRecommendationByProjectId(int projectId)
@@ -263,21 +316,30 @@ namespace Expo_Management.API.Controllers
             {
                 var recommendations = await _projectsRepository.GetRecommendationByProjectId(projectId);
 
-                if (recommendations.Any())
+                if(recommendations != null)
                 {
-                    return Ok(recommendations);
+                    if (recommendations.Any())
+                    {
+                        return Ok(recommendations);
+                    }
+                    return BadRequest("No se encontrarion recomendaciones.");
                 }
                 return BadRequest("No hay recomendaciones para el proyecto.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
         }
 
+        /// <summary>
+        /// Endpoint para calificar proyectos
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("qualify-project")]
-        public async Task<IActionResult> qualifyProject(QualifyProject model)
+        public async Task<IActionResult> qualifyProject(QualifyProjectInputModel model)
         {
             try
             {
@@ -289,12 +351,17 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest("Los datos ingresados son incorrectos.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener las calificaciones del proyecto
+        /// </summary>
+        /// <param name="projectId"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("project-qualifications")]
         public async Task<IActionResult> GetProjectQualifications(int projectId)
@@ -303,20 +370,26 @@ namespace Expo_Management.API.Controllers
             {
                 var qualifications = await _projectsRepository.GetProjectQualifications(projectId);
 
-                if (qualifications.Any())
+                if(qualifications != null)
                 {
-
-
-                    return Ok(qualifications);
+                    if (qualifications.Any())
+                    {
+                        return Ok(qualifications);
+                    }
+                    return BadRequest("No se encontraron calificaciones.");
                 }
                 return BadRequest("No hay calificaciones para el proyecto.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener los proyectos por año
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("project-by-year")]
         public async Task<IActionResult> GetProjectsByYear()
@@ -325,20 +398,26 @@ namespace Expo_Management.API.Controllers
             {
                 var projects = await _projectsRepository.GetProjectsByYear();
 
-                if (projects.Any())
+                if (projects != null)
                 {
-
-
-                    return Ok(projects);
+                    if (projects.Any())
+                    {
+                        return Ok(projects);
+                    }
+                    return BadRequest("No se encontro el proyecto.");
                 }
                 return BadRequest("No hay proyectos registrados.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener los proyectos por categoria
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("project-by-category")]
         public async Task<IActionResult> GetProjectsByCategory()
@@ -347,20 +426,26 @@ namespace Expo_Management.API.Controllers
             {
                 var projects = await _projectsRepository.GetProjectsByCategory();
 
-                if (projects.Any())
+                if (projects != null)
                 {
-
-
-                    return Ok(projects);
+                    if (projects.Any())
+                    {
+                        return Ok(projects);
+                    }
+                    return BadRequest("No se encontro el proyecto.");
                 }
                 return BadRequest("No hay proyectos registrados.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener los proyectos por las calificaciones
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("project-by-qualifications")]
         public async Task<IActionResult> GetProjectsByQualifications()
@@ -369,20 +454,26 @@ namespace Expo_Management.API.Controllers
             {
                 var projects = await _projectsRepository.GetProjectsByQualifications();
 
-                if (projects.Any())
+                if(projects != null)
                 {
-
-
-                    return Ok(projects);
+                    if (projects.Any())
+                    {
+                        return Ok(projects);
+                    }
+                    return BadRequest("No se encontro del proyecto.");
                 }
                 return BadRequest("No hay proyectos registrados.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener los usurios por los proyectos
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("users-per-project")]
         public async Task<IActionResult> GetUsersPerProject()
@@ -391,15 +482,17 @@ namespace Expo_Management.API.Controllers
             {
                 var projects = await _projectsRepository.GetUsersByProject();
 
-                if (projects.Any())
+                if(projects != null)
                 {
-
-
-                    return Ok(projects);
+                    if (projects.Any())
+                    {
+                        return Ok(projects);
+                    }
+                    return BadRequest("No se encontro el proyecto.");
                 }
                 return BadRequest("No hay proyectos registrados.");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500);
             }

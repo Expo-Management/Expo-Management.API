@@ -9,6 +9,9 @@
       "Expo-Management.API/1.0.0": {
         "dependencies": {
           "Abp": "7.2.1",
+          "Expo-Management.API.Application": "1.0.0",
+          "Expo-Management.API.Domain": "1.0.0",
+          "Expo-Management.API.Infraestructure": "1.0.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.6",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.6",
           "Microsoft.EntityFrameworkCore.SqlServer": "6.0.6",
@@ -1896,6 +1899,53 @@
             "fileVersion": "5.0.0.0"
           }
         }
+      },
+      "Expo-Management.API.Application/1.0.0": {
+        "dependencies": {
+          "Abp": "7.2.1",
+          "Expo-Management.API.Domain": "1.0.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.6",
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.6",
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.6",
+          "SendGrid": "9.28.0",
+          "Serilog.AspNetCore": "5.0.0",
+          "Serilog.Settings.Configuration": "3.3.0",
+          "Serilog.Sinks.MSSqlServer": "5.7.1"
+        },
+        "runtime": {
+          "Expo-Management.API.Application.dll": {}
+        }
+      },
+      "Expo-Management.API.Domain/1.0.0": {
+        "dependencies": {
+          "Abp": "7.2.1",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.6",
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.6",
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.6",
+          "Serilog.AspNetCore": "5.0.0",
+          "Serilog.Settings.Configuration": "3.3.0",
+          "Serilog.Sinks.MSSqlServer": "5.7.1"
+        },
+        "runtime": {
+          "Expo-Management.API.Domain.dll": {}
+        }
+      },
+      "Expo-Management.API.Infraestructure/1.0.0": {
+        "dependencies": {
+          "Abp": "7.2.1",
+          "Expo-Management.API.Application": "1.0.0",
+          "Expo-Management.API.Domain": "1.0.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.6",
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "6.0.6",
+          "Microsoft.EntityFrameworkCore.SqlServer": "6.0.6",
+          "SendGrid": "9.28.0",
+          "Serilog.AspNetCore": "5.0.0",
+          "Serilog.Settings.Configuration": "3.3.0",
+          "Serilog.Sinks.MSSqlServer": "5.7.1"
+        },
+        "runtime": {
+          "Expo-Management.API.Infraestructure.dll": {}
+        }
       }
     }
   },
@@ -3206,6 +3256,21 @@
       "sha512": "sha512-U7Oilf3Ya6Rmu6gOaBfWyT3q0kwy2av6a5PfTn05CF54C+7DvuLsE3ljASvYmCpsSQeJvpnqU5Uzag6+ysWUeA==",
       "path": "timezoneconverter/5.0.0",
       "hashPath": "timezoneconverter.5.0.0.nupkg.sha512"
+    },
+    "Expo-Management.API.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Expo-Management.API.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Expo-Management.API.Infraestructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

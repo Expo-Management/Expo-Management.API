@@ -1,21 +1,32 @@
-﻿using Expo_Management.API.Entities.Events;
-using Expo_Management.API.Interfaces;
+﻿using Expo_Management.API.Domain.Models.InputModels;
+using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expo_Management.API.Controllers
 {
+    /// <summary>
+    /// Controlador de eventos
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class EventsController : ControllerBase
     {
         private readonly IEventsRepository _eventsRepository;
 
+        /// <summary>
+        /// Constructor del controlador de eventos
+        /// </summary>
+        /// <param name="eventsRepository"></param>
         public EventsController(
             IEventsRepository eventsRepository)
         {
             _eventsRepository = eventsRepository;
         }
 
+        /// <summary>
+        /// Endpoint para obtener los eventos
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [Route("events")]
         public async Task<IActionResult> GetEvents()
@@ -32,6 +43,11 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener un solo evento
+        /// </summary>
+        /// <param name="EventId"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("event")]
         public async Task<IActionResult> GetEvents(int EventId)
@@ -48,9 +64,14 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para crear un evento
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("event")]
-        public async Task<IActionResult> CreateEvent([FromBody] EventInput model)
+        public async Task<IActionResult> CreateEvent([FromBody] EventInputModel model)
         {
             var response = await _eventsRepository.CreateEventAsync(model);
 
@@ -64,9 +85,14 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para actualizar un evento
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("event")]
-        public async Task<IActionResult> UpdateEvent([FromBody] EventUpdate model)
+        public async Task<IActionResult> UpdateEvent([FromBody] EventUpdateInputModel model)
         {
             var response = await _eventsRepository.UpdateEventAsync(model);
 
@@ -80,6 +106,11 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para eliminar un evento
+        /// </summary>
+        /// <param name="EventId"></param>
+        /// <returns></returns>
         [HttpDelete]
         [Route("event")]
         public async Task<IActionResult> DeleteEvent(int EventId)
@@ -96,6 +127,11 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener las noticias de la feria
+        /// </summary>
+        /// <param name="FairId"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("news")]
         public async Task<IActionResult> GetNews(int FairId)
@@ -112,6 +148,11 @@ namespace Expo_Management.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Endpoint para obtener los protocolos de seguridad de la feria
+        /// </summary>
+        /// <param name="FairId"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("security-protocols")]
         public async Task<IActionResult> GetSecurityProtocols(int FairId)

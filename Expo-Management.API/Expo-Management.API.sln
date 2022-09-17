@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expo-Management.API", "Expo-Management.API\Expo-Management.API.csproj", "{D2AD10AC-A7D9-4071-B73D-FB1636B8BC1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expo-Management.API", "Expo-Management.API\Expo-Management.API.csproj", "{D2AD10AC-A7D9-4071-B73D-FB1636B8BC1B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expo-Management.API.Application", "Expo-Management.API.Application\Expo-Management.API.Application.csproj", "{D0D0B168-1699-4E22-AA2D-57A24D70DF44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expo-Management.API.Domain", "Expo-Management.API.Domain\Expo-Management.API.Domain.csproj", "{6F0069C3-6A6F-4A47-8DA5-6E8376326FC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expo-Management.API.Infraestructure", "Expo-Management.API.Infraestructure\Expo-Management.API.Infraestructure.csproj", "{79C806CA-FE24-4CB0-AC3E-9A92679DC029}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{D2AD10AC-A7D9-4071-B73D-FB1636B8BC1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2AD10AC-A7D9-4071-B73D-FB1636B8BC1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2AD10AC-A7D9-4071-B73D-FB1636B8BC1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0D0B168-1699-4E22-AA2D-57A24D70DF44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0D0B168-1699-4E22-AA2D-57A24D70DF44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0D0B168-1699-4E22-AA2D-57A24D70DF44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0D0B168-1699-4E22-AA2D-57A24D70DF44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F0069C3-6A6F-4A47-8DA5-6E8376326FC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F0069C3-6A6F-4A47-8DA5-6E8376326FC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F0069C3-6A6F-4A47-8DA5-6E8376326FC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F0069C3-6A6F-4A47-8DA5-6E8376326FC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79C806CA-FE24-4CB0-AC3E-9A92679DC029}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79C806CA-FE24-4CB0-AC3E-9A92679DC029}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79C806CA-FE24-4CB0-AC3E-9A92679DC029}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79C806CA-FE24-4CB0-AC3E-9A92679DC029}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

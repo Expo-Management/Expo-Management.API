@@ -60,9 +60,8 @@ namespace Expo_Management.API.Infraestructure.Utils
 
         const string LOWER_CASE = "abcdefghijklmnopqursuvwxyz";
         const string UPPER_CAES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        const string NUMBERS = "123456789";
+        const string NUMBERS = "0123456789";
         const string SPECIALS = @"!@£$%^&*()#€";
-
 
         public string GeneratePassword(bool useLowercase, bool useUppercase, bool useNumbers, bool useSpecial,
             int passwordSize)
@@ -73,11 +72,11 @@ namespace Expo_Management.API.Infraestructure.Utils
             int counter;
 
             // Build up the character set to choose from
+            if (useNumbers) charSet += NUMBERS;
+
             if (useLowercase) charSet += LOWER_CASE;
 
             if (useUppercase) charSet += UPPER_CAES;
-
-            if (useNumbers) charSet += NUMBERS;
 
             if (useSpecial) charSet += SPECIALS;
 
@@ -86,7 +85,14 @@ namespace Expo_Management.API.Infraestructure.Utils
                 _password[counter] = charSet[_random.Next(charSet.Length - 1)];
             }
 
-            return String.Join(null, _password);
+            string password = String.Join(null, _password);
+
+            if (!password.Any(char.IsDigit))
+            {
+                password = password + (_random.Next(NUMBERS.Length) - 9);
+            }
+
+            return password;
         }
     }
 }

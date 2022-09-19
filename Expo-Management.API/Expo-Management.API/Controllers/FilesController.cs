@@ -59,7 +59,7 @@ namespace UploadFiles.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("download-project-file")]
-        public async Task<FileResult?> DownladProjectFile(int id)
+        public async Task<FileResult> DownladProjectFile(int id)
         {
             var file = await _filesUploaderRepository.getProjectFile(id);
 
@@ -88,7 +88,7 @@ namespace UploadFiles.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("download-file")]
-        public async Task<IActionResult?> DownloadFile(int id)
+        public async Task<IActionResult> DownloadFile(int id)
         {
             var file = await _filesUploaderRepository.getFileAsync(id);
 

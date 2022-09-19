@@ -80,7 +80,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
                 if (membersOfTheGroup != null && !project)
                 {
-                    var upload = await _filesUploader.AddProjectsFile(model.Files);
+                    var upload = _filesUploader.AddProjectsFile(model.Files);
                     var Fair = await GetFair(model.Fair);
 
                     var category = await (from x in _context.Categories
@@ -321,8 +321,8 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
                 if (projects != null)
                 {
-                    List<string> members = await GetProjectMembers(projectId);
-                    List<ProjectQualificationsInputModel> qualifications = await GetProjectQualifications(projectId);
+                    List<string>? members = await GetProjectMembers(projectId);
+                    List<ProjectQualificationsInputModel>? qualifications = await GetProjectQualifications(projectId);
 
                     projects[0].Members = members;
                     projects[0].ProjectQualifications = qualifications;

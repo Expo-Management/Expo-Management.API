@@ -68,7 +68,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 _logger.LogWarning("Error al registrar un usuario, credenciales repetidas.");
                 return new Response { Status = "Error", Message = "User already exists!" };
             }
-            var password = _authUtils.GeneratePassword(true, true, true, true, 10);
+            var password = _authUtils.GeneratePassword(true, true, true, true, 15);
 
             User user = new()
             {
@@ -92,7 +92,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
             }
 
             await _authUtils.AssignRole(user, Role);
-            _logger.LogCritical("Error al registrar un usuario, contraseña incorrecta");
+            //_logger.LogCritical("Error al registrar un usuario, contraseña incorrecta");
 
             /*sending email confirmation*/
             var confirmEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);

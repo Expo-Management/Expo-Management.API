@@ -81,7 +81,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 return new Response { Status = "Error", Message = "El usuario con esas credenciales ya existe." };
             }
 
-            var password = _authUtils.GeneratePassword(true, true, true, true, 10);
+            var password = _authUtils.GeneratePassword(true, true, true, true, 15);
 
             User user = new()
             {

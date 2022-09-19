@@ -116,7 +116,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                          where x.StartDate.Year == DateTime.Now.Year
                                          select x.Id).FirstOrDefaultAsync();
 
-                if(currentFair != null)
+                if(currentFair != 0)
                 {
                     return currentFair;
                 }

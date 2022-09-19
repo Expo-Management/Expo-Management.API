@@ -76,7 +76,8 @@ namespace Expo_Management.API.Controllers
             }
             else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, response);
+                _logger.LogWarning("La cedula no puede ser repetida.");
+                return BadRequest("La cedula no puede ser repetida");
             }
         }
 

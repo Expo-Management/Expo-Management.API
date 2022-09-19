@@ -13,6 +13,7 @@ using System.Text;
 using Claim = System.Security.Claims.Claim;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Expo_Management.API.Infraestructure.Data;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -27,6 +28,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         private readonly ILogger<IdentityRepository> _logger;
         private AuthUtils _authUtils;
         private readonly IMailService _mailService;
+        private readonly ApplicationDbContext _context;
 
         /// <summary>
         /// Constructor del repositorio de IdentityUser
@@ -37,6 +39,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// <param name="configuration"></param>
         /// <param name="mailService"></param>
         public IdentityRepository(
+            ApplicationDbContext context,
             UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
             ILogger<IdentityRepository> logger,
@@ -47,7 +50,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
             _roleManager = roleManager;
             _logger = logger;
             _configuration = configuration;
-
+            _context = context;
             _authUtils = new AuthUtils(_userManager, _roleManager, _configuration);
             _mailService = mailService;
         }
@@ -60,14 +63,19 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// <returns></returns>
         public async Task<Response> RegisterNewUser(string Role, RegisterInputModel model)
         {
+
+            var phoneValidator = (from x in _context.User
+                                  where x.PhoneNumber == model.Phone
+                                  select x).FirstOrDefault();
+
             var emailExists = await _userManager.FindByEmailAsync(model.Email);
             var userExists = await _userManager.FindByNameAsync(model.Username);
 
-            if (userExists != null && emailExists != null)
+            if (userExists != null || emailExists != null || phoneValidator != null)
             {
-                _logger.LogWarning("Error al registrar un usuario, credenciales repetidas.");
-                return new Response { Status = "Error", Message = "User already exists!" };
+                return new Response { Status = "Error", Message = "El usuario con esas credenciales ya existe." };
             }
+
             var password = _authUtils.GeneratePassword(true, true, true, true, 15);
 
             User user = new()
@@ -87,12 +95,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
             if (!result.Succeeded)
             {
-                _logger.LogWarning("Error al registrar un usuario, contraseña incorrecta");
-                return new Response { Status = "Error", Message = "Creacion de usuario fallida, contraseña ocupa una mayuscula, un caracter especial, un numero y al menos debe ser de más de 8 caracteres de largo" };
+                _logger.LogWarning("Error al registrar un usuario.");
+                return new Response { Status = "Error", Message = "Creación de usuario fallida." };
             }
 
             await _authUtils.AssignRole(user, Role);
-            //_logger.LogCritical("Error al registrar un usuario, contraseña incorrecta");
 
             /*sending email confirmation*/
             var confirmEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -226,13 +233,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
             if (user == null)
             {
-                _logger.LogWarning("Error al encontrar usuario");
                 return new Response { Status = "Error", Message = "Usuario no encontrado" };
             }
 
             if (model.NewPassword != model.ConfirmPassword)
             {
-                _logger.LogWarning("Error durante cambio de contraseñas");
                 return new Response { Status = "Error", Message = "Contraseña nueva y Confirmación de contrseña nueva no son iguales" };
             }
 

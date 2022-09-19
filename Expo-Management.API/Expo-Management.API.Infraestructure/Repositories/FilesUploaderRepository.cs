@@ -24,7 +24,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
             _logger = logger;
         }
 
-        public async Task<Files?> AddProjectsFile(IFormFile file)
+        public Files? AddProjectsFile(IFormFile file)
         {
             Files obj = new();
             string wwwPath = _hostEnvironment.ContentRootPath;

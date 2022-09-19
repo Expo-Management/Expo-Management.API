@@ -64,19 +64,14 @@ namespace Expo_Management.API.Infraestructure.Repositories
         public async Task<Response> RegisterNewUser(string Role, RegisterInputModel model)
         {
 
-            /*var idValidator = (from x in _context.User
-                                  where x.Id == model.Id
-                                  select x).FirstOrDefault();*/
-
             var phoneValidator = (from x in _context.User
-                                    where x.PhoneNumber == model.Phone
-                                    select x).FirstOrDefault();
+                                  where x.PhoneNumber == model.Phone
+                                  select x).FirstOrDefault();
 
             var emailExists = await _userManager.FindByEmailAsync(model.Email);
             var userExists = await _userManager.FindByNameAsync(model.Username);
-            var idExists = await _userManager.FindByIdAsync(model.Id);
 
-            if (userExists != null || emailExists != null || phoneValidator != null || idExists != null)
+            if (userExists != null || emailExists != null || phoneValidator != null)
             {
                 return new Response { Status = "Error", Message = "El usuario con esas credenciales ya existe." };
             }

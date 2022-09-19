@@ -7,7 +7,7 @@ namespace Expo_Management.API.Application.Contracts.Repositories
     {
         Task<Files?> Add(IFormFile file);
 
-        Task<Files?> AddProjectsFile(IFormFile file);
+        Files? AddProjectsFile(IFormFile file);
 
         Task<Files?> AddProfilePicture(IFormFile file);
 

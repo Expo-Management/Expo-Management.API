@@ -2,7 +2,7 @@
 {
     public class ProjectQuantityInputModel
     {
-        public string name { get; set; } = default!;
-        public int value { get; set; }
-    }
+        public string? name { get; set; } = default!;
+        public int? value { get; set; } = default!;
+    } 
 }

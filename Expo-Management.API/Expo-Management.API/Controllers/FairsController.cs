@@ -2,6 +2,7 @@
 using Expo_Management.API.Domain.Models.InputModels;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Expo_Management.API.Infraestructure.Repositories;
 
 namespace Expo_Management.API.Controllers
 {
@@ -30,7 +31,7 @@ namespace Expo_Management.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("fair")]
-        public async Task<IActionResult> AddFair([FromBody] NewFairInputModel model)
+        public async Task<IActionResult> AddFair(DateTime model)
         {
             try
             {
@@ -50,7 +51,26 @@ namespace Expo_Management.API.Controllers
         }
 
         /// <summary>
-        /// Metodo para obetener la feria actual
+        /// Endpoint para eliminar una feria
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("fair")]
+        public async Task<IActionResult> DeleteCategoryAsync(int id)
+        {
+            var fair = await _fairRepository.DeleteFairAsync(id);
+
+            if (fair)
+            {
+                return Ok("Feria eliminada");
+            }
+            return BadRequest("Hubo un error, por favor, intentelo más tarde.");
+
+        }
+
+        /// <summary>
+        /// Metodo para obtener la feria actual
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -60,6 +80,31 @@ namespace Expo_Management.API.Controllers
             try
             {
                 var currentFair = await _fairRepository.GetCurrentFairIdAsync();
+
+                if (currentFair != 0)
+                {
+                    return Ok(currentFair);
+                }
+                return Ok(0);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Hubo un error, por favor, intentelo más tarde.");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Metodo para obtener los dias restantes de la feria actual
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("current-fair-days")]
+        public async Task<IActionResult> GetDaysFromCurrentFair()
+        {
+            try
+            {
+                var currentFair = await _fairRepository.GetCurrentFairDaysAsync();
 
                 if (currentFair != 0)
                 {

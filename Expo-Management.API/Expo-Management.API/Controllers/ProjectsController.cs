@@ -4,6 +4,7 @@ using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UploadFiles.Controllers;
 
 namespace Expo_Management.API.Controllers
 {
@@ -16,15 +17,18 @@ namespace Expo_Management.API.Controllers
     {
 
         private readonly IProjectsRepository _projectsRepository;
+        private readonly ILogger<ProjectsController> _logger;
 
 
         /// <summary>
         /// Constructor del controlador de proyectos
         /// </summary>
         /// <param name="projectsRepository"></param>
-        public ProjectsController(IProjectsRepository projectsRepository)
+        /// <param name="logger"></param>
+        public ProjectsController(IProjectsRepository projectsRepository, ILogger<ProjectsController> logger)
         {
             _projectsRepository = projectsRepository;
+            _logger = logger;
         }
 
         /// <summary>
@@ -47,9 +51,10 @@ namespace Expo_Management.API.Controllers
                 }
                 return Ok(project);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500);
             }
         }
 
@@ -98,7 +103,7 @@ namespace Expo_Management.API.Controllers
             }
             catch (Exception)
             {
-                throw;
+                return StatusCode(500);
             }
         }
 
@@ -122,7 +127,7 @@ namespace Expo_Management.API.Controllers
             }
             catch (Exception)
             {
-                throw;
+                return StatusCode(500);
             }
         }
 
@@ -146,7 +151,7 @@ namespace Expo_Management.API.Controllers
             }
             catch (Exception)
             {
-                throw;
+                return StatusCode(500);
             }
         }
 
@@ -192,8 +197,9 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest("Id del proyecto o detalles icorrectos");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return StatusCode(500);
             }
         }
@@ -219,7 +225,7 @@ namespace Expo_Management.API.Controllers
             }
             catch (Exception)
             {
-                throw;
+                return StatusCode(500);
             }
         }
 
@@ -243,7 +249,8 @@ namespace Expo_Management.API.Controllers
             }
             catch (Exception)
             {
-                throw;            }
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
@@ -351,8 +358,9 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest("Los datos ingresados son incorrectos.");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return StatusCode(500);
             }
         }

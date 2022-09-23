@@ -4,6 +4,7 @@ using Expo_Management.API.Infraestructure.Data;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -30,25 +31,31 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Fair?> CreateFairAsync(NewFairInputModel model)
+        public async Task<Fair?> CreateFairAsync(DateTime model)
         {
             try
             {
-                if(model != null)
+                var newFair = new Fair()
                 {
-                    var newFair = new Fair()
-                    {
-                        StartDate = model.StartDate,
-                        EndDate = model.EndDate,
-                        Description = "Expo Ingeniería " + model.StartDate.Year,
-                    };
+                    StartDate = model,
+                    EndDate = model.AddMonths(5),
+                    Description = "Expo Ingeniería " + model.Year,
+                };
+
+                if(GetCurrentFairIdAsync() == null)
+                {
+
                     if (await _context.Fair.AddAsync(newFair) != null)
                     {
                         await _context.SaveChangesAsync();
                         return newFair;
                     }
+
+                    _logger.LogWarning("Error al crear una feria.");
+                    return null;
                 }
-                _logger.LogWarning("Error al crear una feria.");
+
+                _logger.LogWarning("Ya existe una feria actual.");
                 return null;
             }
             catch (Exception)
@@ -70,19 +77,18 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                     where x.Id == id
                                     select x).FirstOrDefaultAsync();
 
-                if (result != null)
+                if (result != null && result.EndDate <= DateTime.Now)
                 {
                     _context.Fair.Remove(result);
                     _context.SaveChanges();
                     return true;
                 }
 
-                _logger.LogWarning("Error al eliminar una feria.");
+                _logger.LogWarning("Feria todavia no esta por acabar.");
                 return false;
             }
             catch (Exception)
             {
-
                 return false;
             }
         }
@@ -116,9 +122,34 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                          where x.StartDate.Year == DateTime.Now.Year
                                          select x.Id).FirstOrDefaultAsync();
 
-                if(currentFair != 0)
+                if (currentFair != 0)
                 {
                     return currentFair;
+                }
+                return 0;
+
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Metodo para obtener los dias restantes de la feria actual
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> GetCurrentFairDaysAsync()
+        {
+            try
+            {
+                var currentFair = await (from x in _context.Fair
+                                         where x.StartDate.Year == DateTime.Now.Year
+                                         select x).FirstOrDefaultAsync();
+
+                if (currentFair != null)
+                {
+                    return (DateTime.Now.Day - currentFair.EndDate.Day);
                 }
                 return 0;
 

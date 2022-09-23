@@ -358,10 +358,9 @@ namespace Expo_Management.API.Infraestructure.Repositories
                         counter++;
                     }
 
-                    return FinalQualification / counter;
+                    return await Task.FromResult(FinalQualification / counter); 
                 }
                 return 0;
-
             }
         }
 

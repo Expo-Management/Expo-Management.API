@@ -102,6 +102,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         public async Task<User?> UpdateJudgeAsync(UpdateUserInputModel model)
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);
+            //var oldUser = await _userManager.FindByIdAsync(model.Id);
 
             oldUser.UserName = model.UserName;
             oldUser.Name = model.Name;

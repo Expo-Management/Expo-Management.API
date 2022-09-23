@@ -64,11 +64,12 @@
             <param name="token"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Controllers.AuthenticateController.ForgetPassword(System.String)">
+        <member name="M:Expo_Management.API.Controllers.AuthenticateController.ForgetPassword(System.String,System.String)">
             <summary>
             Endpoint para solicitar un cambio de contraseña
             </summary>
             <param name="email"></param>
+            <param name="role"></param>
             <returns></returns>
         </member>
         <member name="M:Expo_Management.API.Controllers.AuthenticateController.ResetPassword(Expo_Management.API.Domain.Models.ViewModels.ResetPasswordViewModel)">
@@ -186,16 +187,29 @@
             </summary>
             <param name="fairRepository"></param>
         </member>
-        <member name="M:Expo_Management.API.Controllers.FairsController.AddFair(Expo_Management.API.Domain.Models.InputModels.NewFairInputModel)">
+        <member name="M:Expo_Management.API.Controllers.FairsController.AddFair(System.DateTime)">
             <summary>
             Metodo para añadir una feria
             </summary>
             <param name="model"></param>
             <returns></returns>
         </member>
+        <member name="M:Expo_Management.API.Controllers.FairsController.DeleteCategoryAsync(System.Int32)">
+            <summary>
+            Endpoint para eliminar una feria
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
         <member name="M:Expo_Management.API.Controllers.FairsController.GetCurrentFair">
             <summary>
-            Metodo para obetener la feria actual
+            Metodo para obtener la feria actual
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.FairsController.GetDaysFromCurrentFair">
+            <summary>
+            Metodo para obtener los dias restantes de la feria actual
             </summary>
             <returns></returns>
         </member>
@@ -227,11 +241,12 @@
             Controlador para proyectos
             </summary>
         </member>
-        <member name="M:Expo_Management.API.Controllers.ProjectsController.#ctor(Expo_Management.API.Application.Contracts.Repositories.IProjectsRepository)">
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.#ctor(Expo_Management.API.Application.Contracts.Repositories.IProjectsRepository,Microsoft.Extensions.Logging.ILogger{Expo_Management.API.Controllers.ProjectsController})">
             <summary>
             Constructor del controlador de proyectos
             </summary>
             <param name="projectsRepository"></param>
+            <param name="logger"></param>
         </member>
         <member name="M:Expo_Management.API.Controllers.ProjectsController.AddProjects(Expo_Management.API.Domain.Models.InputModels.NewProjectInputModel)">
             <summary>
@@ -450,11 +465,12 @@
             Controlador de archivos
             </summary>
         </member>
-        <member name="M:UploadFiles.Controllers.FilesController.#ctor(Expo_Management.API.Application.Contracts.Repositories.IFilesUploaderRepository)">
+        <member name="M:UploadFiles.Controllers.FilesController.#ctor(Expo_Management.API.Application.Contracts.Repositories.IFilesUploaderRepository,Microsoft.Extensions.Logging.ILogger{UploadFiles.Controllers.FilesController})">
             <summary>
             Constructor del controlador de archivos
             </summary>
             <param name="filesUploaderRepository"></param>
+            <param name="logger"></param>
         </member>
         <member name="M:UploadFiles.Controllers.FilesController.UploadFile(Microsoft.AspNetCore.Http.IFormFile)">
             <summary>

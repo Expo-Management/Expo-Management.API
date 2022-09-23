@@ -189,7 +189,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<Response> ForgetPasswordAsync(string email)
+        public async Task<Response> ForgetPasswordAsync(string email, string role)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
@@ -202,9 +202,23 @@ namespace Expo_Management.API.Infraestructure.Repositories
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedMailToken = Encoding.UTF8.GetBytes(token);
             var validToken = WebEncoders.Base64UrlEncode(encodedMailToken);
-            string url = $"{_configuration["WebUrl"]}/administrator/reset-password?email={email}&token={validToken}";
-            dynamic ForgetPasswordTemplate = new DynamicTemplate();
 
+
+            string url = "";
+            if(role == "Judge")
+            {
+                 url = $"{_configuration["WebUrl"]}/judges/reset-password?email={email}&token={validToken}";
+            }
+            else if(role == "Admin")
+            {
+                 url = $"{_configuration["WebUrl"]}/administrator/reset-password?email={email}&token={validToken}";
+            }
+            else
+            {
+                 url = $"{_configuration["WebUrl"]}/student/reset-password?email={email}&token={validToken}";
+            }
+
+            dynamic ForgetPasswordTemplate = new DynamicTemplate();
             await _mailService.SendEmailAsync(email, "d-9b96ec3a9bb846dd99b1d3c09903e90c", ForgetPasswordTemplate = new
             {
                 username = user.UserName,

@@ -5,6 +5,7 @@ using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -31,10 +32,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Fair?> CreateFairAsync(DateTime model)
+        public async Task<Fair?> CreateFairAsync()
         {
             try
             {
+                var model = DateTime.Now;
                 var newFair = new Fair()
                 {
                     StartDate = model,
@@ -42,7 +44,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                     Description = "Expo Ingeniería " + model.Year,
                 };
 
-                if(GetCurrentFairIdAsync() == null)
+                if(GetCurrentFairId() == 0 && newFair.EndDate.Year == DateTime.Now.Year)
                 {
 
                     if (await _context.Fair.AddAsync(newFair) != null)
@@ -114,13 +116,13 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener las ferias actuales
         /// </summary>
         /// <returns></returns>
-        public async Task<int> GetCurrentFairIdAsync()
+        public int GetCurrentFairId()
         {
             try
             {
-                var currentFair = await (from x in _context.Fair
+                var currentFair =  (from x in _context.Fair
                                          where x.StartDate.Year == DateTime.Now.Year
-                                         select x.Id).FirstOrDefaultAsync();
+                                         select x.Id).FirstOrDefault();
 
                 if (currentFair != 0)
                 {
@@ -139,7 +141,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener los dias restantes de la feria actual
         /// </summary>
         /// <returns></returns>
-        public async Task<int> GetCurrentFairDaysAsync()
+        public async Task<int> GetLeftDaysAsync()
         {
             try
             {
@@ -149,7 +151,25 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
                 if (currentFair != null)
                 {
-                    return (DateTime.Now.Day - currentFair.EndDate.Day);
+                    var Alldays = 0;
+                    var useDays = 0;
+
+                    for (int i = currentFair.StartDate.Month; i <= currentFair.EndDate.Month; i++)
+                    {
+                        Alldays += DateTime.DaysInMonth(currentFair.StartDate.Year, i);
+
+                    }
+
+                    for (int i = currentFair.StartDate.Month; i <= DateTime.Now.Month; i++)
+                    {
+                        useDays += DateTime.DaysInMonth(currentFair.StartDate.Year, i);
+                    }
+
+                    Alldays = Alldays - (DateTime.DaysInMonth(DateTime.Now.Year, currentFair.EndDate.Month) - currentFair.EndDate.Day);
+
+                    useDays = useDays - (DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - DateTime.Now.Day);
+
+                    return Alldays - useDays;
                 }
                 return 0;
 

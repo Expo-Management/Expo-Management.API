@@ -27,19 +27,18 @@ namespace Expo_Management.API.Controllers
         /// <summary>
         /// Metodo para añadir una feria
         /// </summary>
-        /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
         [Route("fair")]
-        public async Task<IActionResult> AddFair(DateTime model)
+        public async Task<IActionResult> AddFair()
         {
             try
             {
-                var fair = await _fairRepository.CreateFairAsync(model);
+                var fair = await _fairRepository.CreateFairAsync();
 
                 if (fair == null)
                 {
-                    return BadRequest("La feria ya existe.");
+                    return BadRequest("La feria ya existe o la feria no esta en un rango dentro del mismo año.");
 
                 }
                 return Ok(fair);
@@ -75,11 +74,11 @@ namespace Expo_Management.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("current-fair")]
-        public async Task<IActionResult> GetCurrentFair()
+        public IActionResult GetCurrentFair()
         {
             try
             {
-                var currentFair = await _fairRepository.GetCurrentFairIdAsync();
+                var currentFair =  _fairRepository.GetCurrentFairId();
 
                 if (currentFair != 0)
                 {
@@ -99,12 +98,12 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("current-fair-days")]
-        public async Task<IActionResult> GetDaysFromCurrentFair()
+        [Route("left-fair-days")]
+        public async Task<IActionResult> GetLeftDaysFair()
         {
             try
             {
-                var currentFair = await _fairRepository.GetCurrentFairDaysAsync();
+                var currentFair = await _fairRepository.GetLeftDaysAsync();
 
                 if (currentFair != 0)
                 {

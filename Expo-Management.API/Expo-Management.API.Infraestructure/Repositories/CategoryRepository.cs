@@ -7,17 +7,32 @@ using Microsoft.Extensions.Logging;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
+    /// <summary>
+    /// Repositorio de Categorias de la feria
+    /// </summary>
     public class CategoryRepository : ICategoryRepository
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<CategoryRepository> _logger;
 
+
+        /// <summary>
+        /// Constructor del repositorio de Categoria de la feria
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="logger"></param>
         public CategoryRepository(ApplicationDbContext context, ILogger<CategoryRepository> logger)
         {
             _context = context;
             _logger = logger;
         }
 
+
+        /// <summary>
+        /// Metodo para crear Categorias de la feria
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<Category?> CreateCategoryAsync(NewCategoryInputModel model)
         {
             try
@@ -46,6 +61,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para eliminar Categoria de la feria
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
         public async Task<bool> DeleteCategoryAsync(int id)
         {
             try
@@ -71,6 +91,10 @@ namespace Expo_Management.API.Infraestructure.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener las categorias de la feria
+        /// </summary>
+        /// <returns></returns>
         public async Task<List<Category>?> GetAllCategoriesAsync()
         {
             try
@@ -84,6 +108,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
             }
         }
 
+        /// <summary>
+        /// Metodo para obtener una categoria de la feria
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <returns></returns>
         public async Task<Category?> GetCategoryAsync(int id)
         {
             try

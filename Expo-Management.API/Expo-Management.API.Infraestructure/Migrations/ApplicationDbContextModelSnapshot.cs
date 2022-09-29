@@ -262,6 +262,10 @@ namespace Expo_Management.API.Infraestructure.Migrations
                     b.Property<int>("categoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("oldMembers")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FairId");
@@ -342,7 +346,7 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FairId")
+                    b.Property<int?>("FairId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -723,9 +727,7 @@ namespace Expo_Management.API.Infraestructure.Migrations
                 {
                     b.HasOne("Expo_Management.API.Domain.Models.Entities.Fair", "Fair")
                         .WithMany()
-                        .HasForeignKey("FairId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FairId");
 
                     b.Navigation("Fair");
                 });

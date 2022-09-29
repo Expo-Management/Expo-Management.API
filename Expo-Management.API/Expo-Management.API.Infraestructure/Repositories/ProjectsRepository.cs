@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using SendGrid.Helpers.Mail;
+using System.Security.Cryptography;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -87,7 +89,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                           where x.Id == model.Category
                                           select x).FirstOrDefaultAsync();
 
-                    if(category != null && Fair != null)
+                    if (category != null && Fair != null)
                     {
                         //create new project
                         Project newProject = new Project()
@@ -96,7 +98,8 @@ namespace Expo_Management.API.Infraestructure.Repositories
                             Name = model.Name,
                             Fair = Fair,
                             Description = model.Description,
-                            category = category
+                            category = category,
+                            oldMembers = ""
                         };
 
                         var projectCreated = await _context.Projects.AddAsync(newProject);
@@ -193,6 +196,75 @@ namespace Expo_Management.API.Infraestructure.Repositories
         }
 
         /// <summary>
+        /// Metodo para borrar estudiantes de un proyecto
+        /// excepto el lider del proyecto
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public async Task<User?> removeUserFromProject(string email)
+        {
+            try
+            {
+                var removedUser = await (from u in _context.User
+                                         where u.Email == email
+                                         select u)
+                                         .Include(p => p.Project)
+                                         .FirstOrDefaultAsync();
+
+                if (removedUser != null)
+                {
+                    removedUser.Project.oldMembers = String.Concat(removedUser.Project.oldMembers, " " + removedUser.UserName);
+                    removedUser.Project = null;
+                    _context.SaveChanges();
+                    return removedUser;
+                }
+
+                return null;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+
+        ///// <summary>
+        ///// Metodo para verificar si el proyecto existe
+        ///// </summary>
+        ///// <param name="email"></param>
+        ///// <returns></returns>
+        //public async Task<Project?> removeProject(string email)
+        //{
+        //    try
+        //    {
+        //        var removedUser = await (from u in _context.User
+        //                                 where u.Email == email
+        //                                 select u)
+        //                                 .Include(p => p.Project)
+        //                                 .FirstOrDefaultAsync();
+
+        //        if (removedUser != null)
+        //        {
+
+        //            removedUser.Project.oldMembers = String.Concat(removedUser.Project.oldMembers, ", " + removedUser.UserName);
+        //            Project oldProject = removedUser.Project;
+        //            removedUser.Project = null;
+        //            _context.SaveChanges();
+        //            return oldProject;
+        //        }
+
+        //        return null;
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        return null;
+        //    }
+        //}
+
+
+        /// <summary>
         /// Metodo para obtener las menciones
         /// </summary>
         /// <returns></returns>
@@ -223,15 +295,15 @@ namespace Expo_Management.API.Infraestructure.Repositories
         {
             try
             {
-                var projects = await (from p in _context.Projects
-                                      where p.Fair.StartDate.Year == DateTime.Now.Year
-                                      select p).ToListAsync();
+                var projects =  await (from p in _context.Projects
+                              join u in _context.User on p.Id equals u.Project.Id
+                              where p.Fair.StartDate.Year == DateTime.Now.Year && u.Project != null
+                              select p)
+                              .Include(x => x.Files)
+                              .Include(c => c.category)
+                              .ToListAsync();
 
-                if (projects != null && projects.Any())
-                {
-                    return projects;
-                }
-                return null;
+                return projects.Distinct().ToList();
             }
             catch (Exception)
             {
@@ -358,10 +430,9 @@ namespace Expo_Management.API.Infraestructure.Repositories
                         counter++;
                     }
 
-                    return FinalQualification / counter;
+                    return await Task.FromResult(FinalQualification / counter);
                 }
                 return 0;
-
             }
         }
 

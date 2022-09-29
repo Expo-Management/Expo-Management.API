@@ -18,7 +18,7 @@ namespace Expo_Management.API.Controllers
         [Route("shutdown-system")]
         public async Task<IActionResult> ShutDownSystem()
         {
-            return Ok();
+            return await Task.FromResult(Ok());
         }
     }
 }

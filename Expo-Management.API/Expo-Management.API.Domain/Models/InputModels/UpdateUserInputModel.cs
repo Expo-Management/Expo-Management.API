@@ -4,7 +4,7 @@ namespace Expo_Management.API.Domain.Models.InputModels
 {
     public class UpdateUserInputModel
     {
-        public string Id { get; set; } = default!;
+        //public string Id { get; set; } = default!;
 
         [Required(ErrorMessage = "Username es requerido")]
         public string UserName { get; set; } = default!;

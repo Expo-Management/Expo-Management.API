@@ -22,5 +22,7 @@ namespace Expo_Management.API.Domain.Models.Entities
         public Fair Fair { get; set; } = default!;
 
         public Category category { get; set; } = default!;
+
+        public string? oldMembers { get; set; } = default!;
     }
 }

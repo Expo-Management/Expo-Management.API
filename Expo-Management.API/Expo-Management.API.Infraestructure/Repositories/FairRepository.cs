@@ -4,6 +4,8 @@ using Expo_Management.API.Infraestructure.Data;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -30,25 +32,32 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Fair?> CreateFairAsync(NewFairInputModel model)
+        public async Task<Fair?> CreateFairAsync()
         {
             try
             {
-                if(model != null)
+                var model = DateTime.Now;
+                var newFair = new Fair()
                 {
-                    var newFair = new Fair()
-                    {
-                        StartDate = model.StartDate,
-                        EndDate = model.EndDate,
-                        Description = "Expo Ingeniería " + model.StartDate.Year,
-                    };
+                    StartDate = model,
+                    EndDate = model.AddMonths(8),
+                    Description = "Expo Ingeniería " + model.Year,
+                };
+
+                if(GetCurrentFairId() == 0 /*&& newFair.EndDate.Year == DateTime.Now.Year*/)
+                {
+
                     if (await _context.Fair.AddAsync(newFair) != null)
                     {
                         await _context.SaveChangesAsync();
                         return newFair;
                     }
+
+                    _logger.LogWarning("Error al crear una feria.");
+                    return null;
                 }
-                _logger.LogWarning("Error al crear una feria.");
+
+                _logger.LogWarning("Ya existe una feria actual.");
                 return null;
             }
             catch (Exception)
@@ -70,19 +79,18 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                     where x.Id == id
                                     select x).FirstOrDefaultAsync();
 
-                if (result != null)
+                if (result != null && result.EndDate <= DateTime.Now)
                 {
                     _context.Fair.Remove(result);
                     _context.SaveChanges();
                     return true;
                 }
 
-                _logger.LogWarning("Error al eliminar una feria.");
+                _logger.LogWarning("Feria todavia no esta por acabar.");
                 return false;
             }
             catch (Exception)
             {
-
                 return false;
             }
         }
@@ -108,17 +116,60 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener las ferias actuales
         /// </summary>
         /// <returns></returns>
-        public async Task<int> GetCurrentFairIdAsync()
+        public int GetCurrentFairId()
+        {
+            try
+            {
+                var currentFair =  (from x in _context.Fair
+                                         where x.StartDate.Year == DateTime.Now.Year
+                                         select x.Id).FirstOrDefault();
+
+                if (currentFair != 0)
+                {
+                    return currentFair;
+                }
+                return 0;
+
+            }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Metodo para obtener los dias restantes de la feria actual
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> GetLeftDaysAsync()
         {
             try
             {
                 var currentFair = await (from x in _context.Fair
                                          where x.StartDate.Year == DateTime.Now.Year
-                                         select x.Id).FirstOrDefaultAsync();
+                                         select x).FirstOrDefaultAsync();
 
-                if(currentFair != 0)
+                if (currentFair != null)
                 {
-                    return currentFair;
+                    var Alldays = 0;
+                    var useDays = 0;
+
+                    for (int i = currentFair.StartDate.Month; i <= currentFair.EndDate.Month; i++)
+                    {
+                        Alldays += DateTime.DaysInMonth(currentFair.StartDate.Year, i);
+
+                    }
+
+                    for (int i = currentFair.StartDate.Month; i <= DateTime.Now.Month; i++)
+                    {
+                        useDays += DateTime.DaysInMonth(currentFair.StartDate.Year, i);
+                    }
+
+                    Alldays = Alldays - (DateTime.DaysInMonth(DateTime.Now.Year, currentFair.EndDate.Month) - currentFair.EndDate.Day);
+
+                    useDays = useDays - (DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month) - DateTime.Now.Day);
+
+                    return Alldays - useDays;
                 }
                 return 0;
 

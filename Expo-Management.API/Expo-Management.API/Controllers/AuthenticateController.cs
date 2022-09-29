@@ -158,14 +158,15 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para solicitar un cambio de contraseña
         /// </summary>
         /// <param name="email"></param>
+        /// <param name="role"></param>
         /// <returns></returns>
         [HttpPost("ForgetPassword")]
-        public async Task<IActionResult> ForgetPassword(string email)
+        public async Task<IActionResult> ForgetPassword(string email, string role)
         {
             if (string.IsNullOrWhiteSpace(email))
                 return BadRequest("error");
 
-            var result = await _identityRepository.ForgetPasswordAsync(email);
+            var result = await _identityRepository.ForgetPasswordAsync(email, role);
 
             if (result.Status == "Success")
             {

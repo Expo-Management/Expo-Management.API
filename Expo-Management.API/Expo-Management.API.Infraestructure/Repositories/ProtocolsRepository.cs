@@ -55,7 +55,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                         
                 };
 
-                    if (await _context.SecurityProtocols.AddAsync(newProtocol) != null)
+                    if (await _context.SecurityProtocols.AddAsync(newProtocol) != null && CurrentFair != null)
                     {
                         await _context.SaveChangesAsync();
                         return newProtocol;

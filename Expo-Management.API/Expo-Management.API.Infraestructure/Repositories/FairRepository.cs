@@ -40,11 +40,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 var newFair = new Fair()
                 {
                     StartDate = model,
-                    EndDate = model.AddMonths(5),
+                    EndDate = model.AddMonths(8),
                     Description = "Expo Ingeniería " + model.Year,
                 };
 
-                if(GetCurrentFairId() == 0 && newFair.EndDate.Year == DateTime.Now.Year)
+                if(GetCurrentFairId() == 0 /*&& newFair.EndDate.Year == DateTime.Now.Year*/)
                 {
 
                     if (await _context.Fair.AddAsync(newFair) != null)

@@ -206,7 +206,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Controllers.FairsController.GetDaysFromCurrentFair">
+        <member name="M:Expo_Management.API.Controllers.FairsController.GetLeftDaysFair">
             <summary>
             Metodo para obtener los dias restantes de la feria actual
             </summary>
@@ -257,6 +257,12 @@
         <member name="M:Expo_Management.API.Controllers.ProjectsController.ShowProjects">
             <summary>
             Endpoint para mostrar proyectos
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.removeUserFromProject(System.String)">
+            <summary>
+            Endpoint para eliminar a un usuario de su grupo de proyecto de Feria
             </summary>
             <returns></returns>
         </member>

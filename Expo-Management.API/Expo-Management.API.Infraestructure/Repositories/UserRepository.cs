@@ -11,7 +11,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
     /// <summary>
     /// Repositorio de usuarios
     /// </summary>
-    public class UserRepository: IUsersRepository
+    public class UserRepository : IUsersRepository
     {
         private readonly UserManager<User> _userManager;
         private readonly ApplicationDbContext _context;
@@ -29,7 +29,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
             ApplicationDbContext context,
             IFilesUploaderRepository filesRepository,
             ILogger<UserRepository> logger
-            ) 
+            )
         {
             _context = context;
             _userManager = userManager;
@@ -42,7 +42,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<String?> GetUserFullName(string email) 
+        public async Task<String?> GetUserFullName(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
@@ -68,7 +68,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
             {
                 return judges;
             }
-            else 
+            else
             {
                 return null;
             }
@@ -103,29 +103,27 @@ namespace Expo_Management.API.Infraestructure.Repositories
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);
 
-            oldUser.UserName = model.UserName;
-            oldUser.Name = model.Name;
-            oldUser.Lastname = model.Lastname;
-            oldUser.Email = model.Email;
-            oldUser.PhoneNumber = model.Phone;
-
-            // if (model.ProfilePicture != null)
-            // {
-            //     var upload = await _filesRepository.AddProfilePicture(model.ProfilePicture);
-            //     oldUser.ProfilePicture = upload;
-            // }
-
-            var result = await _userManager.UpdateAsync(oldUser);
-
-            if (result.Succeeded)
+            if(oldUser != null)
             {
-                return oldUser;
+                oldUser.UserName = model.UserName;
+                oldUser.Name = model.Name;
+                oldUser.Lastname = model.Lastname;
+                oldUser.Email = model.Email;
+                oldUser.PhoneNumber = model.Phone;
+
+                var result = await _userManager.UpdateAsync(oldUser);
+
+                if (result.Succeeded)
+                {
+                    return oldUser;
+                }
+                else
+                {
+                    _logger.LogWarning("Error al actualizar el juez.");
+                    return null;
+                }
             }
-            else
-            {
-                _logger.LogWarning("Error al actualizar el juez.");
-                return null;
-            }
+            return null;
         }
 
         /// <summary>
@@ -141,11 +139,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
             {
                 var result = await _userManager.DeleteAsync(user);
                 return true;
-            } 
-            else 
+            }
+            else
             {
                 _logger.LogWarning("Error al borrar el juez.");
-                return false; 
+                return false;
             }
         }
 
@@ -196,29 +194,27 @@ namespace Expo_Management.API.Infraestructure.Repositories
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);
 
-            oldUser.UserName = model.UserName;
-            oldUser.Name = model.Name;
-            oldUser.Lastname = model.Lastname;
-            oldUser.Email = model.Email;
-            oldUser.PhoneNumber = model.Phone;
-
-            // if (model.ProfilePicture != null)
-            // {
-            //     var upload = await _filesRepository.AddProfilePicture(model.ProfilePicture);
-            //     oldUser.ProfilePicture = upload;
-            // }
-
-            var result = await _userManager.UpdateAsync(oldUser);
-
-            if (result.Succeeded)
+            if(oldUser != null)
             {
-                return oldUser;
+                oldUser.UserName = model.UserName;
+                oldUser.Name = model.Name;
+                oldUser.Lastname = model.Lastname;
+                oldUser.Email = model.Email;
+                oldUser.PhoneNumber = model.Phone;
+
+                var result = await _userManager.UpdateAsync(oldUser);
+
+                if (result.Succeeded)
+                {
+                    return oldUser;
+                }
+                else
+                {
+                    _logger.LogWarning("Error al actualizar el profesor.");
+                    return null;
+                }
             }
-            else
-            {
-                _logger.LogWarning("Error al actualizar el profesor.");
-                return null;
-            }
+            return null;
         }
 
         /// <summary>
@@ -242,7 +238,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
             }
         }
 
-        
+
         /// <summary>
         /// Metodo para obtener todos los estudiantes
         /// </summary>
@@ -292,29 +288,27 @@ namespace Expo_Management.API.Infraestructure.Repositories
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);
 
-            oldUser.UserName = model.UserName;
-            oldUser.Name = model.Name;
-            oldUser.Lastname = model.Lastname;
-            oldUser.Email = model.Email;
-            oldUser.PhoneNumber = model.Phone;
-
-            // if (model.ProfilePicture != null)
-            // {
-            //     var upload = await _filesRepository.AddProfilePicture(model.ProfilePicture);
-            //     oldUser.ProfilePicture = upload;
-            // }
-
-            var result = await _userManager.UpdateAsync(oldUser);
-
-            if (result.Succeeded)
+            if (oldUser != null)
             {
-                return oldUser;
+                oldUser.UserName = model.UserName;
+                oldUser.Name = model.Name;
+                oldUser.Lastname = model.Lastname;
+                oldUser.Email = model.Email;
+                oldUser.PhoneNumber = model.Phone;
+
+                var result = await _userManager.UpdateAsync(oldUser);
+
+                if (result.Succeeded)
+                {
+                    return oldUser;
+                }
+                else
+                {
+                    _logger.LogWarning("Error al actualizar el estudiante.");
+                    return null;
+                }
             }
-            else
-            {
-                _logger.LogWarning("Error al actualizar el estudiante.");
-                return null;
-            }
+            return null;
         }
 
         /// <summary>
@@ -347,26 +341,31 @@ namespace Expo_Management.API.Infraestructure.Repositories
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);
 
-            oldUser.UserId = model.UserId;
-            oldUser.Name = model.Name;
-            oldUser.Lastname = model.Last;
-            oldUser.Email = model.Email;
-            oldUser.UserName = model.Username;
-            oldUser.PhoneNumber = model.Phone;
-            oldUser.Project = model.Project;
-            oldUser.IsLead = model.IsLead;
-
-            var result = await _userManager.UpdateAsync(oldUser);
-
-            if (result.Succeeded)
+            if(oldUser != null)
             {
-                return oldUser;
+                oldUser.UserId = model.UserId;
+                oldUser.Name = model.Name;
+                oldUser.Lastname = model.Last;
+                oldUser.Email = model.Email;
+                oldUser.UserName = model.Username;
+                oldUser.PhoneNumber = model.Phone;
+                oldUser.Project = model.Project;
+                oldUser.IsLead = model.IsLead;
+
+                var result = await _userManager.UpdateAsync(oldUser);
+
+                if (result.Succeeded)
+                {
+                    return oldUser;
+                }
+                else
+                {
+                    _logger.LogWarning("Error al actualizar el proyecto del estudiante.");
+                    return null;
+                }
             }
-            else
-            {
-                _logger.LogWarning("Error al actualizar el proyecto del estudiante.");
-                return null;
-            }
+
+            return null;
         }
     }
 }

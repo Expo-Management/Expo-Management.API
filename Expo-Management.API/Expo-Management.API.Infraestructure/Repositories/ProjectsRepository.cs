@@ -322,7 +322,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 if (projects != null)
                 {
                     List<string>? members = await GetProjectMembers(projectId);
-                    List<ProjectQualificationsInputModel>? qualifications = await GetProjectQualifications(projectId);
+                    List<ProjectQualificationsViewModel>? qualifications = await GetProjectQualifications(projectId);
 
                     projects[0].Members = members;
                     projects[0].ProjectQualifications = qualifications;
@@ -345,7 +345,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                               select u.Name + " " + u.Lastname).ToListAsync();
             }
 
-            async Task<int> CalculateProjectFinalPunctuation(List<ProjectQualificationsInputModel> qualifications)
+            async Task<int> CalculateProjectFinalPunctuation(List<ProjectQualificationsViewModel> qualifications)
             {
                 if (qualifications != null && qualifications.Count() > 0)
                 {
@@ -618,7 +618,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
-        public async Task<List<ProjectQualificationsInputModel>?> GetProjectQualifications(int projectId)
+        public async Task<List<ProjectQualificationsViewModel>?> GetProjectQualifications(int projectId)
         {
 
             try
@@ -627,7 +627,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                               join q in _context.Qualifications on p.Id equals q.Project.Id
                               join u in _context.User on q.Judge.Id equals u.Id
                               where p.Id == projectId
-                              select new ProjectQualificationsInputModel()
+                              select new ProjectQualificationsViewModel()
                               {
                                   Punctuation = q.Punctuation,
                                   JudgeName = u.Name + " " + u.Lastname
@@ -635,7 +635,6 @@ namespace Expo_Management.API.Infraestructure.Repositories
             }
             catch (Exception)
             {
-
                 return null;
             }
         }
@@ -644,14 +643,14 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener los proyectos de cada año
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProjectQuantityInputModel>?> GetProjectsByYear()
+        public async Task<List<ProjectQuantityViewModel>?> GetProjectsByYear()
         {
 
             try
             {
                 return await _context.Projects
                 .GroupBy(x => x.Fair.StartDate.Year)
-                .Select(x => new ProjectQuantityInputModel
+                .Select(x => new ProjectQuantityViewModel
                 {
                     name = x.Select(x => x.Fair.Description).First(),
                     value = x.Count()
@@ -668,14 +667,14 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener las categorias por los proyectos
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProjectQuantityInputModel>?> GetProjectsByCategory()
+        public async Task<List<ProjectQuantityViewModel>?> GetProjectsByCategory()
         {
 
             try
             {
                 return await _context.Projects
                 .GroupBy(x => x.category.Id)
-                .Select(x => new ProjectQuantityInputModel
+                .Select(x => new ProjectQuantityViewModel
                 {
                     name = x.Select(x => x.category.Description).First(),
                     value = x.Count()
@@ -692,14 +691,14 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener las calificaciones por proyectos
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProjectQuantityInputModel>?> GetProjectsByQualifications()
+        public async Task<List<ProjectQuantityViewModel>?> GetProjectsByQualifications()
         {
 
             try
             {
                 return await _context.Qualifications
                     .GroupBy(x => x.Project.Id)
-                    .Select(x => new ProjectQuantityInputModel
+                    .Select(x => new ProjectQuantityViewModel
                     {
                         name = x.Select(x => x.Project.Name).First(),
                         value = x.Count()
@@ -716,7 +715,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener los los usuarios por los proyectos
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProjectQuantityInputModel>?> GetUsersByProject()
+        public async Task<List<ProjectQuantityViewModel>?> GetUsersByProject()
         {
 
             try
@@ -724,7 +723,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 return await _context.User
                     .Where(x => x.Project.Name != null)
                     .GroupBy(x => x.Project.Id)
-                    .Select(x => new ProjectQuantityInputModel
+                    .Select(x => new ProjectQuantityViewModel
                     {
                         name = x.Select(x => x.Project.Name).First(),
                         value = x.Count()

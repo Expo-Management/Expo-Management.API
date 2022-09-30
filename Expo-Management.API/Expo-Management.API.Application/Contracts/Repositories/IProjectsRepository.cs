@@ -11,6 +11,8 @@ namespace Expo_Management.API.Application.Contracts.Repositories
         bool ProjectExists(string lider);
         Task<List<Project>?> GetAllProjectsAsync();
         Task<Fair?> GetFair(int project);
+        Task<User?> removeUserFromProject(string email);
+        //Task<Project?> removeProject(string email);
         Task<List<Mention>?> GetMentionsAsync();
         Task<List<Project>?> GetAllCurrentProjectsAsync();
         Task<List<Project>?> GetOldProjectsAsync();

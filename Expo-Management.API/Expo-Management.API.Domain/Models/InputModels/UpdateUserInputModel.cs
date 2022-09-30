@@ -4,9 +4,7 @@ namespace Expo_Management.API.Domain.Models.InputModels
 {
     public class UpdateUserInputModel
     {
-        [Range(0, long.MaxValue, ErrorMessage = "La cedula no debe tener letras")]
-        [StringLength(9, MinimumLength = 9, ErrorMessage = "La cedula debe ser de de 9 caracteres.")]
-        public string Id { get; set; } = default!;
+        //public string Id { get; set; } = default!;
 
         [Required(ErrorMessage = "Username es requerido")]
         [StringLength(15, MinimumLength = 5, ErrorMessage = "El nombre de usuario debe de ser entre 5 y 15 caracteres.")]

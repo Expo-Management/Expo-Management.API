@@ -328,7 +328,7 @@ namespace Expo_Management.API.Controllers
                 }
                 else
                 {
-                    return BadRequest("Algo salio mal");
+                    return BadRequest("Aún no hay proyectos en el sistema.");
                 }
 
             }

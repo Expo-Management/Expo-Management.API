@@ -263,7 +263,6 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("oldMembers")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -713,23 +712,6 @@ namespace Expo_Management.API.Infraestructure.Migrations
                 });
 
             modelBuilder.Entity("Expo_Management.API.Domain.Models.Entities.Recommendation", b =>
-                {
-                    b.HasOne("Expo_Management.API.Domain.Models.Entities.Project", "project")
-                        .WithMany()
-                        .HasForeignKey("projectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expo_Management.API.Domain.Models.Entities.User", "user")
-                        .WithMany()
-                        .HasForeignKey("userId");
-
-                    b.Navigation("project");
-
-                    b.Navigation("user");
-                });
-
-            modelBuilder.Entity("Expo_Management.API.Domain.Models.Entities.SecurityProtocols", b =>
                 {
                     b.HasOne("Expo_Management.API.Domain.Models.Entities.Project", "project")
                         .WithMany()

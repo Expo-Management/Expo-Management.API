@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
+using Expo_Management.API.Infraestructure.Data;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -29,6 +30,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         private readonly ILogger<IdentityRepository> _logger;
         private AuthUtils _authUtils;
         private readonly IMailService _mailService;
+        private readonly ApplicationDbContext _context;
 
         /// <summary>
         /// Constructor del repositorio de IdentityUser
@@ -39,6 +41,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// <param name="configuration"></param>
         /// <param name="mailService"></param>
         public IdentityRepository(
+            ApplicationDbContext context,
             UserManager<User> userManager,
             RoleManager<IdentityRole> roleManager,
             ILogger<IdentityRepository> logger,
@@ -49,7 +52,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
             _roleManager = roleManager;
             _logger = logger;
             _configuration = configuration;
-
+            _context = context;
             _authUtils = new AuthUtils(_userManager, _roleManager, _configuration);
             _mailService = mailService;
         }
@@ -144,14 +147,19 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// <returns></returns>
         public async Task<Response> RegisterNewUser(string Role, RegisterInputModel model)
         {
+
+            var phoneValidator = (from x in _context.User
+                                  where x.PhoneNumber == model.Phone
+                                  select x).FirstOrDefault();
+
             var emailExists = await _userManager.FindByEmailAsync(model.Email);
             var userExists = await _userManager.FindByNameAsync(model.Username);
 
-            if (userExists != null && emailExists != null)
+            if (userExists != null || emailExists != null || phoneValidator != null)
             {
-                _logger.LogWarning("Error al registrar un usuario, credenciales repetidas.");
-                return new Response { Status = "Error", Message = "User already exists!" };
+                return new Response { Status = "Error", Message = "El usuario con esas credenciales ya existe." };
             }
+
             var password = _authUtils.GeneratePassword(true, true, true, true, 15);
 
             User user = new()
@@ -171,12 +179,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
             if (!result.Succeeded)
             {
-                _logger.LogWarning("Error al registrar un usuario, contraseña incorrecta");
-                return new Response { Status = "Error", Message = "Creacion de usuario fallida, contraseña ocupa una mayuscula, un caracter especial, un numero y al menos debe ser de más de 8 caracteres de largo" };
+                _logger.LogWarning("Error al registrar un usuario.");
+                return new Response { Status = "Error", Message = "Creación de usuario fallida." };
             }
 
             await _authUtils.AssignRole(user, Role);
-            //_logger.LogCritical("Error al registrar un usuario, contraseña incorrecta");
 
             /*sending email confirmation*/
             var confirmEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
@@ -279,7 +286,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<Response> ForgetPasswordAsync(string email)
+        public async Task<Response> ForgetPasswordAsync(string email, string role)
         {
             var user = await _userManager.FindByEmailAsync(email);
 
@@ -292,9 +299,23 @@ namespace Expo_Management.API.Infraestructure.Repositories
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var encodedMailToken = Encoding.UTF8.GetBytes(token);
             var validToken = WebEncoders.Base64UrlEncode(encodedMailToken);
-            string url = $"{_configuration["WebUrl"]}/administrator/reset-password?email={email}&token={validToken}";
-            dynamic ForgetPasswordTemplate = new DynamicTemplate();
 
+
+            string url = "";
+            if(role == "Judge")
+            {
+                 url = $"{_configuration["WebUrl"]}/judges/reset-password?email={email}&token={validToken}";
+            }
+            else if(role == "Admin")
+            {
+                 url = $"{_configuration["WebUrl"]}/administrator/reset-password?email={email}&token={validToken}";
+            }
+            else
+            {
+                 url = $"{_configuration["WebUrl"]}/student/reset-password?email={email}&token={validToken}";
+            }
+
+            dynamic ForgetPasswordTemplate = new DynamicTemplate();
             await _mailService.SendEmailAsync(email, "d-9b96ec3a9bb846dd99b1d3c09903e90c", ForgetPasswordTemplate = new
             {
                 username = user.UserName,
@@ -316,13 +337,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
             if (user == null)
             {
-                _logger.LogWarning("Error al encontrar usuario");
                 return new Response { Status = "Error", Message = "Usuario no encontrado" };
             }
 
             if (model.NewPassword != model.ConfirmPassword)
             {
-                _logger.LogWarning("Error durante cambio de contraseñas");
                 return new Response { Status = "Error", Message = "Contraseña nueva y Confirmación de contrseña nueva no son iguales" };
             }
 

@@ -3,6 +3,7 @@ using Expo_Management.API.Domain.Models.InputModels;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Expo_Management.API.Infraestructure.Repositories;
 
 namespace Expo_Management.API.Controllers
 {
@@ -27,20 +28,19 @@ namespace Expo_Management.API.Controllers
         /// <summary>
         /// Metodo para añadir una feria
         /// </summary>
-        /// <param name="model"></param>
         /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("fair")]
-        public async Task<IActionResult> AddFair([FromBody] NewFairInputModel model)
+        public async Task<IActionResult> AddFair()
         {
             try
             {
-                var fair = await _fairRepository.CreateFairAsync(model);
+                var fair = await _fairRepository.CreateFairAsync();
 
                 if (fair == null)
                 {
-                    return BadRequest("La feria ya existe.");
+                    return BadRequest("La feria ya existe o la feria no esta en un rango dentro del mismo año.");
 
                 }
                 return Ok(fair);
@@ -52,17 +52,62 @@ namespace Expo_Management.API.Controllers
         }
 
         /// <summary>
-        /// Metodo para obetener la feria actual
+        /// Endpoint para eliminar una feria
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+        [Route("fair")]
+        public async Task<IActionResult> DeleteCategoryAsync(int id)
+        {
+            var fair = await _fairRepository.DeleteFairAsync(id);
+
+            if (fair)
+            {
+                return Ok("Feria eliminada");
+            }
+            return BadRequest("Hubo un error, por favor, intentelo más tarde.");
+
+        }
+
+        /// <summary>
+        /// Metodo para obtener la feria actual
         /// </summary>
         /// <returns></returns>
         [Authorize(Roles = "Admin,User,Judge")]
         [HttpGet]
         [Route("current-fair")]
-        public async Task<IActionResult> GetCurrentFair()
+        public IActionResult GetCurrentFair()
         {
             try
             {
-                var currentFair = await _fairRepository.GetCurrentFairIdAsync();
+                var currentFair =  _fairRepository.GetCurrentFairId();
+
+                if (currentFair != 0)
+                {
+                    return Ok(currentFair);
+                }
+                return Ok(0);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Hubo un error, por favor, intentelo más tarde.");
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Metodo para obtener los dias restantes de la feria actual
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("left-fair-days")]
+        public async Task<IActionResult> GetLeftDaysFair()
+        {
+            try
+            {
+                var currentFair = await _fairRepository.GetLeftDaysAsync();
 
                 if (currentFair != 0)
                 {

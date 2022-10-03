@@ -11,6 +11,8 @@ namespace Expo_Management.API.Application.Contracts.Repositories
         bool ProjectExists(string lider);
         Task<List<Project>?> GetAllProjectsAsync();
         Task<Fair?> GetFair(int project);
+        Task<User?> removeUserFromProject(string email);
+        //Task<Project?> removeProject(string email);
         Task<List<Mention>?> GetMentionsAsync();
         Task<List<Project>?> GetAllCurrentProjectsAsync();
         Task<List<Project>?> GetOldProjectsAsync();
@@ -24,11 +26,11 @@ namespace Expo_Management.API.Application.Contracts.Repositories
         Task<List<User>> GetMembersEmail(int projectId);
         Task<List<Recommendation>?> GetRecommendationByProjectId(int recomendacion);
         Task<Qualifications?> QualifyProject(QualifyProjectInputModel model);
-        Task<List<ProjectQualificationsInputModel>?> GetProjectQualifications(int projectId);
-        Task<List<ProjectQuantityInputModel>?> GetProjectsByYear();
-        Task<List<ProjectQuantityInputModel>?> GetProjectsByCategory();
-        Task<List<ProjectQuantityInputModel>?> GetUsersByProject();
-        Task<List<ProjectQuantityInputModel>?> GetProjectsByQualifications();
         Task<Boolean> CanJudgeQualifyTheProject(int ProjectId, string JudgeEmail);
+        Task<List<ProjectQualificationsViewModel>?> GetProjectQualifications(int projectId);
+        Task<List<ProjectQuantityViewModel>?> GetProjectsByYear();
+        Task<List<ProjectQuantityViewModel>?> GetProjectsByCategory();
+        Task<List<ProjectQuantityViewModel>?> GetUsersByProject();
+        Task<List<ProjectQuantityViewModel>?> GetProjectsByQualifications();
     }
 }

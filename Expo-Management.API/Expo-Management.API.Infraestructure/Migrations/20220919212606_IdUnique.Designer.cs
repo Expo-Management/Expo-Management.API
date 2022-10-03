@@ -4,6 +4,7 @@ using Expo_Management.API.Infraestructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220919212606_IdUnique")]
+    partial class IdUnique
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,10 +264,6 @@ namespace Expo_Management.API.Infraestructure.Migrations
                     b.Property<int>("categoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("oldMembers")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FairId");
@@ -346,7 +344,7 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("FairId")
+                    b.Property<int>("FairId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -608,12 +606,6 @@ namespace Expo_Management.API.Infraestructure.Migrations
                     b.Property<int?>("ProjectId")
                         .HasColumnType("int");
 
-                    b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("RefreshTokenExpiryTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -731,26 +723,11 @@ namespace Expo_Management.API.Infraestructure.Migrations
 
             modelBuilder.Entity("Expo_Management.API.Domain.Models.Entities.SecurityProtocols", b =>
                 {
-                    b.HasOne("Expo_Management.API.Domain.Models.Entities.Project", "project")
-                        .WithMany()
-                        .HasForeignKey("projectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expo_Management.API.Domain.Models.Entities.User", "user")
-                        .WithMany()
-                        .HasForeignKey("userId");
-
-                    b.Navigation("project");
-
-                    b.Navigation("user");
-                });
-
-            modelBuilder.Entity("Expo_Management.API.Domain.Models.Entities.SecurityProtocols", b =>
-                {
                     b.HasOne("Expo_Management.API.Domain.Models.Entities.Fair", "Fair")
                         .WithMany()
-                        .HasForeignKey("FairId");
+                        .HasForeignKey("FairId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Fair");
                 });

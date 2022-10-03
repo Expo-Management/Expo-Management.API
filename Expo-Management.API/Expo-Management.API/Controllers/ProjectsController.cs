@@ -4,6 +4,7 @@ using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UploadFiles.Controllers;
 
 namespace Expo_Management.API.Controllers
 {
@@ -16,15 +17,18 @@ namespace Expo_Management.API.Controllers
     {
 
         private readonly IProjectsRepository _projectsRepository;
+        private readonly ILogger<ProjectsController> _logger;
 
 
         /// <summary>
         /// Constructor del controlador de proyectos
         /// </summary>
         /// <param name="projectsRepository"></param>
-        public ProjectsController(IProjectsRepository projectsRepository)
+        /// <param name="logger"></param>
+        public ProjectsController(IProjectsRepository projectsRepository, ILogger<ProjectsController> logger)
         {
             _projectsRepository = projectsRepository;
+            _logger = logger;
         }
 
         /// <summary>
@@ -48,9 +52,10 @@ namespace Expo_Management.API.Controllers
                 }
                 return Ok(project);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500);
             }
         }
 
@@ -65,7 +70,7 @@ namespace Expo_Management.API.Controllers
         {
             try
             {
-                var projects = await _projectsRepository.GetAllProjectsAsync();
+                var projects = await _projectsRepository.GetAllCurrentProjectsAsync();
 
                 if (projects != null)
                 {
@@ -79,6 +84,7 @@ namespace Expo_Management.API.Controllers
                             Name = items.Name,
                             Description = items.Description,
                             Fair = items.Fair,
+                            oldMembers = items.oldMembers,
                             Files = new Files()
                             {
                                 Id = items.Files.Id,
@@ -100,9 +106,65 @@ namespace Expo_Management.API.Controllers
             }
             catch (Exception)
             {
-                throw;
+                return StatusCode(500);
             }
         }
+
+        /// <summary>
+        /// Endpoint para eliminar a un usuario de su grupo de proyecto de Feria
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("remove-user-project")]
+        public async Task<IActionResult> removeUserFromProject(string email)
+        {
+            try
+            {
+                if (email != null)
+                {
+                    var removedUser = await _projectsRepository.removeUserFromProject(email);
+                    if (removedUser != null)
+                    {
+                        return Ok(removedUser);
+                    }
+                    return BadRequest("usuario es Lider del proyecto o no existe");
+
+                }
+                return BadRequest("Hubo un error, por favor, intentelo más tarde.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        ///// <summary>
+        ///// Endpoint para eliminar al lider de proyecto y con eso eliminar proyecto
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpPut]
+        //[Route("remove-project")]
+        //public async Task<IActionResult> removeProject(string email)
+        //{
+        //    try
+        //    {
+        //        if (email != null)
+        //        {
+        //            var removedProject = await _projectsRepository.removeProject(email);
+        //            if (removedProject != null)
+        //            {
+        //                return Ok(removedProject);
+        //            }
+        //            return BadRequest("Proyecto no existe");
+
+        //        }
+        //        return BadRequest("Hubo un error, por favor, intentelo más tarde.");
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return StatusCode(500);
+        //    }
+        //}
 
         /// <summary>
         /// Endpoint para mostrar los proyectos antiguos
@@ -125,7 +187,7 @@ namespace Expo_Management.API.Controllers
             }
             catch (Exception)
             {
-                throw;
+                return StatusCode(500);
             }
         }
 
@@ -150,7 +212,7 @@ namespace Expo_Management.API.Controllers
             }
             catch (Exception)
             {
-                throw;
+                return StatusCode(500);
             }
         }
 
@@ -198,8 +260,9 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest("Id del proyecto o detalles icorrectos");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return StatusCode(500);
             }
         }
@@ -226,7 +289,7 @@ namespace Expo_Management.API.Controllers
             }
             catch (Exception)
             {
-                throw;
+                return StatusCode(500);
             }
         }
 
@@ -251,7 +314,8 @@ namespace Expo_Management.API.Controllers
             }
             catch (Exception)
             {
-                throw;            }
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
@@ -273,7 +337,7 @@ namespace Expo_Management.API.Controllers
                 }
                 else
                 {
-                    return BadRequest("Algo salio mal");
+                    return BadRequest("Aún no hay proyectos en el sistema.");
                 }
 
             }
@@ -327,7 +391,7 @@ namespace Expo_Management.API.Controllers
             {
                 var recommendations = await _projectsRepository.GetRecommendationByProjectId(projectId);
 
-                if(recommendations != null)
+                if (recommendations != null)
                 {
                     if (recommendations.Any())
                     {
@@ -389,8 +453,9 @@ namespace Expo_Management.API.Controllers
                 }
                 return BadRequest("Los datos ingresados son incorrectos o el proyecto ya fue calificado.");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return StatusCode(500);
             }
         }
@@ -409,7 +474,7 @@ namespace Expo_Management.API.Controllers
             {
                 var qualifications = await _projectsRepository.GetProjectQualifications(projectId);
 
-                if(qualifications != null)
+                if (qualifications != null)
                 {
                     if (qualifications.Any())
                     {
@@ -496,7 +561,7 @@ namespace Expo_Management.API.Controllers
             {
                 var projects = await _projectsRepository.GetProjectsByQualifications();
 
-                if(projects != null)
+                if (projects != null)
                 {
                     if (projects.Any())
                     {
@@ -525,7 +590,7 @@ namespace Expo_Management.API.Controllers
             {
                 var projects = await _projectsRepository.GetUsersByProject();
 
-                if(projects != null)
+                if (projects != null)
                 {
                     if (projects.Any())
                     {

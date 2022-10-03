@@ -1,6 +1,6 @@
-﻿namespace Expo_Management.API.Domain.Models.InputModels
+﻿namespace Expo_Management.API.Domain.Models.ViewModels
 {
-    public class ProjectQualificationsInputModel
+    public class ProjectQualificationsViewModel
     {
         public string JudgeName { get; set; } = default!;
         public int Punctuation { get; set; }

@@ -31,6 +31,7 @@ namespace Expo_Management.API.Infraestructure
             services.AddScoped<IProjectsRepository, ProjectsRepository>();
             services.AddScoped<IFairRepository, FairRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProtocolsRepository, ProtocolsRepository>();
             services.AddTransient<IMailService, SenderGridMailService>();
 
             services.AddScoped<IApplicationDbContext>

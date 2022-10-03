@@ -12,7 +12,7 @@ namespace Expo_Management.API.Application.Contracts.Repositories
         Task<Response> RegisterNewUser(string Role, RegisterInputModel model);
         Task<LoginResponse?> LoginUser(LoginViewModel model);
         Task<Response> ConfirmEmailAsync(string userId, string token);
-        Task<Response> ForgetPasswordAsync(string email);
+        Task<Response> ForgetPasswordAsync(string email, string role);
         Task<Response> ResetPasswordAsync(ResetPasswordViewModel model);
         Task<TokenModel?> RefreshToken(TokenModel tokenModel);
     }

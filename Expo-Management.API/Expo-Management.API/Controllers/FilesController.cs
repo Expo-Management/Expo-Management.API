@@ -1,4 +1,5 @@
 ﻿using Expo_Management.API.Application.Contracts.Repositories;
+using Expo_Management.API.Controllers;
 using Expo_Management.API.Domain.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,14 +16,18 @@ namespace UploadFiles.Controllers
     {
 
         private readonly IFilesUploaderRepository _filesUploaderRepository;
+        private readonly ILogger<FilesController> _logger;
 
         /// <summary>
         /// Constructor del controlador de archivos
         /// </summary>
         /// <param name="filesUploaderRepository"></param>
-        public FilesController(IFilesUploaderRepository filesUploaderRepository)
+        /// <param name="logger"></param>
+
+        public FilesController(IFilesUploaderRepository filesUploaderRepository, ILogger<FilesController> logger)
         {
             _filesUploaderRepository = filesUploaderRepository;
+            _logger = logger;
         }
 
         /// <summary>
@@ -35,23 +40,30 @@ namespace UploadFiles.Controllers
         [Route("file")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
-
-            if (file != null)
+            try
             {
-                var existFile = _filesUploaderRepository.fileExist(file.FileName);
-                if (existFile == false)
+                if (file != null)
                 {
-                    if (file.ContentType == "application/pdf" || file.ContentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                    var existFile = _filesUploaderRepository.fileExist(file.FileName);
+                    if (existFile == false)
                     {
-                        await _filesUploaderRepository.Add(file);
-                        return Ok($"Documento {file.FileName} subido exitosamente!");
+                        if (file.ContentType == "application/pdf" || file.ContentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                        {
+                            await _filesUploaderRepository.Add(file);
+                            return Ok($"Documento {file.FileName} subido exitosamente!");
+                        }
+                        return BadRequest("Documento solo puede ser PDF o Word.");
                     }
-                    return BadRequest("Documento solo puede ser PDF o Word.");
+                    return BadRequest("Documento ya existe.");
                 }
-                return BadRequest("Documento ya existe.");
-            }
 
-            return BadRequest("Hubo un error por favor intentelo más tarde.");
+                return BadRequest("Hubo un error por favor intentelo más tarde.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
@@ -62,26 +74,32 @@ namespace UploadFiles.Controllers
         [Authorize(Roles = "Judge")]
         [HttpGet]
         [Route("download-project-file")]
-        public async Task<FileResult> DownladProjectFile(int id)
+        public async Task<IActionResult> DownladProjectFile(int id)
         {
-            var file = await _filesUploaderRepository.getProjectFile(id);
-
-            if (file != null)
+            try
             {
-                string startupPath = System.IO.Directory.GetCurrentDirectory();
-                startupPath = Environment.CurrentDirectory + file.Url;
+                var file = await _filesUploaderRepository.getProjectFile(id);
 
-                var bytes = System.IO.File.ReadAllBytes(startupPath);
-
-                if (file.Name.EndsWith(".pdf"))
+                if (file != null)
                 {
-                    return File(bytes, "application/pdf", file.Name);
+                    string startupPath = System.IO.Directory.GetCurrentDirectory();
+                    startupPath = Environment.CurrentDirectory + file.Url;
 
+                    var bytes = System.IO.File.ReadAllBytes(startupPath);
+
+                    if (file.Name.EndsWith(".pdf"))
+                    {
+                        return File(bytes, "application/pdf", file.Name);
+
+                    }
+                    return File(bytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", file.Name);
                 }
-                return File(bytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", file.Name);
             }
-
-            return null;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
+            return StatusCode(500);
         }
 
         /// <summary>
@@ -94,24 +112,30 @@ namespace UploadFiles.Controllers
         [Route("download-file")]
         public async Task<IActionResult> DownloadFile(int id)
         {
-            var file = await _filesUploaderRepository.getFileAsync(id);
-
-            if (file != null)
+            try
             {
-                string startupPath = System.IO.Directory.GetCurrentDirectory();
-                startupPath = Environment.CurrentDirectory + file.Url;
+                var file = await _filesUploaderRepository.getFileAsync(id);
 
-                var bytes = System.IO.File.ReadAllBytes(startupPath);
-
-                if (file.Name.EndsWith(".pdf"))
+                if (file != null)
                 {
-                    return File(bytes, "application/pdf", file.Name);
+                    string startupPath = System.IO.Directory.GetCurrentDirectory();
+                    startupPath = Environment.CurrentDirectory + file.Url;
 
+                    var bytes = System.IO.File.ReadAllBytes(startupPath);
+
+                    if (file.Name.EndsWith(".pdf"))
+                    {
+                        return File(bytes, "application/pdf", file.Name);
+
+                    }
+                    return File(bytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", file.Name);
                 }
-                return File(bytes, "application/vnd.openxmlformats-officedocument.wordprocessingml.document", file.Name);
             }
-
-            return null;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
+            return StatusCode(500);
         }
 
         // [HttpGet]
@@ -163,14 +187,21 @@ namespace UploadFiles.Controllers
         [Route("file")]
         public async Task<IActionResult> DeleteFile(int id)
         {
-            var result = await _filesUploaderRepository.deleteFiles(id);
-
-            if (result != null)
+            try
             {
-                return Ok("Documento borrado exitosamente!");
-            }
+                var result = await _filesUploaderRepository.deleteFiles(id);
 
-            return BadRequest("Documento no existe.");
+                if (result != null)
+                {
+                    return Ok("Documento borrado exitosamente!");
+                }
+
+                return BadRequest("Documento no existe.");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
 
         /// <summary>
@@ -183,27 +214,34 @@ namespace UploadFiles.Controllers
         public async Task<IActionResult> ShowFiles()
         {
 
-            var files = await _filesUploaderRepository.getAll();
-
-            if (files != null)
+            try
             {
-                var domainFiles = new List<Files>();
+                var files = await _filesUploaderRepository.getAll();
 
-                foreach (var items in files)
+                if (files != null)
                 {
-                    domainFiles.Add(new Files()
-                    {
-                        Id = items.Id,
-                        Name = items.Name,
-                        Url = items.Url,
-                        Size = (items.Size * (8) / (8 * 1000)),
-                        uploadDateTime = items.uploadDateTime
+                    var domainFiles = new List<Files>();
 
-                    });
+                    foreach (var items in files)
+                    {
+                        domainFiles.Add(new Files()
+                        {
+                            Id = items.Id,
+                            Name = items.Name,
+                            Url = items.Url,
+                            Size = (items.Size * (8) / (8 * 1000)),
+                            uploadDateTime = items.uploadDateTime
+
+                        });
+                    }
+                    return Ok(domainFiles);
                 }
-                return Ok(domainFiles);
+                return BadRequest("Hubo un error, por favor, intentelo más tarde.");
             }
-            return BadRequest("Hubo un error, por favor, intentelo más tarde.");
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
         }
     }
 }

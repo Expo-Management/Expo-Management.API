@@ -25,5 +25,11 @@ namespace Expo_Management.API.Infraestructure.Data
         public DbSet<Qualifications> Qualifications { get; set; } = default!;
         public DbSet<Claim> Claim { get; set; } = default!;
         public DbSet<Recommendation> JudgeRecommendation { get; set; } = default!;
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<User>().HasIndex(u => u.UserId).IsUnique();
+        }
     }
 }

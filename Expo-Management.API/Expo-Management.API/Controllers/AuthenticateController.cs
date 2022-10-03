@@ -100,7 +100,7 @@ namespace Expo_Management.API.Controllers
             }
             else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, response);
+                return BadRequest("La cédula no puede ser repetida");
             }
         }
 
@@ -116,22 +116,15 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _identityRepository.RegisterNewUser("Admin", model);
 
-            try
+            if (response.Status == "Success")
             {
-                if (response.Status == "Success")
-                {
-                    return Ok(response);
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, response);
-                }
+                return Ok(response);
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError(ex, ex.Message);
+                return BadRequest("La cédula no puede ser repetida");
+                //return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
-            return StatusCode(StatusCodes.Status500InternalServerError, response);
         }
 
         /// <summary>
@@ -152,7 +145,7 @@ namespace Expo_Management.API.Controllers
             }
             else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, response);
+                return BadRequest("La cédula no puede ser repetida");
             }
         }
 
@@ -184,15 +177,16 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para solicitar un cambio de contraseña
         /// </summary>
         /// <param name="email"></param>
+        /// <param name="role"></param>
         /// <returns></returns>
         [Authorize(Roles = "Admin,User,Judge")]
         [HttpPost("ForgetPassword")]
-        public async Task<IActionResult> ForgetPassword(string email)
+        public async Task<IActionResult> ForgetPassword(string email, string role)
         {
             if (string.IsNullOrWhiteSpace(email))
                 return BadRequest("error");
 
-            var result = await _identityRepository.ForgetPasswordAsync(email);
+            var result = await _identityRepository.ForgetPasswordAsync(email, role);
 
             if (result.Status == "Success")
             {

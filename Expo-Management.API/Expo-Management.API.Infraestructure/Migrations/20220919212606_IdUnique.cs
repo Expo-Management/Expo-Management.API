@@ -9,7 +9,7 @@ namespace Expo_Management.API.Infraestructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MentionProjectModel");
+                name: "MentionProject");
 
             migrationBuilder.AlterColumn<string>(
                 name: "UserId",

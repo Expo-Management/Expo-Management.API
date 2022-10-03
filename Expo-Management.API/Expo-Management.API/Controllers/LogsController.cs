@@ -1,6 +1,7 @@
 ﻿using Expo_Management.API.Application.Contracts.Repositories;
 using Expo_Management.API.Domain.Models.Entities;
 using Expo_Management.API.Infraestructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expo_Management.API.Controllers
@@ -27,6 +28,7 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para obtener los logs
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("logs")]
         public async Task<IActionResult> GetLogs()

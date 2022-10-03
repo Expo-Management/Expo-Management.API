@@ -32,6 +32,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Authorize(Roles = "User")]
         [HttpPost]
         [Route("projects")]
         public async Task<IActionResult> AddProjects([FromForm] NewProjectInputModel model)
@@ -57,6 +58,7 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para mostrar proyectos
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Judge,User")]
         [HttpGet]
         [Route("projects")]
         public async Task<IActionResult> ShowProjects()
@@ -106,6 +108,7 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para mostrar los proyectos antiguos
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "User")]
         [HttpGet]
         [Route("old-projects")]
         public async Task<IActionResult> showOldProjects()
@@ -130,6 +133,7 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para mostrar las menciones
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Judge,User")]
         [HttpGet]
         [Route("mentions")]
         public async Task<IActionResult> showMentions()
@@ -155,6 +159,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Judge,User")]
         [HttpGet]
         [Route("project")]
         public async Task<IActionResult> getProjectQualificationAsync(int projectId)
@@ -177,6 +182,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Authorize(Roles = "User")]
         [HttpPost]
         [Route("create-claim")]
         public async Task<IActionResult> CreateProjectClaim(NewClaimInputModel model)
@@ -203,6 +209,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Judge")]
         [HttpPost]
         [Route("recommendation")]
         //[Authorize(Roles = "Judge")]
@@ -228,6 +235,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="recomendacion"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Judge,User")]
         [HttpGet]
         [Route("getRecommendation")]
         public async Task<IActionResult> getRecommendation(int recomendacion)
@@ -250,6 +258,7 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para obtener los miembros del proyecto
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Judge,User")]
         [HttpGet]
         [Route("project-members")]
         public async Task<IActionResult> GetProjectMembers()
@@ -279,6 +288,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Judge")]
         [HttpGet]
         [Route("members-emails")]
         public async Task<IActionResult> GetMembersEmail(int projectId)
@@ -308,6 +318,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Judge,User")]
         [HttpGet]
         [Route("recommendation-by-project")]
         public async Task<IActionResult> getRecommendationByProjectId(int projectId)
@@ -333,10 +344,37 @@ namespace Expo_Management.API.Controllers
         }
 
         /// <summary>
+        /// Endpoint para validar la calificacion de proyectos
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Judge")]
+        [HttpGet]
+        [Route("can-judge-qualify-project")]
+        public async Task<IActionResult> qualifyProject(int ProjectId, string JudgeEmail)
+        {
+            try
+            {
+                var result = await _projectsRepository.CanJudgeQualifyTheProject(ProjectId, JudgeEmail);
+
+                if (result)
+                {
+                    return Ok(result);
+                }
+                return BadRequest("El proyecto ya fue calificado con esta cuenta");
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
         /// Endpoint para calificar proyectos
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Judge")]
         [HttpPost]
         [Route("qualify-project")]
         public async Task<IActionResult> qualifyProject(QualifyProjectInputModel model)
@@ -349,7 +387,7 @@ namespace Expo_Management.API.Controllers
                 {
                     return Ok(result);
                 }
-                return BadRequest("Los datos ingresados son incorrectos.");
+                return BadRequest("Los datos ingresados son incorrectos o el proyecto ya fue calificado.");
             }
             catch (Exception)
             {
@@ -362,6 +400,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Judge,User")]
         [HttpGet]
         [Route("project-qualifications")]
         public async Task<IActionResult> GetProjectQualifications(int projectId)
@@ -390,6 +429,7 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para obtener los proyectos por año
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("project-by-year")]
         public async Task<IActionResult> GetProjectsByYear()
@@ -418,6 +458,7 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para obtener los proyectos por categoria
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("project-by-category")]
         public async Task<IActionResult> GetProjectsByCategory()
@@ -446,6 +487,7 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para obtener los proyectos por las calificaciones
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("project-by-qualifications")]
         public async Task<IActionResult> GetProjectsByQualifications()
@@ -474,6 +516,7 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para obtener los usurios por los proyectos
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("users-per-project")]
         public async Task<IActionResult> GetUsersPerProject()

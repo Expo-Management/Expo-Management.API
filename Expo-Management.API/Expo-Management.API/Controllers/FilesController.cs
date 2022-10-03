@@ -1,5 +1,6 @@
 ﻿using Expo_Management.API.Application.Contracts.Repositories;
 using Expo_Management.API.Domain.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace UploadFiles.Controllers
@@ -29,6 +30,7 @@ namespace UploadFiles.Controllers
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin,User")]
         [HttpPost]
         [Route("file")]
         public async Task<IActionResult> UploadFile(IFormFile file)
@@ -57,6 +59,7 @@ namespace UploadFiles.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Judge")]
         [HttpGet]
         [Route("download-project-file")]
         public async Task<FileResult> DownladProjectFile(int id)
@@ -86,6 +89,7 @@ namespace UploadFiles.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize(Roles = "User")]
         [HttpGet]
         [Route("download-file")]
         public async Task<IActionResult> DownloadFile(int id)
@@ -154,6 +158,7 @@ namespace UploadFiles.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("file")]
         public async Task<IActionResult> DeleteFile(int id)
@@ -172,6 +177,7 @@ namespace UploadFiles.Controllers
         /// Endpoint para ver los archivos
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin,User")]
         [HttpGet]
         [Route("files")]
         public async Task<IActionResult> ShowFiles()

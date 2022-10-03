@@ -513,6 +513,42 @@ namespace Expo_Management.API.Infraestructure.Repositories
             });
         }
 
+
+        public async Task<Boolean> CanJudgeQualifyTheProject(int ProjectId, string JudgeEmail)
+        {
+            try
+            {
+                var judge = await _usersRepository.GetJudgeAsync(JudgeEmail);
+                var project = await GetProjectById(ProjectId);
+
+                var haveJudgeQualifiedTheProject = await (from q in _context.Qualifications
+                                                          where q.Project.Id == ProjectId && q.Judge.Email == JudgeEmail
+                                                          select q).FirstOrDefaultAsync();
+
+                if (project == null || judge == null)
+                {
+                    _logger.LogWarning("Hubo un error obteniendo el juez o el proyecto.");
+                    return false;
+                }
+
+                if (haveJudgeQualifiedTheProject != null)
+                {
+                    _logger.LogWarning("El error ya fue calificado por el juez con email: " + JudgeEmail);
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                _logger.LogWarning("Hubo un error validando si el juez puede calificar un proyecto.");
+                return false;
+            }
+        }
+
+
         /// <summary>
         /// Metodo para calificar proyecto
         /// </summary>

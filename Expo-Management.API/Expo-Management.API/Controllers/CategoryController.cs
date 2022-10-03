@@ -3,6 +3,7 @@ using Expo_Management.API.Domain.Models.InputModels;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Expo_Management.API.Controllers
 {
@@ -30,6 +31,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("category")]
         public async Task<IActionResult> CreateCategoryAsync([FromBody] NewCategoryInputModel model)
@@ -56,6 +58,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin,User")]
         [HttpGet]
         [Route("category")]
         public async Task<IActionResult> GetCategoryAsync(int id)
@@ -73,6 +76,7 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para obtener todas las categorias
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin,User")]
         [HttpGet]
         [Route("categories")]
         public async Task<IActionResult> GetAllCategoriesAsync()
@@ -103,6 +107,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("category")]
         public async Task<IActionResult> DeleteCategoryAsync(int id)

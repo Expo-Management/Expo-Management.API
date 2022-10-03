@@ -29,5 +29,6 @@ namespace Expo_Management.API.Application.Contracts.Repositories
         Task<List<ProjectQuantityInputModel>?> GetProjectsByCategory();
         Task<List<ProjectQuantityInputModel>?> GetUsersByProject();
         Task<List<ProjectQuantityInputModel>?> GetProjectsByQualifications();
+        Task<Boolean> CanJudgeQualifyTheProject(int ProjectId, string JudgeEmail);
     }
 }

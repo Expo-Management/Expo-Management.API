@@ -1,7 +1,9 @@
-﻿using Expo_Management.API.Domain.Models.InputModels;
+﻿using Expo_Management.API.Domain.Models.Entities;
+using Expo_Management.API.Domain.Models.InputModels;
 using Expo_Management.API.Domain.Models.Reponses;
 using Expo_Management.API.Domain.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Expo_Management.API.Application.Contracts.Repositories
 {
@@ -12,5 +14,6 @@ namespace Expo_Management.API.Application.Contracts.Repositories
         Task<Response> ConfirmEmailAsync(string userId, string token);
         Task<Response> ForgetPasswordAsync(string email);
         Task<Response> ResetPasswordAsync(ResetPasswordViewModel model);
+        Task<TokenModel?> RefreshToken(TokenModel tokenModel);
     }
 }

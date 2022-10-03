@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using System.Security.Cryptography;
 
 namespace Expo_Management.API.Infraestructure.Utils
 {
@@ -41,22 +42,6 @@ namespace Expo_Management.API.Infraestructure.Utils
             }
             await _userManager.AddToRoleAsync(userToAssignRole, getRole(roleToAssign));
         }
-
-        public JwtSecurityToken GetToken(List<System.Security.Claims.Claim> authClaims)
-        {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
-                expires: DateTime.Now.AddHours(3),
-                claims: authClaims,
-                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
-
-            return token;
-        }
-
 
         const string LOWER_CASE = "abcdefghijklmnopqursuvwxyz";
         const string UPPER_CAES = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";

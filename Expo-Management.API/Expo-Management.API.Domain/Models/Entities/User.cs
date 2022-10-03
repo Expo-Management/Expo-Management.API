@@ -14,5 +14,7 @@ namespace Expo_Management.API.Domain.Models.Entities
         public bool? IsLead { get; set; } = false;
         public string Position { get; set; } = default!;
         public string Institution { get; set; } = default!;
+        public string? RefreshToken { get; set; }
+        public DateTime RefreshTokenExpiryTime { get; set; }
     }
 }

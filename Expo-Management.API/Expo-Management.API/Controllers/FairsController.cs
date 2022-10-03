@@ -2,6 +2,7 @@
 using Expo_Management.API.Domain.Models.InputModels;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Expo_Management.API.Controllers
 {
@@ -28,6 +29,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("fair")]
         public async Task<IActionResult> AddFair([FromBody] NewFairInputModel model)
@@ -53,6 +55,7 @@ namespace Expo_Management.API.Controllers
         /// Metodo para obetener la feria actual
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin,User,Judge")]
         [HttpGet]
         [Route("current-fair")]
         public async Task<IActionResult> GetCurrentFair()
@@ -78,6 +81,7 @@ namespace Expo_Management.API.Controllers
         /// Metodo para obtener todas las ferias
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin,User")]
         [HttpGet]
         [Route("fairs")]
         public async Task<IActionResult> ShowFairs()

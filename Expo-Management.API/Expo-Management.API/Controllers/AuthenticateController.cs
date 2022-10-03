@@ -7,6 +7,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Expo_Management.API.Domain.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Expo_Management.API.Controllers
 {
@@ -39,6 +41,27 @@ namespace Expo_Management.API.Controllers
         }
 
         /// <summary>
+        /// Endpoint para refrescar el token del usuario logueado
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] TokenModel model)
+        {
+            var response = await _identityRepository.RefreshToken(model);
+
+            if (response == null)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok(response);
+            }
+        }
+
+        /// <summary>
         /// Endpoint para logearse en el sistema
         /// </summary>
         /// <param name="model"></param>
@@ -64,6 +87,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterInputModel model)
@@ -85,6 +109,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterInputModel model)
@@ -114,6 +139,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("register-judge")]
         public async Task<IActionResult> RegisterJudge([FromBody] RegisterInputModel model)
@@ -136,6 +162,7 @@ namespace Expo_Management.API.Controllers
         /// <param name="userId"></param>
         /// <param name="token"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin,User,Judge")]
         [HttpGet("confirmEmailToken")]
         public async Task<IActionResult> confirmEmailToken(string userId, string token)
         {
@@ -158,6 +185,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin,User,Judge")]
         [HttpPost("ForgetPassword")]
         public async Task<IActionResult> ForgetPassword(string email)
         {
@@ -178,6 +206,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin,User,Judge")]
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {

@@ -1,6 +1,7 @@
 ﻿using Expo_Management.API.Domain.Models.InputModels;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Expo_Management.API.Controllers
 {
@@ -27,6 +28,7 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para obtener los eventos
         /// </summary>
         /// <returns></returns>
+        [Authorize(Roles = "Admin,Judge,User")]
         [HttpGet]
         [Route("events")]
         public async Task<IActionResult> GetEvents()
@@ -48,6 +50,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="EventId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("event")]
         public async Task<IActionResult> GetEvents(int EventId)
@@ -69,6 +72,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("event")]
         public async Task<IActionResult> CreateEvent([FromBody] EventInputModel model)
@@ -90,6 +94,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         [Route("event")]
         public async Task<IActionResult> UpdateEvent([FromBody] EventUpdateInputModel model)
@@ -111,6 +116,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="EventId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("event")]
         public async Task<IActionResult> DeleteEvent(int EventId)
@@ -132,6 +138,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="FairId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "User,Admin")]
         [HttpGet]
         [Route("news")]
         public async Task<IActionResult> GetNews(int FairId)
@@ -153,6 +160,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="FairId"></param>
         /// <returns></returns>
+        [Authorize(Roles = "Admin,User")]
         [HttpGet]
         [Route("security-protocols")]
         public async Task<IActionResult> GetSecurityProtocols(int FairId)

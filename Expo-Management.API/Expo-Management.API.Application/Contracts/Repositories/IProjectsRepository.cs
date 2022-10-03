@@ -26,10 +26,10 @@ namespace Expo_Management.API.Application.Contracts.Repositories
         Task<List<User>> GetMembersEmail(int projectId);
         Task<List<Recommendation>?> GetRecommendationByProjectId(int recomendacion);
         Task<Qualifications?> QualifyProject(QualifyProjectInputModel model);
-        Task<List<ProjectQualificationsInputModel>?> GetProjectQualifications(int projectId);
-        Task<List<ProjectQuantityInputModel>?> GetProjectsByYear();
-        Task<List<ProjectQuantityInputModel>?> GetProjectsByCategory();
-        Task<List<ProjectQuantityInputModel>?> GetUsersByProject();
-        Task<List<ProjectQuantityInputModel>?> GetProjectsByQualifications();
+        Task<List<ProjectQualificationsViewModel>?> GetProjectQualifications(int projectId);
+        Task<List<ProjectQuantityViewModel>?> GetProjectsByYear();
+        Task<List<ProjectQuantityViewModel>?> GetProjectsByCategory();
+        Task<List<ProjectQuantityViewModel>?> GetUsersByProject();
+        Task<List<ProjectQuantityViewModel>?> GetProjectsByQualifications();
     }
 }

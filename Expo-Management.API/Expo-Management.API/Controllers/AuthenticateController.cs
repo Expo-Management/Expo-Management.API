@@ -76,8 +76,7 @@ namespace Expo_Management.API.Controllers
             }
             else
             {
-                _logger.LogWarning("La cedula no puede ser repetida.");
-                return BadRequest("La cedula no puede ser repetida");
+                return BadRequest("La cédula no puede ser repetida");
             }
         }
 
@@ -92,22 +91,15 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _identityRepository.RegisterNewUser("Admin", model);
 
-            try
+            if (response.Status == "Success")
             {
-                if (response.Status == "Success")
-                {
-                    return Ok(response);
-                }
-                else
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError, response);
-                }
+                return Ok(response);
             }
-            catch (Exception ex)
+            else
             {
-                _logger.LogError(ex, ex.Message);
+                return BadRequest("La cédula no puede ser repetida");
+                //return StatusCode(StatusCodes.Status500InternalServerError, response);
             }
-            return StatusCode(StatusCodes.Status500InternalServerError, response);
         }
 
         /// <summary>
@@ -127,7 +119,7 @@ namespace Expo_Management.API.Controllers
             }
             else
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, response);
+                return BadRequest("La cédula no puede ser repetida");
             }
         }
 

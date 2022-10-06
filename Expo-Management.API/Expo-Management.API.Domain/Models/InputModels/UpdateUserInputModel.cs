@@ -23,7 +23,7 @@ namespace Expo_Management.API.Domain.Models.InputModels
 
         [Required(ErrorMessage = "Correo es requerido")]
         [DataType(DataType.EmailAddress)]
-        [StringLength(100, MinimumLength = 5, ErrorMessage = "El correo debe de ser entre 5 y 100 caracteres.")]
+        [StringLength(100, MinimumLength = 10, ErrorMessage = "El correo debe de ser entre 10 y 100 caracteres.")]
         public string Email { get; set; } = default!;
 
 

@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Expo_Management.API.Infraestructure.Repositories
-{   
-     /// <summary>
-     /// Repositorio de protocolos de seguridad
-     /// </summary>
+{
+    /// <summary>
+    /// Repositorio de protocolos de seguridad
+    /// </summary>
     public class ProtocolsRepository : IProtocolsRepository
     {
         private readonly ApplicationDbContext _context;
@@ -28,9 +28,9 @@ namespace Expo_Management.API.Infraestructure.Repositories
         }
 
         /// <summary>
-        /// Metodo para crear protocolos de seguridad
+        /// Metodo para crear protocolo de seguridad
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="description"></param>
         /// <returns></returns>
         public async Task<SecurityProtocols?> CreateProtocolAsync(string description)
         {
@@ -38,10 +38,10 @@ namespace Expo_Management.API.Infraestructure.Repositories
             {
                 if (description != null)
                 {
-                    
+
                     var LastId = await (from x in _context.SecurityProtocols
                                            .OrderByDescending(x => x.Id)
-                                            select x.Id).FirstOrDefaultAsync();
+                                        select x.Id).FirstOrDefaultAsync();
 
                     var CurrentFair = await (from x in _context.Fair
                                              where x.StartDate.Year == DateTime.Now.Year
@@ -52,8 +52,8 @@ namespace Expo_Management.API.Infraestructure.Repositories
                         Name = "PrN:" + LastId,
                         Description = description,
                         Fair = CurrentFair
-                        
-                };
+
+                    };
 
                     if (await _context.SecurityProtocols.AddAsync(newProtocol) != null && CurrentFair != null)
                     {
@@ -82,7 +82,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                     where x.Id == id
                                     select x).FirstOrDefaultAsync();
 
-                if(result != null)
+                if (result != null)
                 {
                     _context.SecurityProtocols.Remove(result);
                     _context.SaveChanges();

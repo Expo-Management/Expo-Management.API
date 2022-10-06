@@ -408,9 +408,10 @@ namespace Expo_Management.API.Controllers
         }
 
         /// <summary>
-        /// Endpoint para validar la calificacion de proyectos
+        /// Endpoint para validar la calificacion del proyecto
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="ProjectId"></param>
+        /// <param name="JudgeEmail"></param>
         /// <returns></returns>
         [Authorize(Roles = "Judge")]
         [HttpGet]

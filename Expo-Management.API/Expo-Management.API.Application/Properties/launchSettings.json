@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Expo-Management.API.Application": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:49675;http://localhost:49676"
+    }
+  }
+}

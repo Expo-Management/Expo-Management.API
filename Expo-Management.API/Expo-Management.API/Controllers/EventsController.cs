@@ -50,7 +50,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="EventId"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Judge,User")]
         [HttpGet]
         [Route("event")]
         public async Task<IActionResult> GetEvents(int EventId)

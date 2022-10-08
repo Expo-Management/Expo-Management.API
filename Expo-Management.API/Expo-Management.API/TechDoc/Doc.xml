@@ -28,6 +28,13 @@
             <param name="configuration"></param>
             <param name="logger"></param>
         </member>
+        <member name="M:Expo_Management.API.Controllers.AuthenticateController.RefreshToken(Expo_Management.API.Domain.Models.Entities.TokenModel)">
+            <summary>
+            Endpoint para refrescar el token del usuario logueado
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
         <member name="M:Expo_Management.API.Controllers.AuthenticateController.Login(Expo_Management.API.Domain.Models.ViewModels.LoginViewModel)">
             <summary>
             Endpoint para logearse en el sistema
@@ -324,6 +331,13 @@
             Endpoint para obtener la recomendacion de un proyecto
             </summary>
             <param name="projectId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.qualifyProject(System.Int32,System.String)">
+            <summary>
+            Endpoint para validar la calificacion de proyectos
+            </summary>
+            <param name="model"></param>
             <returns></returns>
         </member>
         <member name="M:Expo_Management.API.Controllers.ProjectsController.qualifyProject(Expo_Management.API.Domain.Models.InputModels.QualifyProjectInputModel)">

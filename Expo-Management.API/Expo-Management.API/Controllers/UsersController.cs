@@ -133,7 +133,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Admin,Judge")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("judge")]
         public async Task<IActionResult> DeleteJudgeAsync(string email)
@@ -286,7 +286,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Admin,Judge,User")]
+        [Authorize(Roles = "Admin,User")]
         [HttpPut]
         [Route("student")]
         public async Task<IActionResult> UpdateStudentAsync([FromBody] UpdateUserInputModel model)
@@ -305,7 +305,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Admin,Judge,User")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
         [Route("student")]
         public async Task<IActionResult> DeleteStudentAsync(string email)

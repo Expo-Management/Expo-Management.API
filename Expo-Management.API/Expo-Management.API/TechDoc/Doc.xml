@@ -335,9 +335,10 @@
         </member>
         <member name="M:Expo_Management.API.Controllers.ProjectsController.qualifyProject(System.Int32,System.String)">
             <summary>
-            Endpoint para validar la calificacion de proyectos
+            Endpoint para validar la calificacion del proyecto
             </summary>
-            <param name="model"></param>
+            <param name="ProjectId"></param>
+            <param name="JudgeEmail"></param>
             <returns></returns>
         </member>
         <member name="M:Expo_Management.API.Controllers.ProjectsController.qualifyProject(Expo_Management.API.Domain.Models.InputModels.QualifyProjectInputModel)">

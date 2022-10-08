@@ -604,7 +604,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
                 if (haveJudgeQualifiedTheProject != null)
                 {
-                    _logger.LogWarning("El error ya fue calificado por el juez con email: " + JudgeEmail);
+                    _logger.LogWarning("El proyecto ya fue calificado por el juez con email: " + JudgeEmail);
                     return false;
                 }
                 else

@@ -179,7 +179,7 @@ namespace Expo_Management.API.Controllers
         /// <param name="email"></param>
         /// <param name="role"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Admin,User,Judge")]
+        //[Authorize(Roles = "Admin,User,Judge")]
         [HttpPost("ForgetPassword")]
         public async Task<IActionResult> ForgetPassword(string email, string role)
         {
@@ -200,7 +200,7 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Admin,User,Judge")]
+        //[Authorize(Roles = "Admin,User,Judge")]
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {

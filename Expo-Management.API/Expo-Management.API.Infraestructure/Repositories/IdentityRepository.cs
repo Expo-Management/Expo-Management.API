@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography;
 using Expo_Management.API.Infraestructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -286,43 +287,57 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<Response> ForgetPasswordAsync(string email, string role)
+        public async Task<Response> ForgetPasswordAsync(string email, string? role)
         {
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user == null)
+            try
             {
-                _logger.LogWarning("Error al encontrar usuario");
-                return new Response { Status = "Error", Message = "Usuario no encontrado" };
+                var user = await (from x in _context.User
+                                  where x.Email == email
+                                  select x).FirstOrDefaultAsync();
+
+                if (user == null)
+                {
+                    _logger.LogWarning("Error al encontrar usuario");
+                    return new Response { Status = "Error", Message = "Usuario no encontrado" };
+                }
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var encodedMailToken = Encoding.UTF8.GetBytes(token);
+                var validToken = WebEncoders.Base64UrlEncode(encodedMailToken);
+
+                string url = "";
+                if (role == "Judge")
+                {
+                    url = $"{_configuration["WebUrl"]}/judges/reset-password?email={email}&token={validToken}";
+                }
+                else if (role == "Admin")
+                {
+                    url = $"{_configuration["WebUrl"]}/administrator/reset-password?email={email}&token={validToken}";
+                }
+                else if (role == "Student")
+                {
+                    url = $"{_configuration["WebUrl"]}/student/reset-password?email={email}&token={validToken}";
+                }
+                else
+                {
+                    url = $"{_configuration["WebUrl"]}/auth/reset-password?email={email}&token={validToken}";
+
+                }
+
+                dynamic ForgetPasswordTemplate = new DynamicTemplate();
+                await _mailService.SendEmailAsync(email, "d-9b96ec3a9bb846dd99b1d3c09903e90c", ForgetPasswordTemplate = new
+                {
+                    username = user.UserName,
+                    url = url
+                });
+
+                return new Response { Status = "Success", Message = "Correo enviado existosamente" };
             }
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var encodedMailToken = Encoding.UTF8.GetBytes(token);
-            var validToken = WebEncoders.Base64UrlEncode(encodedMailToken);
-
-
-            string url = "";
-            if(role == "Judge")
+            catch (Exception ex)
             {
-                 url = $"{_configuration["WebUrl"]}/judges/reset-password?email={email}&token={validToken}";
+
+                return new Response { Status = "Error", Message = ex.Message };
             }
-            else if(role == "Admin")
-            {
-                 url = $"{_configuration["WebUrl"]}/administrator/reset-password?email={email}&token={validToken}";
-            }
-            else
-            {
-                 url = $"{_configuration["WebUrl"]}/student/reset-password?email={email}&token={validToken}";
-            }
-
-            dynamic ForgetPasswordTemplate = new DynamicTemplate();
-            await _mailService.SendEmailAsync(email, "d-9b96ec3a9bb846dd99b1d3c09903e90c", ForgetPasswordTemplate = new
-            {
-                username = user.UserName,
-                url = url
-            });
-
-            return new Response { Status = "Success", Message = "Correo enviado existosamente" };
 
         }
 

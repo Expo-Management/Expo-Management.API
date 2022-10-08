@@ -71,7 +71,7 @@ namespace UploadFiles.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Judge")]
+        [Authorize(Roles = "Judge,User")]
         [HttpGet]
         [Route("download-project-file")]
         public async Task<IActionResult> DownladProjectFile(int id)

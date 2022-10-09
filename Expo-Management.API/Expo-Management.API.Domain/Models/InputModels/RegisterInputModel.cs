@@ -17,8 +17,8 @@ namespace Expo_Management.API.Domain.Models.InputModels
         [StringLength(30, MinimumLength = 3, ErrorMessage = "El nombre debe de ser entre 3 y 30 caracteres.")]
         public string Name { get; set; } = default!;
 
-        [Required(ErrorMessage = "Apellidos son requeridos")]
-        [StringLength(100, MinimumLength = 10, ErrorMessage = "Los apellidos deben de ser entre 10 y 100 caracteres.")]
+        [Required(ErrorMessage = "Ambos Apellidos son requeridos")]
+        [StringLength(50, MinimumLength = 10, ErrorMessage = "Los apellidos deben de ser entre 10 y 50 caracteres.")]
         public string Lastname { get; set; } = default!;
 
         [Required(ErrorMessage = "Correo es requerido")]

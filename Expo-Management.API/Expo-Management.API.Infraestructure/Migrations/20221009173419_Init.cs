@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Expo_Management.API.Infraestructure.Migrations
 {
-    public partial class AllDataBase : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,7 +29,7 @@ namespace Expo_Management.API.Infraestructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -151,8 +151,8 @@ namespace Expo_Management.API.Infraestructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FairId = table.Column<int>(type: "int", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(250)", maxLength: 250, nullable: false),
+                    FairId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -161,8 +161,7 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         name: "FK_SecurityProtocols_Fair_FairId",
                         column: x => x.FairId,
                         principalTable: "Fair",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -171,11 +170,12 @@ namespace Expo_Management.API.Infraestructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(70)", maxLength: 70, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: false),
                     FilesId = table.Column<int>(type: "int", nullable: false),
                     FairId = table.Column<int>(type: "int", nullable: false),
-                    categoryId = table.Column<int>(type: "int", nullable: false)
+                    categoryId = table.Column<int>(type: "int", nullable: false),
+                    oldMembers = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -206,7 +206,7 @@ namespace Expo_Management.API.Infraestructure.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Lastname = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProfilePictureId = table.Column<int>(type: "int", nullable: true),
@@ -214,6 +214,8 @@ namespace Expo_Management.API.Infraestructure.Migrations
                     IsLead = table.Column<bool>(type: "bit", nullable: true),
                     Position = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Institution = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RefreshTokenExpiryTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -265,7 +267,7 @@ namespace Expo_Management.API.Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MentionProjectModel",
+                name: "MentionProject",
                 columns: table => new
                 {
                     MentionsId = table.Column<int>(type: "int", nullable: false),
@@ -273,15 +275,15 @@ namespace Expo_Management.API.Infraestructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MentionProjectModel", x => new { x.MentionsId, x.ProjectsId });
+                    table.PrimaryKey("PK_MentionProject", x => new { x.MentionsId, x.ProjectsId });
                     table.ForeignKey(
-                        name: "FK_MentionProjectModel_Mention_MentionsId",
+                        name: "FK_MentionProject_Mention_MentionsId",
                         column: x => x.MentionsId,
                         principalTable: "Mention",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MentionProjectModel_Projects_ProjectsId",
+                        name: "FK_MentionProject_Projects_ProjectsId",
                         column: x => x.ProjectsId,
                         principalTable: "Projects",
                         principalColumn: "Id",
@@ -454,6 +456,21 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoles",
+                columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
+                values: new object[] { "e4ac8fa9-2478-4158-9184-3a30371793d4", "f7104c2d-0318-4412-a366-b329d3225afa", "Admin", "ADMIN" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "Institution", "IsLead", "Lastname", "LockoutEnabled", "LockoutEnd", "Name", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "Position", "ProfilePictureId", "ProjectId", "RefreshToken", "RefreshTokenExpiryTime", "SecurityStamp", "TwoFactorEnabled", "UserId", "UserName" },
+                values: new object[] { "3e32e27b-7564-47bc-a84e-c53ec4bce500", 0, "ac37d1f9-c93d-4683-8c93-24c2ae031295", "User", "superuser@gmail.com", true, "Expo Management", false, "User", true, null, "Super", "SUPERUSER@GMAIL.COM", "SUPER_USER", "AQAAAAEAACcQAAAAENOnvFWoDlwlguiTnME6AYS+fsCudlGvY4D/DyjHdZ/3sEZgHzz78dd49FRuQKCp1g==", "00000000", false, "System Admin", null, null, null, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "WFPEJN3SJ3EFRD5SO5L4ASFJ25PM36LJ", false, "101110111", "super_user" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "e4ac8fa9-2478-4158-9184-3a30371793d4", "3e32e27b-7564-47bc-a84e-c53ec4bce500" });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -497,6 +514,13 @@ namespace Expo_Management.API.Infraestructure.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_UserId",
+                table: "AspNetUsers",
+                column: "UserId",
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -524,8 +548,8 @@ namespace Expo_Management.API.Infraestructure.Migrations
                 column: "userId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MentionProjectModel_ProjectsId",
-                table: "MentionProjectModel",
+                name: "IX_MentionProject_ProjectsId",
+                table: "MentionProject",
                 column: "ProjectsId");
 
             migrationBuilder.CreateIndex(
@@ -599,7 +623,7 @@ namespace Expo_Management.API.Infraestructure.Migrations
                 name: "Logs");
 
             migrationBuilder.DropTable(
-                name: "MentionProjectModel");
+                name: "MentionProject");
 
             migrationBuilder.DropTable(
                 name: "New");

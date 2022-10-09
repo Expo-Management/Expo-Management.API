@@ -32,7 +32,8 @@ namespace Expo_Management.API.Infraestructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 
@@ -247,7 +248,8 @@ namespace Expo_Management.API.Infraestructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
 
                     b.Property<int>("FairId")
                         .HasColumnType("int");
@@ -257,7 +259,8 @@ namespace Expo_Management.API.Infraestructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
 
                     b.Property<int>("categoryId")
                         .HasColumnType("int");
@@ -343,7 +346,8 @@ namespace Expo_Management.API.Infraestructure.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("FairId")
                         .HasColumnType("int");
@@ -399,6 +403,15 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "e4ac8fa9-2478-4158-9184-3a30371793d4",
+                            ConcurrencyStamp = "f7104c2d-0318-4412-a366-b329d3225afa",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -557,6 +570,13 @@ namespace Expo_Management.API.Infraestructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "3e32e27b-7564-47bc-a84e-c53ec4bce500",
+                            RoleId = "e4ac8fa9-2478-4158-9184-3a30371793d4"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -626,6 +646,32 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         .HasFilter("[UserId] IS NOT NULL");
 
                     b.HasDiscriminator().HasValue("User");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "3e32e27b-7564-47bc-a84e-c53ec4bce500",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "ac37d1f9-c93d-4683-8c93-24c2ae031295",
+                            Email = "superuser@gmail.com",
+                            EmailConfirmed = true,
+                            LockoutEnabled = true,
+                            NormalizedEmail = "SUPERUSER@GMAIL.COM",
+                            NormalizedUserName = "SUPER_USER",
+                            PasswordHash = "AQAAAAEAACcQAAAAENOnvFWoDlwlguiTnME6AYS+fsCudlGvY4D/DyjHdZ/3sEZgHzz78dd49FRuQKCp1g==",
+                            PhoneNumber = "00000000",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "WFPEJN3SJ3EFRD5SO5L4ASFJ25PM36LJ",
+                            TwoFactorEnabled = false,
+                            UserName = "super_user",
+                            Institution = "Expo Management",
+                            IsLead = false,
+                            Lastname = "User",
+                            Name = "Super",
+                            Position = "System Admin",
+                            RefreshTokenExpiryTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UserId = "101110111"
+                        });
                 });
 
             modelBuilder.Entity("Expo_Management.API.Domain.Models.Entities.Claim", b =>

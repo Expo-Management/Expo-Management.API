@@ -155,7 +155,6 @@ namespace Expo_Management.API.Controllers
         /// <param name="userId"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        [Authorize(Roles = "Admin,User,Judge")]
         [HttpGet("confirmEmailToken")]
         public async Task<IActionResult> confirmEmailToken(string userId, string token)
         {

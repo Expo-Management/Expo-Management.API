@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "mssql2": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/expomanagement-db/databases/Expo-Management.DB",
+      "type": "mssql.azure",
+      "connectionId": "DB_Connection"
+    }
+  }
+}

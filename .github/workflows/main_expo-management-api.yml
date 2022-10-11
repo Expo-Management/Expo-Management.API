@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'expo-management-api'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5AE9B08259B14593AAF084BACF88A3F0 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BC823F2F446E4852B42A5EEDA104E0F3 }}
           package: .

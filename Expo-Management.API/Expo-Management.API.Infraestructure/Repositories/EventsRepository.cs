@@ -227,32 +227,48 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="Event"></param>
         /// <returns></returns>
-        public async Task<Event?> UpdateEventAsync(EventUpdateInputModel Event)
+        public async Task<Response> UpdateEventAsync(EventUpdateInputModel Event)
         {
-            var result = await (from e in _context.Event
-                           where e.Id == Event.Id
-                           select e).FirstOrDefaultAsync();
-
-            var kindEvent = await (from ke in _context.KindOfEvent
-                                   where ke.Id == Event.Id
-                                   select ke).FirstOrDefaultAsync();
-
-            if (result != null) 
+            try
             {
-                result.Title = Event.Title;
-                result.Location = Event.Location;
-                result.Start = Event.Start;
-                result.End = Event.End;
-                result.Details = Event.Details;
-                result.AllDay = Event.AllDay;
-                result.KindEvents = kindEvent!;
-                _context.SaveChanges();
+                var result = await (from e in _context.Event
+                                    where e.Id == Event.Id
+                                    select e).FirstOrDefaultAsync();
 
-                return result;
+                if (result != null)
+                {
+                    result.Title = Event.Title;
+                    result.Location = Event.Location;
+                    result.Start = Event.Start;
+                    result.End = Event.End;
+                    result.Details = Event.Details;
+                    result.AllDay = Event.AllDay;
+
+                    _context.SaveChanges();
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = result,
+                        Message = "Evento actualizado exitosamente!"
+                    };
+                }
+                _logger.LogWarning("Error al actualizar un evento.");
+                return new Response()
+                {
+                    Status = 400,
+                    Error = new string[2] { "El evento que se desea actualizar no fue encontrado", "Revise los datos enviados en la solicitud" },
+                    Message = "No se pudo procesar la solicitud, revise los datos enviados."
+                };
             }
-            _logger.LogWarning("Error al actualizar un evento.");
-            return null;
-
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud contacte administracion."
+                };
+            }
         }
 
         /// <summary>

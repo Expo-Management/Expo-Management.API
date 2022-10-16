@@ -65,6 +65,7 @@ namespace Expo_Management.API.Controllers
             else
             {
                 return Ok(response);
+
             }
         }
 
@@ -109,14 +110,7 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _eventsRepository.UpdateEventAsync(model);
 
-            if (response == null)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                return Ok("Evento actualizado exitosamente!");
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>

@@ -2,7 +2,9 @@
 {
     public class Response
     {
-        public string? Status { get; set; }
-        public string? Message { get; set; }
+        public int Status { get; set; }
+        public object Message { get; set; } = default!;
+        public object Data { get; set; } = default!;
+        public string[] Error { get; set; } = Array.Empty<string>();
     }
 }

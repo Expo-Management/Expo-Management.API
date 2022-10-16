@@ -9,20 +9,24 @@ namespace Expo_Management.API.Domain.Models.Entities
     
         [Required]
         [StringLength(100)]
-        public string Description { get; set; } = default!;
+        public string Title { get; set; } = default!;
 
         [Required]
         [StringLength(150)]
         public string Location { get; set; } = default!;
 
         [Required]
-        public DateTime StartDate { get; set; }
+        public DateTime Start { get; set; }
 
         [Required]
-        public DateTime EndDate { get; set; }
+        public DateTime End { get; set; }
 
         [StringLength(200)]
         public string? Details { get; set; }
+
+        public bool AllDay { get; set; }
+
+        public KindEvents KindEvents { get; set; } = default!;
 
         public Fair Fair { get; set; } = default!;
 

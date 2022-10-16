@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Expo_Management.API.Infraestructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221009173419_Init")]
-    partial class Init
+    [Migration("20221011230910_Initialize")]
+    partial class Initialize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -72,19 +72,20 @@ namespace Expo_Management.API.Infraestructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<bool>("AllDay")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Details")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime>("End")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("FairId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("KindEventsId")
                         .HasColumnType("int");
 
                     b.Property<string>("Location")
@@ -92,12 +93,19 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime>("Start")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("FairId");
+
+                    b.HasIndex("KindEventsId");
 
                     b.ToTable("Event");
                 });
@@ -150,6 +158,31 @@ namespace Expo_Management.API.Infraestructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Files");
+                });
+
+            modelBuilder.Entity("Expo_Management.API.Domain.Models.Entities.KindEvents", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Primary")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Secondary")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("KindOfEvent");
                 });
 
             modelBuilder.Entity("Expo_Management.API.Domain.Models.Entities.Logs", b =>
@@ -695,7 +728,15 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Expo_Management.API.Domain.Models.Entities.KindEvents", "KindEvents")
+                        .WithMany()
+                        .HasForeignKey("KindEventsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Fair");
+
+                    b.Navigation("KindEvents");
                 });
 
             modelBuilder.Entity("Expo_Management.API.Domain.Models.Entities.New", b =>

@@ -94,14 +94,7 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _identityRepository.RegisterNewUser("User", model);
 
-            if (response.Status == "Success")
-            {
-                return Ok(response);
-            }
-            else
-            {
-                return BadRequest("La cédula no puede ser repetida");
-            }
+            return StatusCode(response.Status, response.Message);
         }
 
         /// <summary>
@@ -116,15 +109,7 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _identityRepository.RegisterNewUser("Admin", model);
 
-            if (response.Status == "Success")
-            {
-                return Ok(response);
-            }
-            else
-            {
-                return BadRequest("La cédula no puede ser repetida");
-                //return StatusCode(StatusCodes.Status500InternalServerError, response);
-            }
+            return StatusCode(response.Status, response.Message);
         }
 
         /// <summary>
@@ -139,14 +124,7 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _identityRepository.RegisterNewUser("Judge", model);
 
-            if (response.Status == "Success")
-            {
-                return Ok(response);
-            }
-            else
-            {
-                return BadRequest("La cédula no puede ser repetida");
-            }
+            return StatusCode(response.Status, response.Message);
         }
 
         /// <summary>
@@ -160,16 +138,16 @@ namespace Expo_Management.API.Controllers
         {
             if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(token))
             {
-                return BadRequest("error");
+                return StatusCode(400, "El id o el token es incorrecto, revise los datos");
             }
             var result = await _identityRepository.ConfirmEmailAsync(userId, token);
 
-            if (result.Status == "Success")
+            if (result.Status == 200)
             {
-                return Redirect($"{_Configuration["WebUrl"]}/auth/login");
+                return Redirect(Environment.GetEnvironmentVariable("WebUrl") + "/auth/login");
 
             }
-            return BadRequest("Se acaba de dar un error, por favor intentelo más tarde");
+            return StatusCode(400, "Se acaba de dar un error, por favor intentelo más tarde");
         }
 
         /// <summary>
@@ -183,15 +161,11 @@ namespace Expo_Management.API.Controllers
         public async Task<IActionResult> ForgetPassword(string email, string role)
         {
             if (string.IsNullOrWhiteSpace(email))
-                return BadRequest("error");
+                return StatusCode(400, "Hay un problema con el correo ingresado, revise los datos.");
 
             var result = await _identityRepository.ForgetPasswordAsync(email, role);
 
-            if (result.Status == "Success")
-            {
-                return Ok(result);
-            }
-            return BadRequest(result);
+            return StatusCode(result.Status, result.Message);
         }
 
         /// <summary>
@@ -207,13 +181,9 @@ namespace Expo_Management.API.Controllers
             {
                 var result = await _identityRepository.ResetPasswordAsync(model);
 
-                if (result.Status == "Success")
-                {
-                    return Ok(result);
-                }
-                return BadRequest(result);
+                return StatusCode(result.Status, result.Message);
             }
-            return BadRequest("algunas propiedades escritas no son validas");
+            return StatusCode(400, "Hay un problema con las propiedades ingresadas, revise los datos.");
         }
     }
 }

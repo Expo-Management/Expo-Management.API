@@ -27,6 +27,7 @@ namespace Expo_Management.API.Infraestructure.Data
         public DbSet<Qualifications> Qualifications { get; set; } = default!;
         public DbSet<Claim> Claim { get; set; } = default!;
         public DbSet<Recommendation> JudgeRecommendation { get; set; } = default!;
+        public DbSet<KindEvents> KindOfEvent { get; set; } = default!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

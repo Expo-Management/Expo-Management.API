@@ -659,3 +659,4 @@ Expo-Management.API/Expo-Management.API/Properties/serviceDependencies.ExpoManag
 Expo-Management.API/Expo-Management.API/Properties/serviceDependencies.json
 Expo-Management.API/Expo-Management.API/Properties/ServiceDependencies/ExpoManagementAPI2 - Web Deploy/mssql1.arm.json
 Expo-Management.API/Expo-Management.API/Properties/ServiceDependencies/ExpoManagementAPI2 - Web Deploy/profile.arm.json
+Expo-Management.API/Expo-Management.API/Properties/ServiceDependencies/expo-management-api - Web Deploy/profile.arm.json

@@ -148,6 +148,12 @@
             <param name="EventId"></param>
             <returns></returns>
         </member>
+        <member name="M:Expo_Management.API.Controllers.EventsController.GetKindEvents">
+            <summary>
+            Endpoint para obtener los tipos de evento
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:Expo_Management.API.Controllers.EventsController.CreateEvent(Expo_Management.API.Domain.Models.InputModels.EventInputModel)">
             <summary>
             Endpoint para crear un evento

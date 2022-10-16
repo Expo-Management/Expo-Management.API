@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Expo_Management.API.Infraestructure.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initialize : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -68,6 +68,21 @@ namespace Expo_Management.API.Infraestructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "KindOfEvent",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Primary = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Secondary = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KindOfEvent", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Logs",
                 columns: table => new
                 {
@@ -116,30 +131,6 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
                         principalTable: "AspNetRoles",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Event",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Description = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Location = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Details = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    FairId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Event", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Event_Fair_FairId",
-                        column: x => x.FairId,
-                        principalTable: "Fair",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -196,6 +187,38 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         name: "FK_Projects_Files_FilesId",
                         column: x => x.FilesId,
                         principalTable: "Files",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Event",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Start = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    End = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Details = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    AllDay = table.Column<bool>(type: "bit", nullable: false),
+                    KindEventsId = table.Column<int>(type: "int", nullable: false),
+                    FairId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Event", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Event_Fair_FairId",
+                        column: x => x.FairId,
+                        principalTable: "Fair",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Event_KindOfEvent_KindEventsId",
+                        column: x => x.KindEventsId,
+                        principalTable: "KindOfEvent",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -538,6 +561,11 @@ namespace Expo_Management.API.Infraestructure.Migrations
                 column: "FairId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Event_KindEventsId",
+                table: "Event",
+                column: "KindEventsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_JudgeRecommendation_projectId",
                 table: "JudgeRecommendation",
                 column: "projectId");
@@ -636,6 +664,9 @@ namespace Expo_Management.API.Infraestructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "KindOfEvent");
 
             migrationBuilder.DropTable(
                 name: "Mention");

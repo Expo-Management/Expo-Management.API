@@ -2,6 +2,7 @@
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Expo_Management.API.Domain.Models.Reponses;
 
 namespace Expo_Management.API.Controllers
 {
@@ -10,7 +11,7 @@ namespace Expo_Management.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class EventsController : ControllerBase
+    public class EventsController : Controller
     {
         private readonly IEventsRepository _eventsRepository;
 
@@ -68,6 +69,20 @@ namespace Expo_Management.API.Controllers
         }
 
         /// <summary>
+        /// Endpoint para obtener los tipos de evento
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin,Judge,User")]
+        [HttpGet]
+        [Route("kind-events")]
+        public async Task<IActionResult> GetKindEvents()
+        {
+            var response = await _eventsRepository.GetKindEventsAsync();
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error});
+        }
+
+        /// <summary>
         /// Endpoint para crear un evento
         /// </summary>
         /// <param name="model"></param>
@@ -79,14 +94,7 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _eventsRepository.CreateEventAsync(model);
 
-            if (response == null)
-            {
-                return BadRequest();
-            }
-            else
-            {
-                return Ok("Evento creado exitosamente!");
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>

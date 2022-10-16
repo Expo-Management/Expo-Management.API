@@ -3,10 +3,12 @@
     public class EventUpdateInputModel
     {
         public int Id { get; set; }
-        public string Description { get; set; } = default!;
+        public string Title { get; set; } = default!;
         public string Location { get; set; } = default!;
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime Start { get; set; }
+        public DateTime End { get; set; }
         public string? Details { get; set; }
+        public bool AllDay { get; set; }
+        public int KindEvent { get; set; }
     }
 }

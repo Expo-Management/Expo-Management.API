@@ -158,7 +158,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
             if (userExists != null || emailExists != null || phoneValidator != null)
             {
-                return new Response { Status = "Error", Message = "El usuario con esas credenciales ya existe." };
+                return new Response { Status = 400, Message = "El usuario con esas credenciales ya existe, revise los datos." };
             }
 
             var password = _authUtils.GeneratePassword(true, true, true, true, 15);
@@ -181,7 +181,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
             if (!result.Succeeded)
             {
                 _logger.LogWarning("Error al registrar un usuario.");
-                return new Response { Status = "Error", Message = "Creación de usuario fallida." };
+                return new Response { Status = 500, Message = "Creación de usuario fallida, contacte administracion." };
             }
 
             await _authUtils.AssignRole(user, Role);
@@ -190,7 +190,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
             var confirmEmailToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var encodedMailToken = Encoding.UTF8.GetBytes(confirmEmailToken);
             var validEmailToken = WebEncoders.Base64UrlEncode(encodedMailToken);
-            string url = $"{_configuration["AppUrl"]}/api/authenticate/confirmEmailToken?userId={user.Id}&token={validEmailToken}";
+            string url = $"{Environment.GetEnvironmentVariable("AppUrl")}/api/authenticate/confirmEmailToken?userId={user.Id}&token={validEmailToken}";
 
             dynamic ConfirmEmailTemplate = new DynamicTemplate();
 
@@ -201,7 +201,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 url = url
             });
 
-            return new Response { Status = "Success", Message = "Usuario creado existosamente!" };
+            return new Response { Status = 200, Message = "Usuario creado existosamente!" };
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
             if (user == null)
             {
                 _logger.LogWarning("Error al encontrar usuario");
-                return new Response { Status = "Error", Message = "Usuario no encontrado" };
+                return new Response { Status = 404, Message = "Usuario no encontrado" };
             }
 
             //decode and validate token
@@ -277,9 +277,9 @@ namespace Expo_Management.API.Infraestructure.Repositories
             if (!result.Succeeded)
             {
                 _logger.LogWarning("Error al enviar correo");
-                return new Response { Status = "Error", Message = "Correo no encontrado" };
+                return new Response { Status = 404, Message = "Correo no encontrado" };
             }
-            return new Response { Status = "Success", Message = "Cuenta confirmada" };
+            return new Response { Status = 200, Message = "Cuenta confirmada" };
         }
 
         /// <summary>
@@ -298,7 +298,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 if (user == null)
                 {
                     _logger.LogWarning("Error al encontrar usuario");
-                    return new Response { Status = "Error", Message = "Usuario no encontrado" };
+                    return new Response { Status = 404, Message = "Usuario no encontrado" };
                 }
 
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -308,19 +308,19 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 string url = "";
                 if (role == "Judge")
                 {
-                    url = $"{_configuration["WebUrl"]}/judges/reset-password?email={email}&token={validToken}";
+                    url = $"{Environment.GetEnvironmentVariable("WebUrl")}/judges/reset-password?email={email}&token={validToken}";
                 }
                 else if (role == "Admin")
                 {
-                    url = $"{_configuration["WebUrl"]}/administrator/reset-password?email={email}&token={validToken}";
+                    url = $"{Environment.GetEnvironmentVariable("WebUrl")}/administrator/reset-password?email={email}&token={validToken}";
                 }
                 else if (role == "Student")
                 {
-                    url = $"{_configuration["WebUrl"]}/student/reset-password?email={email}&token={validToken}";
+                    url = $"{Environment.GetEnvironmentVariable("WebUrl")}/student/reset-password?email={email}&token={validToken}";
                 }
                 else
                 {
-                    url = $"{_configuration["WebUrl"]}/auth/reset-password?email={email}&token={validToken}";
+                    url = $"{Environment.GetEnvironmentVariable("WebUrl")}/auth/reset-password?email={email}&token={validToken}";
 
                 }
 
@@ -331,12 +331,12 @@ namespace Expo_Management.API.Infraestructure.Repositories
                     url = url
                 });
 
-                return new Response { Status = "Success", Message = "Correo enviado existosamente" };
+                return new Response { Status = 200, Message = "Correo enviado existosamente" };
             }
             catch (Exception ex)
             {
 
-                return new Response { Status = "Error", Message = ex.Message };
+                return new Response { Status = 500, Message = ex.Message };
             }
 
         }
@@ -352,12 +352,12 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
             if (user == null)
             {
-                return new Response { Status = "Error", Message = "Usuario no encontrado" };
+                return new Response { Status = 404, Message = "Usuario no encontrado" };
             }
 
             if (model.NewPassword != model.ConfirmPassword)
             {
-                return new Response { Status = "Error", Message = "Contraseña nueva y Confirmación de contrseña nueva no son iguales" };
+                return new Response { Status = 400, Message = "Contraseña nueva y Confirmación de contrseña nueva no son iguales" };
             }
 
             var decodeToken = WebEncoders.Base64UrlDecode(model.Token);
@@ -367,10 +367,10 @@ namespace Expo_Management.API.Infraestructure.Repositories
             if (!result.Succeeded)
             {
                 _logger.LogWarning("Error al cambiar contrsaeña");
-                return new Response { Status = "Error", Message = "Hubo un error, por favor intentelo más tarde" };
+                return new Response { Status = 500, Message = "Hubo un error, por favor intentelo más tarde" };
             }
 
-            return new Response { Status = "Success", Message = "Contraseña cambiada existosamente" };
+            return new Response { Status = 200, Message = "Contraseña cambiada existosamente" };
         }
     }
 }

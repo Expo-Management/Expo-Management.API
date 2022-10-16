@@ -4,6 +4,11 @@ using Expo_Management.API.Infraestructure.Data;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Castle.Core;
+using Expo_Management.API.Domain.Models.Reponses;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
+using Abp.Json;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -31,36 +36,67 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="Event"></param>
         /// <returns></returns>
-        public async Task<Event?> CreateEventAsync(EventInputModel Event)
+        public async Task<Response> CreateEventAsync(EventInputModel Event)
         {
-            var fair = await (from f in _context.Fair
-                        where f.Id == Event.FairId
-                        select f).FirstOrDefaultAsync();
-
-            if (fair != null) 
+            try
             {
-                var newEvent = new Event()
-                {
-                    Description = Event.Description,
-                    Location = Event.Location,
-                    StartDate = Event.StartDate,
-                    EndDate = Event.EndDate,
-                    Details = Event.Details,
-                    Fair = fair
-                };
+                var fair = await (from f in _context.Fair
+                                  where f.Id == Event.FairId
+                                  select f).FirstOrDefaultAsync();
 
-                if (_context.Event.Add(newEvent) != null)
+                var kindEvent = await (from ke in _context.KindOfEvent
+                                       where ke.Id == Event.KindEvent
+                                       select ke).FirstOrDefaultAsync();
+
+                if (fair != null && kindEvent != null)
                 {
-                    _context.SaveChanges();
-                    return newEvent;
+                    var newEvent = new Event()
+                    {
+                        Title = Event.Title,
+                        Location = Event.Location,
+                        Start = Event.Start,
+                        End = Event.End,
+                        Details = Event.Details,
+                        AllDay = Event.AllDay,
+                        KindEvents = kindEvent!,
+                        Fair = fair
+                    };
+
+                    if (_context.Event.Add(newEvent) != null)
+                    {
+                        _context.SaveChanges();
+                        return new Response()
+                        {
+                            Status = 200,
+                            Data = newEvent,
+                            Message = "Evento creado exitosamente!"
+                        };
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Error al crear un evento.");
+                        return new Response()
+                        {
+                            Status = 500,
+                            Message = "No se pudo crear el evento, intentelo mas tarde."
+                        };
+                    }
                 }
-                else
+                return new Response()
                 {
-                    _logger.LogWarning("Error al crear un evento.");
-                    return null;
-                }
+                    Status = 400,
+                    Message = "Revise los datos enviados"
+                };
             }
-            return null;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud contacte administracion."
+                };
+            }
         }
 
         /// <summary>
@@ -112,19 +148,78 @@ namespace Expo_Management.API.Infraestructure.Repositories
         }
 
         /// <summary>
+        /// Metodo para obtener los tipos de eventos
+        /// </summary>
+        /// <param name="EventId"></param>
+        /// <returns></returns>
+        public async Task<Response> GetKindEventsAsync()
+        {
+            try
+            {
+                var results = await (from ke in _context.KindOfEvent
+                                     select ke).ToListAsync();
+
+                if (results.Any())
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = results,
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "No hay tipos de eventos registrados."
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud contacte administracion."
+                };
+            }
+        }
+
+        /// <summary>
         /// Metodo para obtener eventos
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Event>?> GetEventsAsync()
+        public async Task<Response?> GetEventsAsync()
         {
-            var results = await (from e in _context.Event
-                           select e).ToListAsync();
-
-            if (results.Count() > 0)
+            try
             {
-                return (List<Event>)results;
+                var results = await (from e in _context.Event
+                                     select e)
+                                     .Include(e => e.KindEvents)
+                                     .ToListAsync();
+
+                if (results.Any())
+                {
+                    return new  Response()
+                    {
+                        Status = 200,
+                        Data = results
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "No hay eventos registrados."
+                };
             }
-            return null;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud contacte administracion."
+                };
+            }
         }
 
         /// <summary>
@@ -138,13 +233,19 @@ namespace Expo_Management.API.Infraestructure.Repositories
                            where e.Id == Event.Id
                            select e).FirstOrDefaultAsync();
 
+            var kindEvent = await (from ke in _context.KindOfEvent
+                                   where ke.Id == Event.Id
+                                   select ke).FirstOrDefaultAsync();
+
             if (result != null) 
             {
-                result.Description = Event.Description;
+                result.Title = Event.Title;
                 result.Location = Event.Location;
-                result.StartDate = Event.StartDate;
-                result.EndDate = Event.EndDate;
+                result.Start = Event.Start;
+                result.End = Event.End;
                 result.Details = Event.Details;
+                result.AllDay = Event.AllDay;
+                result.KindEvents = kindEvent!;
                 _context.SaveChanges();
 
                 return result;

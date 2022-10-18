@@ -1,16 +1,15 @@
-﻿using System;
+﻿using Expo_Management.API.Domain.Models.Entities;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
-namespace Expo_Management.API.Domain.Models.Entities
+namespace Expo_Management.API.Domain.Models.InputModels
 {
-    public class KindEvents
+    public class newKindEventInputModel
     {
-        public int Id { get; set; }
-
         [Required]
         public string Name { get; set; } = default!;
 

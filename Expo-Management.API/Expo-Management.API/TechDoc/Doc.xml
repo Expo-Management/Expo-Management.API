@@ -148,12 +148,6 @@
             <param name="EventId"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Controllers.EventsController.GetKindEvents">
-            <summary>
-            Endpoint para obtener los tipos de evento
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:Expo_Management.API.Controllers.EventsController.CreateEvent(Expo_Management.API.Domain.Models.InputModels.EventInputModel)">
             <summary>
             Endpoint para crear un evento
@@ -173,6 +167,39 @@
             Endpoint para eliminar un evento
             </summary>
             <param name="EventId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.EventsController.GetKindEvents">
+            <summary>
+            Endpoint para obtener los tipos de evento
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.EventsController.GetColorName">
+            <summary>
+            Endpoint para crear un tipo de evento
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.EventsController.CreateKindEvent(Expo_Management.API.Domain.Models.InputModels.newKindEventInputModel)">
+            <summary>
+            Endpoint para crear un tipo de evento
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.EventsController.UpdateKindEvent(Expo_Management.API.Domain.Models.InputModels.UpdateKindEventsInputModel)">
+            <summary>
+            Endpoint para actualizar un evento
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Expo_Management.API.Controllers.EventsController.DeleteKindEvent(System.Int32)">
+            <summary>
+            Endpoint para eliminar un evento
+            </summary>
+            <param name="KindEventId"></param>
             <returns></returns>
         </member>
         <member name="M:Expo_Management.API.Controllers.EventsController.GetNews(System.Int32)">

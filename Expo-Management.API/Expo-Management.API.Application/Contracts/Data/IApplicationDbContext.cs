@@ -23,5 +23,6 @@ namespace Expo_Management.API.Application.Contracts.Data
         DbSet<Qualifications> Qualifications { get; set; }
         DbSet<Claim> Claim { get; set; }
         DbSet<Recommendation> JudgeRecommendation { get; set; }
+        DbSet<KindEvents> KindOfEvent { get; set; }
     }
 }

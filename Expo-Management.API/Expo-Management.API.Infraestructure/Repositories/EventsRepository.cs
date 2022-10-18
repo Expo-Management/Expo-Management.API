@@ -9,6 +9,10 @@ using Expo_Management.API.Domain.Models.Reponses;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Abp.Json;
+using System.Linq.Dynamic.Core;
+using Expo_Management.API.Domain.InputModels;
+using System.Reflection;
+using Expo_Management.API.Domain.Models.ViewModels;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -94,7 +98,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 return new Response()
                 {
                     Status = 500,
-                    Message = "Hubo un problema procesando su solicitud contacte administracion."
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
                 };
             }
         }
@@ -107,11 +111,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
         public async Task<bool> DeleteEventAsync(int EventId)
         {
             var result = await (from e in _context.Event
-                           where e.Id == EventId
-                           select e).FirstOrDefaultAsync();
+                                where e.Id == EventId
+                                select e).FirstOrDefaultAsync();
             try
             {
-                if(result != null)
+                if (result != null)
                 {
                     _context.Event.Remove(result);
                     _context.SaveChanges();
@@ -137,13 +141,84 @@ namespace Expo_Management.API.Infraestructure.Repositories
         public async Task<Event?> GetEventAsync(int EventId)
         {
             var results = await (from e in _context.Event
-                           where e.Id == EventId
-                           select e).FirstOrDefaultAsync();
+                                 where e.Id == EventId
+                                 select e).FirstOrDefaultAsync();
 
             if (results != null)
             {
                 return (Event)results;
             }
+            return null;
+        }
+
+        /// <summary>
+        /// Metodo para obtener eventos
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Response> GetEventsAsync()
+        {
+            try
+            {
+                var results = await (from e in _context.Event
+                                     select e)
+                                     .Include(e => e.KindEvents)
+                                     .Include(f => f.Fair)
+                                     .ToListAsync();
+
+                if (results.Any())
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = results
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "No hay eventos registrados."
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
+            }
+        }
+
+        /// <summary>
+        /// Metodo para actualizar eventos
+        /// </summary>
+        /// <param name="Event"></param>
+        /// <returns></returns>
+        public async Task<Event?> UpdateEventAsync(EventUpdateInputModel Event)
+        {
+            var result = await (from e in _context.Event
+                                where e.Id == Event.Id
+                                select e).FirstOrDefaultAsync();
+
+            var kindEvent = await (from ke in _context.KindOfEvent
+                                   where ke.Id == Event.Id
+                                   select ke).FirstOrDefaultAsync();
+
+            if (result != null)
+            {
+                result.Title = Event.Title;
+                result.Location = Event.Location;
+                result.Start = Event.Start;
+                result.End = Event.End;
+                result.Details = Event.Details;
+                result.AllDay = Event.AllDay;
+                result.KindEvents = kindEvent!;
+                _context.SaveChanges();
+
+                return result;
+            }
+            _logger.LogWarning("Error al actualizar un evento.");
             return null;
         }
 
@@ -157,7 +232,8 @@ namespace Expo_Management.API.Infraestructure.Repositories
             try
             {
                 var results = await (from ke in _context.KindOfEvent
-                                     select ke).ToListAsync();
+                                     select ke)
+                                     .ToListAsync();
 
                 if (results.Any())
                 {
@@ -179,36 +255,56 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 return new Response()
                 {
                     Status = 500,
-                    Message = "Hubo un problema procesando su solicitud contacte administracion."
+                    Message = "Hubo un problema procesando su solicitud contacte, administracion."
                 };
             }
         }
 
         /// <summary>
-        /// Metodo para obtener eventos
+        /// Metodo para obtener el valor hexadecimal de un color en especifico
         /// </summary>
+        /// <param name="name"></param>
         /// <returns></returns>
-        public async Task<Response?> GetEventsAsync()
+        private string? GetColorName(string name)
+        {
+            FieldInfo[] fields = typeof(Colors).GetFields();
+            foreach (var field in fields)
+            {
+                if (field.Name == name)
+                {
+                    return field.GetValue(typeof(Colors)).ToString();
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Metodo para obtener el nombre y valor hexadecimal de un color en especifico
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public Response GetColorName()
         {
             try
             {
-                var results = await (from e in _context.Event
-                                     select e)
-                                     .Include(e => e.KindEvents)
-                                     .ToListAsync();
+               List<ColorsViewModel> colors = new();
+                var fields = typeof(Colors).GetFields().ToList();
 
-                if (results.Any())
+                foreach (var field in fields)
                 {
-                    return new  Response()
+
+                    var c = new ColorsViewModel()
                     {
-                        Status = 200,
-                        Data = results
+                        Name = field.Name,
+                        Value = field.GetValue(typeof(Colors)).ToString()
                     };
+                    colors.Add(c);
                 }
                 return new Response()
                 {
-                    Status = 204,
-                    Message = "No hay eventos registrados."
+                    Status = 200,
+                    Data = colors,
+                    Message = "Colores obtenidos exitosamente!"
                 };
             }
             catch (Exception ex)
@@ -217,54 +313,162 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 return new Response()
                 {
                     Status = 500,
-                    Message = "Hubo un problema procesando su solicitud contacte administracion."
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
                 };
             }
         }
 
         /// <summary>
-        /// Metodo para actualizar eventos
+        /// Metodo para crear tipos de categorias de los eventos de la feria
         /// </summary>
-        /// <param name="Event"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Event?> UpdateEventAsync(EventUpdateInputModel Event)
+        public async Task<Response?> CreateKindEventAsync(newKindEventInputModel model)
         {
-            var result = await (from e in _context.Event
-                           where e.Id == Event.Id
-                           select e).FirstOrDefaultAsync();
-
-            var kindEvent = await (from ke in _context.KindOfEvent
-                                   where ke.Id == Event.Id
-                                   select ke).FirstOrDefaultAsync();
-
-            if (result != null) 
+            try
             {
-                result.Title = Event.Title;
-                result.Location = Event.Location;
-                result.Start = Event.Start;
-                result.End = Event.End;
-                result.Details = Event.Details;
-                result.AllDay = Event.AllDay;
-                result.KindEvents = kindEvent!;
-                _context.SaveChanges();
+                if (model != null)
+                {
+                    var primaryColour = GetColorName(model.Primary);
+                    var secondaryColour = GetColorName(model.Secondary);
 
-                return result;
+                    var newKindEvent = new KindEvents()
+                    {
+                        Name = model.Name,
+                        Primary = primaryColour,
+                        Secondary = secondaryColour
+                    };
+
+                    if (await _context.KindOfEvent.AddAsync(newKindEvent) != null)
+                    {
+                        await _context.SaveChangesAsync();
+                        return new Response()
+                        {
+                            Status = 200,
+                            Data = newKindEvent,
+                            Message = "Tipo de Evento ha sido creado exitosamente!"
+                        };
+                    }
+                }
+                return new Response()
+                {
+                    Status = 400,
+                    Message = "Revise los datos enviados"
+                };
             }
-            _logger.LogWarning("Error al actualizar un evento.");
-            return null;
-
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
+            }
         }
+
+        /// <summary>
+        /// Metodo para actualizar los tipos de eventos de la feria
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public async Task<Response?> UpdateKindEventAsync(UpdateKindEventsInputModel model)
+        {
+            try
+            {
+                var result = await (from ke in _context.KindOfEvent
+                                    where ke.Id == model.Id
+                                    select ke).FirstOrDefaultAsync();
+
+
+                var primaryColour = GetColorName(model.Primary);
+                var secondaryColour = GetColorName(model.Secondary);
+
+                if (result != null)
+                {
+                    result.Name = model.Name;
+                    result.Primary = primaryColour;
+                    result.Secondary = secondaryColour;
+                    _context.SaveChanges();
+
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = result,
+                        Message = "Tipo de Evento ha sido actualizado exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 400,
+                    Message = "Revise los datos enviados"
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
+            }
+        }
+
+        /// <summary>
+        /// Metodo para eliminar tipos de eventos de la feria
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<Response> DeleteKindEventAsync(int kindEventId)
+        {
+            var result = await (from e in _context.KindOfEvent
+                                where e.Id == kindEventId
+                                select e).FirstOrDefaultAsync();
+            try
+            {
+                if (result != null)
+                {
+                    _context.KindOfEvent.Remove(result);
+                    _context.SaveChanges();
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = true,
+                        Message = "Tipo de Evento ha sido actualizado exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 400,
+                    Data = false,
+                    Message = "Revise los datos enviados"
+                };
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Data = false,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
+            }
+        }
+
 
         /// <summary>
         /// Metodo para obtener las noticias de la feria
         /// </summary>
         /// <param name="FairId"></param>
         /// <returns></returns>
-        public async Task<List<New>?> GetNewsByFairIdAsync(int FairId) 
+        public async Task<List<New>?> GetNewsByFairIdAsync(int FairId)
         {
             var results = await (from n in _context.New
-                          where n.Fair.Id == FairId
-                          select n).Include(n => n.Publisher).ToListAsync();
+                                 where n.Fair.Id == FairId
+                                 select n).Include(n => n.Publisher).ToListAsync();
 
             if (results != null && results.Count() > 0)
             {

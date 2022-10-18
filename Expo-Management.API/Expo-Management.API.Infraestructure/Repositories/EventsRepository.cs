@@ -4,13 +4,8 @@ using Expo_Management.API.Infraestructure.Data;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Castle.Core;
 using Expo_Management.API.Domain.Models.Reponses;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using Abp.Json;
 using System.Linq.Dynamic.Core;
-using Expo_Management.API.Domain.InputModels;
 using System.Reflection;
 using Expo_Management.API.Domain.Models.ViewModels;
 
@@ -195,31 +190,48 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="Event"></param>
         /// <returns></returns>
-        public async Task<Event?> UpdateEventAsync(EventUpdateInputModel Event)
+        public async Task<Response> UpdateEventAsync(EventUpdateInputModel Event)
         {
-            var result = await (from e in _context.Event
-                                where e.Id == Event.Id
-                                select e).FirstOrDefaultAsync();
-
-            var kindEvent = await (from ke in _context.KindOfEvent
-                                   where ke.Id == Event.Id
-                                   select ke).FirstOrDefaultAsync();
-
-            if (result != null)
+            try
             {
-                result.Title = Event.Title;
-                result.Location = Event.Location;
-                result.Start = Event.Start;
-                result.End = Event.End;
-                result.Details = Event.Details;
-                result.AllDay = Event.AllDay;
-                result.KindEvents = kindEvent!;
-                _context.SaveChanges();
+                var result = await (from e in _context.Event
+                                    where e.Id == Event.Id
+                                    select e).FirstOrDefaultAsync();
 
-                return result;
+                if (result != null)
+                {
+                    result.Title = Event.Title;
+                    result.Location = Event.Location;
+                    result.Start = Event.Start;
+                    result.End = Event.End;
+                    result.Details = Event.Details;
+                    result.AllDay = Event.AllDay;
+
+                    _context.SaveChanges();
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = result,
+                        Message = "Evento actualizado exitosamente!"
+                    };
+                }
+                _logger.LogWarning("Error al actualizar un evento.");
+                return new Response()
+                {
+                    Status = 400,
+                    Error = new string[2] { "El evento que se desea actualizar no fue encontrado", "Revise los datos enviados en la solicitud" },
+                    Message = "No se pudo procesar la solicitud, revise los datos enviados."
+                };
             }
-            _logger.LogWarning("Error al actualizar un evento.");
-            return null;
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud contacte administracion."
+                };
+            }
         }
 
         /// <summary>
@@ -287,7 +299,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         {
             try
             {
-               List<ColorsViewModel> colors = new();
+                List<ColorsViewModel> colors = new();
                 var fields = typeof(Colors).GetFields().ToList();
 
                 foreach (var field in fields)
@@ -373,126 +385,127 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// <param name="model"></param>
         /// <returns></returns>
         public async Task<Response?> UpdateKindEventAsync(UpdateKindEventsInputModel model)
-        {
-            try
-            {
-                var result = await (from ke in _context.KindOfEvent
-                                    where ke.Id == model.Id
-                                    select ke).FirstOrDefaultAsync();
-
-
-                var primaryColour = GetColorName(model.Primary);
-                var secondaryColour = GetColorName(model.Secondary);
-
-                if (result != null)
                 {
-                    result.Name = model.Name;
-                    result.Primary = primaryColour;
-                    result.Secondary = secondaryColour;
-                    _context.SaveChanges();
-
-                    return new Response()
+                    try
                     {
-                        Status = 200,
-                        Data = result,
-                        Message = "Tipo de Evento ha sido actualizado exitosamente!"
-                    };
-                }
-                return new Response()
-                {
-                    Status = 400,
-                    Message = "Revise los datos enviados"
-                };
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return new Response()
-                {
-                    Status = 500,
-                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
-                };
-            }
-        }
+                        var result = await (from ke in _context.KindOfEvent
+                                            where ke.Id == model.Id
+                                            select ke).FirstOrDefaultAsync();
 
-        /// <summary>
-        /// Metodo para eliminar tipos de eventos de la feria
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public async Task<Response> DeleteKindEventAsync(int kindEventId)
-        {
-            var result = await (from e in _context.KindOfEvent
-                                where e.Id == kindEventId
-                                select e).FirstOrDefaultAsync();
-            try
-            {
-                if (result != null)
-                {
-                    _context.KindOfEvent.Remove(result);
-                    _context.SaveChanges();
-                    return new Response()
+
+                        var primaryColour = GetColorName(model.Primary);
+                        var secondaryColour = GetColorName(model.Secondary);
+
+                        if (result != null)
+                        {
+                            result.Name = model.Name;
+                            result.Primary = primaryColour;
+                            result.Secondary = secondaryColour;
+                            _context.SaveChanges();
+
+                            return new Response()
+                            {
+                                Status = 200,
+                                Data = result,
+                                Message = "Tipo de Evento ha sido actualizado exitosamente!"
+                            };
+                        }
+                        return new Response()
+                        {
+                            Status = 400,
+                            Message = "Revise los datos enviados"
+                        };
+                    }
+                    catch (Exception ex)
                     {
-                        Status = 200,
-                        Data = true,
-                        Message = "Tipo de Evento ha sido actualizado exitosamente!"
-                    };
+                        _logger.LogError(ex.Message);
+                        return new Response()
+                        {
+                            Status = 500,
+                            Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                        };
+                    }
                 }
-                return new Response()
+
+                /// <summary>
+                /// Metodo para eliminar tipos de eventos de la feria
+                /// </summary>
+                /// <param name="id"></param>
+                /// <returns></returns>
+                public async Task<Response> DeleteKindEventAsync(int kindEventId)
                 {
-                    Status = 400,
-                    Data = false,
-                    Message = "Revise los datos enviados"
-                };
+                    var result = await (from e in _context.KindOfEvent
+                                        where e.Id == kindEventId
+                                        select e).FirstOrDefaultAsync();
+                    try
+                    {
+                        if (result != null)
+                        {
+                            _context.KindOfEvent.Remove(result);
+                            _context.SaveChanges();
+                            return new Response()
+                            {
+                                Status = 200,
+                                Data = true,
+                                Message = "Tipo de Evento ha sido actualizado exitosamente!"
+                            };
+                        }
+                        return new Response()
+                        {
+                            Status = 400,
+                            Data = false,
+                            Message = "Revise los datos enviados"
+                        };
 
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return new Response()
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.Message);
+                        return new Response()
+                        {
+                            Status = 500,
+                            Data = false,
+                            Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                        };
+                    }
+                }
+
+
+                /// <summary>
+                /// Metodo para obtener las noticias de la feria
+                /// </summary>
+                /// <param name="FairId"></param>
+                /// <returns></returns>
+                public async Task<List<New>?> GetNewsByFairIdAsync(int FairId)
                 {
-                    Status = 500,
-                    Data = false,
-                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
-                };
+                    var results = await (from n in _context.New
+                                         where n.Fair.Id == FairId
+                                         select n).Include(n => n.Publisher).ToListAsync();
+
+                    if (results != null && results.Count() > 0)
+                    {
+                        return results;
+                    }
+                    return null;
+                }
+
+                /// <summary>
+                /// Metodo para obtener los protocolos de seguridad
+                /// </summary>
+                /// <param name="FairId"></param>
+                /// <returns></returns>
+                public async Task<List<SecurityProtocols>?> GetGetSecurityProtocols(int FairId)
+                {
+                    var results = await (from sp in _context.SecurityProtocols
+                                         where sp.Fair.Id == FairId
+                                         select sp).ToListAsync();
+
+                    if (results != null && results.Count() > 0)
+                    {
+                        return results;
+                    }
+                    return null;
+                }
             }
         }
-
-
-        /// <summary>
-        /// Metodo para obtener las noticias de la feria
-        /// </summary>
-        /// <param name="FairId"></param>
-        /// <returns></returns>
-        public async Task<List<New>?> GetNewsByFairIdAsync(int FairId)
-        {
-            var results = await (from n in _context.New
-                                 where n.Fair.Id == FairId
-                                 select n).Include(n => n.Publisher).ToListAsync();
-
-            if (results != null && results.Count() > 0)
-            {
-                return results;
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Metodo para obtener los protocolos de seguridad
-        /// </summary>
-        /// <param name="FairId"></param>
-        /// <returns></returns>
-        public async Task<List<SecurityProtocols>?> GetGetSecurityProtocols(int FairId)
-        {
-            var results = await (from sp in _context.SecurityProtocols
-                                 where sp.Fair.Id == FairId
-                                 select sp).ToListAsync();
-
-            if (results != null && results.Count() > 0)
-            {
-                return results;
-            }
-            return null;
-        }
-    }
-}
+    

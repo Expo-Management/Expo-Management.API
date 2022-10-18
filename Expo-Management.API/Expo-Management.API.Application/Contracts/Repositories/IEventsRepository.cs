@@ -10,7 +10,7 @@ namespace Expo_Management.API.Application.Contracts.Repositories
         Task<Response> GetEventsAsync();
         Task<Event?> GetEventAsync(int EventId);
         Task<Response> CreateEventAsync(EventInputModel Event);
-        Task<Event?> UpdateEventAsync(EventUpdateInputModel Event);
+        Task<Response> UpdateEventAsync(EventUpdateInputModel Event);
         Task<bool> DeleteEventAsync(int EventId);
 
         Task<Response> GetKindEventsAsync();

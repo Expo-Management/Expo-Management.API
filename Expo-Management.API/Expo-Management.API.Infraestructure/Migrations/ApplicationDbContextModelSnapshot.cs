@@ -235,42 +235,6 @@ namespace Expo_Management.API.Infraestructure.Migrations
                     b.ToTable("Mention");
                 });
 
-            modelBuilder.Entity("Expo_Management.API.Domain.Models.Entities.New", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.Property<int>("FairId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PublisherId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FairId");
-
-                    b.HasIndex("PublisherId");
-
-                    b.ToTable("New");
-                });
-
             modelBuilder.Entity("Expo_Management.API.Domain.Models.Entities.Project", b =>
                 {
                     b.Property<int>("Id")
@@ -735,23 +699,6 @@ namespace Expo_Management.API.Infraestructure.Migrations
                     b.Navigation("Fair");
 
                     b.Navigation("KindEvents");
-                });
-
-            modelBuilder.Entity("Expo_Management.API.Domain.Models.Entities.New", b =>
-                {
-                    b.HasOne("Expo_Management.API.Domain.Models.Entities.Fair", "Fair")
-                        .WithMany()
-                        .HasForeignKey("FairId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Expo_Management.API.Domain.Models.Entities.User", "Publisher")
-                        .WithMany()
-                        .HasForeignKey("PublisherId");
-
-                    b.Navigation("Fair");
-
-                    b.Navigation("Publisher");
                 });
 
             modelBuilder.Entity("Expo_Management.API.Domain.Models.Entities.Project", b =>

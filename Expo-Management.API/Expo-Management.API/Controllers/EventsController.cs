@@ -3,6 +3,7 @@ using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Expo_Management.API.Domain.Models.Reponses;
+using Expo_Management.API.Domain.Models.Entities;
 
 namespace Expo_Management.API.Controllers
 {
@@ -70,20 +71,6 @@ namespace Expo_Management.API.Controllers
         }
 
         /// <summary>
-        /// Endpoint para obtener los tipos de evento
-        /// </summary>
-        /// <returns></returns>
-        [Authorize(Roles = "Admin,Judge,User")]
-        [HttpGet]
-        [Route("kind-events")]
-        public async Task<IActionResult> GetKindEvents()
-        {
-            var response = await _eventsRepository.GetKindEventsAsync();
-
-            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error});
-        }
-
-        /// <summary>
         /// Endpoint para crear un evento
         /// </summary>
         /// <param name="model"></param>
@@ -133,6 +120,80 @@ namespace Expo_Management.API.Controllers
             {
                 return Ok("Evento removido exitosamente");
             }
+        }
+
+
+        /// <summary>
+        /// Endpoint para obtener los tipos de evento
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin,Judge,User")]
+        [HttpGet]
+        [Route("kind-events")]
+        public async Task<IActionResult> GetKindEvents()
+        {
+            var response = await _eventsRepository.GetKindEventsAsync();
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+        }
+
+        /// <summary>
+        /// Endpoint para crear un tipo de evento
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        [Route("colours")]
+        public async Task<IActionResult> GetColorName()
+        {
+            var response =  _eventsRepository.GetColorName();
+
+            return await Task.FromResult(Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error }));
+        }
+
+        /// <summary>
+        /// Endpoint para crear un tipo de evento
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [Route("kind-event")]
+        public async Task<IActionResult> CreateKindEvent([FromBody] newKindEventInputModel model)
+        {
+            var response = await _eventsRepository.CreateKindEventAsync(model);
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+        }
+
+        /// <summary>
+        /// Endpoint para actualizar un evento
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        [Route("kind-event")]
+        public async Task<IActionResult> UpdateKindEvent([FromBody] UpdateKindEventsInputModel model)
+        {
+            var response = await _eventsRepository.UpdateKindEventAsync(model);
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+        }
+
+        /// <summary>
+        /// Endpoint para eliminar un evento
+        /// </summary>
+        /// <param name="KindEventId"></param>
+        /// <returns></returns>
+        [Authorize(Roles = "Admin")]
+        [HttpDelete]
+        [Route("kind-event")]
+        public async Task<IActionResult> DeleteKindEvent(int KindEventId)
+        {
+            var response = await _eventsRepository.DeleteKindEventAsync(KindEventId);
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>

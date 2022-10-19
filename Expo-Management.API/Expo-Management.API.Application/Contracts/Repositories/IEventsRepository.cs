@@ -19,7 +19,6 @@ namespace Expo_Management.API.Application.Contracts.Repositories
         Task<Response> DeleteKindEventAsync(int kindEventId);
         Response GetColorName();
 
-        Task<List<New>?> GetNewsByFairIdAsync(int FairId);
         Task<List<SecurityProtocols>?> GetGetSecurityProtocols(int FairId);
     }
 }

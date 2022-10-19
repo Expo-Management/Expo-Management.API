@@ -183,7 +183,7 @@ namespace Expo_Management.API.Controllers
                 {
                     return Ok(projects);
                 }
-                return NotFound("No hay proyectos antiguos");
+                return NoContent();
             }
             catch (Exception)
             {

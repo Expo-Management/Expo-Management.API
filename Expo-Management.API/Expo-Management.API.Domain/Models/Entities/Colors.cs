@@ -4,7 +4,6 @@ namespace Expo_Management.API.Domain.Models.Entities
 {
     public struct Colors
     {
-
         public const string Amarillo = "#E3BC08";
         public const string Celeste = "#1E90FF";
         public const string Rojo = "#AD2121";

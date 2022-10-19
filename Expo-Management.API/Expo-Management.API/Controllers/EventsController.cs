@@ -197,28 +197,6 @@ namespace Expo_Management.API.Controllers
         }
 
         /// <summary>
-        /// Endpoint para obtener las noticias de la feria
-        /// </summary>
-        /// <param name="FairId"></param>
-        /// <returns></returns>
-        [Authorize(Roles = "User,Admin")]
-        [HttpGet]
-        [Route("news")]
-        public async Task<IActionResult> GetNews(int FairId)
-        {
-            var response = await _eventsRepository.GetNewsByFairIdAsync(FairId);
-
-            if (response == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(response);
-            }
-        }
-
-        /// <summary>
         /// Endpoint para obtener los protocolos de seguridad de la feria
         /// </summary>
         /// <param name="FairId"></param>

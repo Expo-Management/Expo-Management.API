@@ -470,25 +470,6 @@ namespace Expo_Management.API.Infraestructure.Repositories
                     }
                 }
 
-
-                /// <summary>
-                /// Metodo para obtener las noticias de la feria
-                /// </summary>
-                /// <param name="FairId"></param>
-                /// <returns></returns>
-                public async Task<List<New>?> GetNewsByFairIdAsync(int FairId)
-                {
-                    var results = await (from n in _context.New
-                                         where n.Fair.Id == FairId
-                                         select n).Include(n => n.Publisher).ToListAsync();
-
-                    if (results != null && results.Count() > 0)
-                    {
-                        return results;
-                    }
-                    return null;
-                }
-
                 /// <summary>
                 /// Metodo para obtener los protocolos de seguridad
                 /// </summary>

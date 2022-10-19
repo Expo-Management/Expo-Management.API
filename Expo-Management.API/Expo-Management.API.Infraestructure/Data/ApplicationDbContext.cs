@@ -18,7 +18,6 @@ namespace Expo_Management.API.Infraestructure.Data
         public DbSet<Fair> Fair { get; set; } = default!;
         public DbSet<Event> Event { get; set; } = default!;
         public DbSet<Logs> Logs { get; set; } = default!;
-        public DbSet<New> New { get; set; } = default!; 
         public DbSet<Files> Files { get; set; } = default!;
         public DbSet<Category> Categories { get; set; } = default!;
         public DbSet<Project> Projects { get; set; } = default!;

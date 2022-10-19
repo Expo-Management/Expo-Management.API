@@ -202,13 +202,6 @@
             <param name="KindEventId"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Controllers.EventsController.GetNews(System.Int32)">
-            <summary>
-            Endpoint para obtener las noticias de la feria
-            </summary>
-            <param name="FairId"></param>
-            <returns></returns>
-        </member>
         <member name="M:Expo_Management.API.Controllers.EventsController.GetSecurityProtocols(System.Int32)">
             <summary>
             Endpoint para obtener los protocolos de seguridad de la feria

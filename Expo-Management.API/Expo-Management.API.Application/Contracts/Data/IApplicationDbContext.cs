@@ -14,7 +14,6 @@ namespace Expo_Management.API.Application.Contracts.Data
         DbSet<Fair> Fair { get; set; }
         DbSet<Event> Event { get; set; }
         DbSet<Logs> Logs { get; set; }
-        DbSet<New> New { get; set; }
         DbSet<Files> Files { get; set; }
         DbSet<Category> Categories { get; set; }
         DbSet<Project> Projects { get; set; }

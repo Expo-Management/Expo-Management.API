@@ -310,7 +310,7 @@ namespace Expo_Management.API.Controllers
                 {
                     return Ok(recommendation);
                 }
-                return BadRequest("Hubo un error interno, por favor intentelo mas tarde");
+                return NoContent();
             }
             catch (Exception)
             {
@@ -399,7 +399,7 @@ namespace Expo_Management.API.Controllers
                     }
                     return BadRequest("No se encontrarion recomendaciones.");
                 }
-                return BadRequest("No hay recomendaciones para el proyecto.");
+                return NotFound("No hay recomendaciones para el proyecto.");
             }
             catch (Exception)
             {

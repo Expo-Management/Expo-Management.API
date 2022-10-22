@@ -237,7 +237,6 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// <summary>
         /// Metodo para obtener los tipos de eventos
         /// </summary>
-        /// <param name="EventId"></param>
         /// <returns></returns>
         public async Task<Response> GetKindEventsAsync()
         {
@@ -291,9 +290,8 @@ namespace Expo_Management.API.Infraestructure.Repositories
         }
 
         /// <summary>
-        /// Metodo para obtener el nombre y valor hexadecimal de un color en especifico
+        /// Metodo para obtener el nombre y el valor hexadecimal de un color en especifico.
         /// </summary>
-        /// <param name="name"></param>
         /// <returns></returns>
         public Response GetColorName()
         {
@@ -385,108 +383,108 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// <param name="model"></param>
         /// <returns></returns>
         public async Task<Response?> UpdateKindEventAsync(UpdateKindEventsInputModel model)
+        {
+            try
+            {
+                var result = await (from ke in _context.KindOfEvent
+                                    where ke.Id == model.Id
+                                    select ke).FirstOrDefaultAsync();
+
+
+                var primaryColour = GetColorName(model.Primary);
+                var secondaryColour = GetColorName(model.Secondary);
+
+                if (result != null)
                 {
-                    try
+                    result.Name = model.Name;
+                    result.Primary = primaryColour;
+                    result.Secondary = secondaryColour;
+                    _context.SaveChanges();
+
+                    return new Response()
                     {
-                        var result = await (from ke in _context.KindOfEvent
-                                            where ke.Id == model.Id
-                                            select ke).FirstOrDefaultAsync();
-
-
-                        var primaryColour = GetColorName(model.Primary);
-                        var secondaryColour = GetColorName(model.Secondary);
-
-                        if (result != null)
-                        {
-                            result.Name = model.Name;
-                            result.Primary = primaryColour;
-                            result.Secondary = secondaryColour;
-                            _context.SaveChanges();
-
-                            return new Response()
-                            {
-                                Status = 200,
-                                Data = result,
-                                Message = "Tipo de Evento ha sido actualizado exitosamente!"
-                            };
-                        }
-                        return new Response()
-                        {
-                            Status = 400,
-                            Message = "Revise los datos enviados"
-                        };
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex.Message);
-                        return new Response()
-                        {
-                            Status = 500,
-                            Message = "Hubo un problema procesando su solicitud, contacte administracion."
-                        };
-                    }
+                        Status = 200,
+                        Data = result,
+                        Message = "Tipo de Evento ha sido actualizado exitosamente!"
+                    };
                 }
-
-                /// <summary>
-                /// Metodo para eliminar tipos de eventos de la feria
-                /// </summary>
-                /// <param name="id"></param>
-                /// <returns></returns>
-                public async Task<Response> DeleteKindEventAsync(int kindEventId)
+                return new Response()
                 {
-                    var result = await (from e in _context.KindOfEvent
-                                        where e.Id == kindEventId
-                                        select e).FirstOrDefaultAsync();
-                    try
-                    {
-                        if (result != null)
-                        {
-                            _context.KindOfEvent.Remove(result);
-                            _context.SaveChanges();
-                            return new Response()
-                            {
-                                Status = 200,
-                                Data = true,
-                                Message = "Tipo de Evento ha sido actualizado exitosamente!"
-                            };
-                        }
-                        return new Response()
-                        {
-                            Status = 400,
-                            Data = false,
-                            Message = "Revise los datos enviados"
-                        };
-
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex.Message);
-                        return new Response()
-                        {
-                            Status = 500,
-                            Data = false,
-                            Message = "Hubo un problema procesando su solicitud, contacte administracion."
-                        };
-                    }
-                }
-
-                /// <summary>
-                /// Metodo para obtener los protocolos de seguridad
-                /// </summary>
-                /// <param name="FairId"></param>
-                /// <returns></returns>
-                public async Task<List<SecurityProtocols>?> GetGetSecurityProtocols(int FairId)
+                    Status = 400,
+                    Message = "Revise los datos enviados"
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
                 {
-                    var results = await (from sp in _context.SecurityProtocols
-                                         where sp.Fair.Id == FairId
-                                         select sp).ToListAsync();
-
-                    if (results != null && results.Count() > 0)
-                    {
-                        return results;
-                    }
-                    return null;
-                }
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
-    
+
+        /// <summary>
+        /// Metodo para eliminar los tipos de eventos en la feria
+        /// </summary>
+        /// <param name="kindEventId"></param>
+        /// <returns></returns>
+        public async Task<Response> DeleteKindEventAsync(int kindEventId)
+        {
+            var result = await (from e in _context.KindOfEvent
+                                where e.Id == kindEventId
+                                select e).FirstOrDefaultAsync();
+            try
+            {
+                if (result != null)
+                {
+                    _context.KindOfEvent.Remove(result);
+                    _context.SaveChanges();
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = true,
+                        Message = "Tipo de Evento ha sido actualizado exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 400,
+                    Data = false,
+                    Message = "Revise los datos enviados"
+                };
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Data = false,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
+            }
+        }
+
+        /// <summary>
+        /// Metodo para obtener los protocolos de seguridad
+        /// </summary>
+        /// <param name="FairId"></param>
+        /// <returns></returns>
+        public async Task<List<SecurityProtocols>?> GetGetSecurityProtocols(int FairId)
+        {
+            var results = await (from sp in _context.SecurityProtocols
+                                 where sp.Fair.Id == FairId
+                                 select sp).ToListAsync();
+
+            if (results != null && results.Count() > 0)
+            {
+                return results;
+            }
+            return null;
+        }
+    }
+}
+

@@ -314,7 +314,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 {
                     url = $"{Environment.GetEnvironmentVariable("WebUrl")}/administrator/reset-password?email={email}&token={validToken}";
                 }
-                else if (role == "Student")
+                else if (role == "User")
                 {
                     url = $"{Environment.GetEnvironmentVariable("WebUrl")}/student/reset-password?email={email}&token={validToken}";
                 }

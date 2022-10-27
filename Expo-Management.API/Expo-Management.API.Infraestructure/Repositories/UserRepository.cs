@@ -5,6 +5,9 @@ using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Expo_Management.API.Domain.Models.Reponses;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -42,17 +45,38 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<String?> GetUserFullName(string email)
+        public async Task<Response?> GetUserFullName(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
 
-            if (user != null)
-            {
-                return user.Name + ' ' + user.Lastname;
+                if (user != null)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = user.Name + ' ' + user.Lastname,
+                        Message = "Usuario encontrado exitosamente!"
+                    };
+                }
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 204,
+                        Message = "Usuario no encontrado."
+                    };
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -60,17 +84,38 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obetner los jueces del sistema
         /// </summary>
         /// <returns></returns>
-        public async Task<List<User>?> GetJudgesAsync()
+        public async Task<Response?> GetJudgesAsync()
         {
-            List<User> judges = (List<User>)await _userManager.GetUsersInRoleAsync("Judge");
+            try
+            {
+                List<User> judges = (List<User>)await _userManager.GetUsersInRoleAsync("Judge");
 
-            if (judges.Count > 0)
-            {
-                return judges;
+                if (judges.Count > 0)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = judges,
+                        Message = "Usuarios encontrados exitosamente!"
+                    };
+                }
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 204,
+                        Message = "Usuarios no encontrados."
+                    };
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -79,18 +124,38 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<User?> GetJudgeAsync(string email)
+        public async Task<Response?> GetJudgeAsync(string email)
         {
-            User judge = await _userManager.FindByEmailAsync(email);
+            try
+            {
+                User judge = await _userManager.FindByEmailAsync(email);
 
-            if (judge != null)
-            {
-                return judge;
+                if (judge != null)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = judge,
+                        Message = "Usuario encontrado exitosamente!"
+                    };
+                }
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 204,
+                        Message = "Usuario no encontrado."
+                    };
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _logger.LogWarning("Error al encontrar el juez.");
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -99,32 +164,56 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<User?> UpdateJudgeAsync(UpdateUserInputModel model)
+        public async Task<Response?> UpdateJudgeAsync(UpdateUserInputModel model)
         {
-            var oldUser = await _userManager.FindByEmailAsync(model.Email);
-            //var oldUser = await _userManager.FindByIdAsync(model.Id);
-
-            if(oldUser != null)
+            try
             {
-                oldUser.UserName = model.UserName;
-                oldUser.Name = model.Name;
-                oldUser.Lastname = model.Lastname;
-                oldUser.Email = model.Email;
-                oldUser.PhoneNumber = model.Phone;
+                var oldUser = await _userManager.FindByEmailAsync(model.Email);
+                //var oldUser = await _userManager.FindByIdAsync(model.Id);
 
-                var result = await _userManager.UpdateAsync(oldUser);
+                if (oldUser != null)
+                {
+                    oldUser.UserName = model.UserName;
+                    oldUser.Name = model.Name;
+                    oldUser.Lastname = model.Lastname;
+                    oldUser.Email = model.Email;
+                    oldUser.PhoneNumber = model.Phone;
 
-                if (result.Succeeded)
-                {
-                    return oldUser;
+                    var result = await _userManager.UpdateAsync(oldUser);
+
+                    if (result.Succeeded)
+                    {
+                        return new Response()
+                        {
+                            Status = 200,
+                            Data = oldUser,
+                            Message = "Usuario actualizado exitosamente!"
+                        };
+                    }
+                    else
+                    {
+                        return new Response()
+                        {
+                            Status = 400,
+                            Message = "Revise los datos enviados"
+                        };
+                    }
                 }
-                else
+                return new Response()
                 {
-                    _logger.LogWarning("Error al actualizar el juez.");
-                    return null;
-                }
+                    Status = 204,
+                    Message = "Usuario no encontrado."
+                };
             }
-            return null;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
+            }
         }
 
         /// <summary>
@@ -132,19 +221,41 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteJudgeAsync(string email)
+        public async Task<Response> DeleteJudgeAsync(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
 
-            if (user != null)
-            {
-                var result = await _userManager.DeleteAsync(user);
-                return true;
+                if (user != null)
+                {
+                    var result = await _userManager.DeleteAsync(user);
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = true,
+                        Message = "Usuario borrado exitosamente!"
+                    };
+                }
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 204,
+                        Data = false,
+                        Message = "Usuario no encontrado."
+                    };
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _logger.LogWarning("Error al borrar el juez.");
-                return false;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Data = false,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -152,17 +263,38 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para los administradores del sistema
         /// </summary>
         /// <returns></returns>
-        public async Task<List<User>?> GetAdminsAsync()
+        public async Task<Response?> GetAdminsAsync()
         {
-            List<User> admins = (List<User>)await _userManager.GetUsersInRoleAsync("Admin");
+            try
+            {
+                List<User> admins = (List<User>)await _userManager.GetUsersInRoleAsync("Admin");
 
-            if (admins.Count > 0)
-            {
-                return admins;
+                if (admins.Count > 0)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = admins,
+                        Message = "Usuarios encontrados exitosamente!"
+                    };
+                }
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 204,
+                        Message = "Usuarios no encontrados."
+                    };
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -171,18 +303,38 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<User?> GetAdminAsync(string email)
+        public async Task<Response?> GetAdminAsync(string email)
         {
-            User admin = await _userManager.FindByEmailAsync(email);
+            try
+            {
+                User admin = await _userManager.FindByEmailAsync(email);
 
-            if (admin != null)
-            {
-                return admin;
+                if (admin != null)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = admin,
+                        Message = "Usuario encontrado exitosamente!"
+                    };
+                }
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 204,
+                        Message = "Usuario no encontrado."
+                    };
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _logger.LogWarning("Error al encontrar el profesor.");
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -191,31 +343,55 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<User?> UpdateAdminAsync(UpdateUserInputModel model)
+        public async Task<Response?> UpdateAdminAsync(UpdateUserInputModel model)
         {
-            var oldUser = await _userManager.FindByEmailAsync(model.Email);
-
-            if(oldUser != null)
+            try
             {
-                oldUser.UserName = model.UserName;
-                oldUser.Name = model.Name;
-                oldUser.Lastname = model.Lastname;
-                oldUser.Email = model.Email;
-                oldUser.PhoneNumber = model.Phone;
+                var oldUser = await _userManager.FindByEmailAsync(model.Email);
 
-                var result = await _userManager.UpdateAsync(oldUser);
+                if (oldUser != null)
+                {
+                    oldUser.UserName = model.UserName;
+                    oldUser.Name = model.Name;
+                    oldUser.Lastname = model.Lastname;
+                    oldUser.Email = model.Email;
+                    oldUser.PhoneNumber = model.Phone;
 
-                if (result.Succeeded)
-                {
-                    return oldUser;
+                    var result = await _userManager.UpdateAsync(oldUser);
+
+                    if (result.Succeeded)
+                    {
+                        return new Response()
+                        {
+                            Status = 200,
+                            Data = oldUser,
+                            Message = "Usuario actualizado exitosamente!"
+                        };
+                    }
+                    else
+                    {
+                        return new Response()
+                        {
+                            Status = 400,
+                            Message = "Revise los datos enviados."
+                        }; ;
+                    }
                 }
-                else
+                return new Response()
                 {
-                    _logger.LogWarning("Error al actualizar el profesor.");
-                    return null;
-                }
+                    Status = 204,
+                    Message = "Usuario no encontrado."
+                };
             }
-            return null;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
+            }
         }
 
         /// <summary>
@@ -223,19 +399,41 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteAdminAsync(string email)
+        public async Task<Response> DeleteAdminAsync(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
 
-            if (user != null)
-            {
-                var result = await _userManager.DeleteAsync(user);
-                return true;
+                if (user != null)
+                {
+                    var result = await _userManager.DeleteAsync(user);
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = true,
+                        Message = "Usuario borrado exitosamente!"
+                    };
+                }
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 204,
+                        Data = false,
+                        Message = "Usuario no encontrado."
+                    }; ;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _logger.LogWarning("Error al borrar el profesor.");
-                return false;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Data = false,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -244,17 +442,38 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener todos los estudiantes
         /// </summary>
         /// <returns></returns>
-        public async Task<List<User>?> GetStudentsAsync()
+        public async Task<Response?> GetStudentsAsync()
         {
-            List<User> students = (List<User>)await _userManager.GetUsersInRoleAsync("User");
+            try
+            {
+                List<User> students = (List<User>)await _userManager.GetUsersInRoleAsync("User");
 
-            if (students.Count > 0)
-            {
-                return students;
+                if (students.Count > 0)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = students,
+                        Message = "Usuarios encontrados exitosamente!"
+                    };
+                }
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 204,
+                        Message = "Usuarios no encontrados."
+                    }; ;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -263,20 +482,40 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<User?> GetStudentAsync(string email)
+        public async Task<Response?> GetStudentAsync(string email)
         {
-            var student = await (from u in _context.User
-                                 where u.Email == email
-                                 select u).Include(x => x.Project).FirstAsync();
+            try
+            {
+                var student = await (from u in _context.User
+                                     where u.Email == email
+                                     select u).Include(x => x.Project).FirstAsync();
 
-            if (student != null)
-            {
-                return student;
+                if (student != null)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = student,
+                        Message = "Usuario encontrado exitosamente!"
+                    };
+                }
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 204,
+                        Message = "Usuario no encontrado."
+                    }; ;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _logger.LogWarning("Error al encontrar el estudiante.");
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -285,31 +524,55 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<User?> UpdateStudentAsync(UpdateUserInputModel model)
+        public async Task<Response?> UpdateStudentAsync(UpdateUserInputModel model)
         {
-            var oldUser = await _userManager.FindByEmailAsync(model.Email);
-
-            if (oldUser != null)
+            try
             {
-                oldUser.UserName = model.UserName;
-                oldUser.Name = model.Name;
-                oldUser.Lastname = model.Lastname;
-                oldUser.Email = model.Email;
-                oldUser.PhoneNumber = model.Phone;
+                var oldUser = await _userManager.FindByEmailAsync(model.Email);
 
-                var result = await _userManager.UpdateAsync(oldUser);
+                if (oldUser != null)
+                {
+                    oldUser.UserName = model.UserName;
+                    oldUser.Name = model.Name;
+                    oldUser.Lastname = model.Lastname;
+                    oldUser.Email = model.Email;
+                    oldUser.PhoneNumber = model.Phone;
 
-                if (result.Succeeded)
-                {
-                    return oldUser;
+                    var result = await _userManager.UpdateAsync(oldUser);
+
+                    if (result.Succeeded)
+                    {
+                        return new Response()
+                        {
+                            Status = 200,
+                            Data = oldUser,
+                            Message = "Usuario acutalizado exitosamente!"
+                        };
+                    }
+                    else
+                    {
+                        return new Response()
+                        {
+                            Status = 204,
+                            Message = "Usuario no encontrado."
+                        }; ;
+                    }
                 }
-                else
+                return new Response()
                 {
-                    _logger.LogWarning("Error al actualizar el estudiante.");
-                    return null;
-                }
+                    Status = 400,
+                    Message = "Revise los datos enviados"
+                };
             }
-            return null;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
+            }
         }
 
         /// <summary>
@@ -317,19 +580,41 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteStudentAsync(string email)
+        public async Task<Response> DeleteStudentAsync(string email)
         {
-            var user = await _userManager.FindByEmailAsync(email);
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(email);
 
-            if (user != null)
-            {
-                var result = await _userManager.DeleteAsync(user);
-                return true;
+                if (user != null)
+                {
+                    var result = await _userManager.DeleteAsync(user);
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = true,
+                        Message = "Usuario borrado exitosamente!"
+                    };
+                }
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 204,
+                        Data = false,
+                        Message = "Usuario no encontrado."
+                    };
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _logger.LogWarning("Error al borrar el estudiante.");
-                return false;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Data = false,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -338,35 +623,58 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<User?> UpdateStudetProjectAsync(UpdateUserProjectInputModel model)
+        public async Task<Response?> UpdateStudetProjectAsync(UpdateUserProjectInputModel model)
         {
-            var oldUser = await _userManager.FindByEmailAsync(model.Email);
-
-            if(oldUser != null)
+            try
             {
-                oldUser.UserId = model.UserId;
-                oldUser.Name = model.Name;
-                oldUser.Lastname = model.Last;
-                oldUser.Email = model.Email;
-                oldUser.UserName = model.Username;
-                oldUser.PhoneNumber = model.Phone;
-                oldUser.Project = model.Project;
-                oldUser.IsLead = model.IsLead;
+                var oldUser = await _userManager.FindByEmailAsync(model.Email);
 
-                var result = await _userManager.UpdateAsync(oldUser);
+                if (oldUser != null)
+                {
+                    oldUser.UserId = model.UserId;
+                    oldUser.Name = model.Name;
+                    oldUser.Lastname = model.Last;
+                    oldUser.Email = model.Email;
+                    oldUser.UserName = model.Username;
+                    oldUser.PhoneNumber = model.Phone;
+                    oldUser.Project = model.Project;
+                    oldUser.IsLead = model.IsLead;
 
-                if (result.Succeeded)
-                {
-                    return oldUser;
+                    var result = await _userManager.UpdateAsync(oldUser);
+
+                    if (result.Succeeded)
+                    {
+                        return new Response()
+                        {
+                            Status = 200,
+                            Data = oldUser,
+                            Message = "Usuario actualizado exitosamente!"
+                        };
+                    }
+                    else
+                    {
+                        return new Response()
+                        {
+                            Status = 400,
+                            Message = "Revise los datos enviados"
+                        };
+                    }
                 }
-                else
+                return new Response()
                 {
-                    _logger.LogWarning("Error al actualizar el proyecto del estudiante.");
-                    return null;
-                }
+                    Status = 204,
+                    Message = "Usuario no encontrado."
+                };
             }
-
-            return null;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
+            }
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Expo_Management.API.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class ProtocolsController : ControllerBase
+    public class ProtocolsController : Controller
     {
         private readonly IProtocolsRepository _protocolRepository;
 
@@ -31,21 +31,10 @@ namespace Expo_Management.API.Controllers
         [Route("protocol")]
         public async Task<IActionResult> CreateProtocolAsync(string description)
         {
-            try
-            {
-                var protocol = await _protocolRepository.CreateProtocolAsync(description);
+            var response = await _protocolRepository.CreateProtocolAsync(description);
 
-                if (protocol == null)
-                {
-                    return BadRequest("El protocolo ya existe.");
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
 
-                }
-                return Ok(protocol);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
         }
 
 
@@ -58,13 +47,10 @@ namespace Expo_Management.API.Controllers
         [Route("protocol")]
         public async Task<IActionResult> DeleteProtocolAsync(int id)
         {
-            var protocol = await _protocolRepository.DeleteProtocolAsync(id);
+            var response = await _protocolRepository.DeleteProtocolAsync(id);
 
-            if (protocol)
-            {
-                return Ok("Categoría eliminada");
-            }
-            return BadRequest("Hubo un error, por favor, intentelo más tarde.");
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+
 
         }
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UploadFiles.Controllers;
+using Expo_Management.API.Infraestructure.Repositories;
 
 namespace Expo_Management.API.Controllers
 {
@@ -13,7 +14,7 @@ namespace Expo_Management.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjectsController : ControllerBase
+    public class ProjectsController : Controller
     {
 
         private readonly IProjectsRepository _projectsRepository;
@@ -41,22 +42,9 @@ namespace Expo_Management.API.Controllers
         [Route("projects")]
         public async Task<IActionResult> AddProjects([FromForm] NewProjectInputModel model)
         {
-            try
-            {
-                var project = await _projectsRepository.CreateProject(model);
+            var response = await _projectsRepository.CreateProject(model);
 
-                if (project == null)
-                {
-                    return BadRequest("Por favor revisar los detalles del proyecto.");
-
-                }
-                return Ok(project);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(500);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -68,46 +56,10 @@ namespace Expo_Management.API.Controllers
         [Route("projects")]
         public async Task<IActionResult> ShowProjects()
         {
-            try
-            {
-                var projects = await _projectsRepository.GetAllCurrentProjectsAsync();
+            var response = await _projectsRepository.GetAllCurrentProjectsAsync();
 
-                if (projects != null)
-                {
-                    var domainProjects = new List<Project>();
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
 
-                    foreach (var items in projects)
-                    {
-                        domainProjects.Add(new Project()
-                        {
-                            Id = items.Id,
-                            Name = items.Name,
-                            Description = items.Description,
-                            Fair = items.Fair,
-                            oldMembers = items.oldMembers,
-                            Files = new Files()
-                            {
-                                Id = items.Files.Id,
-                                Name = items.Files.Name,
-                                Size = items.Files.Size,
-                                Url = items.Files.Url,
-                                uploadDateTime = items.Files.uploadDateTime
-                            },
-                            category = new Category()
-                            {
-                                Id = items.category.Id,
-                                Description = items.category.Description
-                            }
-                        });
-                    }
-                    return Ok(domainProjects);
-                }
-                return BadRequest("Hubo un error, por favor, intentelo más tarde.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
         }
 
         /// <summary>
@@ -118,53 +70,10 @@ namespace Expo_Management.API.Controllers
         [Route("remove-user-project")]
         public async Task<IActionResult> removeUserFromProject(string email)
         {
-            try
-            {
-                if (email != null)
-                {
-                    var removedUser = await _projectsRepository.removeUserFromProject(email);
-                    if (removedUser != null)
-                    {
-                        return Ok(removedUser);
-                    }
-                    return BadRequest("usuario es Lider del proyecto o no existe");
 
-                }
-                return BadRequest("Hubo un error, por favor, intentelo más tarde.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            var response = await _projectsRepository.removeUserFromProject(email);
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
-
-        ///// <summary>
-        ///// Endpoint para eliminar al lider de proyecto y con eso eliminar proyecto
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpPut]
-        //[Route("remove-project")]
-        //public async Task<IActionResult> removeProject(string email)
-        //{
-        //    try
-        //    {
-        //        if (email != null)
-        //        {
-        //            var removedProject = await _projectsRepository.removeProject(email);
-        //            if (removedProject != null)
-        //            {
-        //                return Ok(removedProject);
-        //            }
-        //            return BadRequest("Proyecto no existe");
-
-        //        }
-        //        return BadRequest("Hubo un error, por favor, intentelo más tarde.");
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(500);
-        //    }
-        //}
 
         /// <summary>
         /// Endpoint para mostrar los proyectos antiguos
@@ -175,20 +84,9 @@ namespace Expo_Management.API.Controllers
         [Route("old-projects")]
         public async Task<IActionResult> showOldProjects()
         {
-            try
-            {
+            var response = await _projectsRepository.GetOldProjectsAsync();
 
-                var projects = await _projectsRepository.GetOldProjectsAsync();
-                if (projects != null)
-                {
-                    return Ok(projects);
-                }
-                return NoContent();
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -200,20 +98,10 @@ namespace Expo_Management.API.Controllers
         [Route("mentions")]
         public async Task<IActionResult> showMentions()
         {
-            try
-            {
 
-                var mentions = await _projectsRepository.GetMentionsAsync();
-                if (mentions != null)
-                {
-                    return Ok(mentions);
-                }
-                return NotFound("Aún no hay menciones creadas.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            var response = await _projectsRepository.GetMentionsAsync();
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -226,17 +114,11 @@ namespace Expo_Management.API.Controllers
         [Route("project")]
         public async Task<IActionResult> getProjectQualificationAsync(int projectId)
         {
-            try
-            {
 
-                var projectDetails = await _projectsRepository.GetProjectDetails(projectId);
+            var response = await _projectsRepository.GetProjectDetails(projectId);
 
-                return Ok(projectDetails);
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+
         }
 
         /// <summary>
@@ -249,22 +131,10 @@ namespace Expo_Management.API.Controllers
         [Route("create-claim")]
         public async Task<IActionResult> CreateProjectClaim(NewClaimInputModel model)
         {
-            try
-            {
 
-                var claim = await _projectsRepository.CreateProjectClaim(model);
+            var response = await _projectsRepository.CreateProjectClaim(model);
 
-                if (claim != null)
-                {
-                    return Ok(claim);
-                }
-                return BadRequest("Id del proyecto o detalles icorrectos");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(500);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -278,19 +148,10 @@ namespace Expo_Management.API.Controllers
         //[Authorize(Roles = "Judge")]
         public async Task<IActionResult> postRecommendation([FromBody] NewRecommendationInputModel model)
         {
-            try
-            {
-                var recommendation = await _projectsRepository.JudgeRecommendation(model);
-                if (recommendation != null)
-                {
-                    return Ok(recommendation);
-                }
-                return BadRequest("Hubo un error interno, por favor intentelo mas tarde");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+
+            var response = await _projectsRepository.JudgeRecommendation(model);
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -303,19 +164,10 @@ namespace Expo_Management.API.Controllers
         [Route("getRecommendation")]
         public async Task<IActionResult> getRecommendation(int recomendacion)
         {
-            try
-            {
-                var recommendation = await _projectsRepository.GetRecommendation(recomendacion);
-                if (recommendation != null)
-                {
-                    return Ok(recommendation);
-                }
-                return NoContent();
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+
+            var response = await _projectsRepository.GetRecommendation(recomendacion);
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -327,24 +179,10 @@ namespace Expo_Management.API.Controllers
         [Route("project-members")]
         public async Task<IActionResult> GetProjectMembers()
         {
-            try
-            {
-                var members = await _projectsRepository.GetMembers();
 
-                if (members != null)
-                {
-                    return Ok(members);
-                }
-                else
-                {
-                    return BadRequest("Aún no hay proyectos en el sistema.");
-                }
+            var response = await _projectsRepository.GetMembers();
 
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -357,24 +195,10 @@ namespace Expo_Management.API.Controllers
         [Route("members-emails")]
         public async Task<IActionResult> GetMembersEmail(int projectId)
         {
-            try
-            {
-                var emails = await _projectsRepository.GetMembersEmail(projectId);
 
-                if (emails != null)
-                {
-                    return Ok(emails);
-                }
-                else
-                {
-                    return BadRequest("Id del proyecto o detalles incorrectos");
-                }
+            var response = await _projectsRepository.GetMembersEmail(projectId);
 
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -387,24 +211,10 @@ namespace Expo_Management.API.Controllers
         [Route("recommendation-by-project")]
         public async Task<IActionResult> getRecommendationByProjectId(int projectId)
         {
-            try
-            {
-                var recommendations = await _projectsRepository.GetRecommendationByProjectId(projectId);
 
-                if (recommendations != null)
-                {
-                    if (recommendations.Any())
-                    {
-                        return Ok(recommendations);
-                    }
-                    return BadRequest("No se encontrarion recomendaciones.");
-                }
-                return NotFound("No hay recomendaciones para el proyecto.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            var response = await _projectsRepository.GetRecommendationByProjectId(projectId);
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -444,21 +254,10 @@ namespace Expo_Management.API.Controllers
         [Route("qualify-project")]
         public async Task<IActionResult> qualifyProject(QualifyProjectInputModel model)
         {
-            try
-            {
-                var result = await _projectsRepository.QualifyProject(model);
 
-                if (result != null)
-                {
-                    return Ok(result);
-                }
-                return BadRequest("Los datos ingresados son incorrectos o el proyecto ya fue calificado.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return StatusCode(500);
-            }
+            var response = await _projectsRepository.QualifyProject(model);
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -471,24 +270,10 @@ namespace Expo_Management.API.Controllers
         [Route("project-qualifications")]
         public async Task<IActionResult> GetProjectQualifications(int projectId)
         {
-            try
-            {
-                var qualifications = await _projectsRepository.GetProjectQualifications(projectId);
 
-                if (qualifications != null)
-                {
-                    if (qualifications.Any())
-                    {
-                        return Ok(qualifications);
-                    }
-                    return BadRequest("No se encontraron calificaciones.");
-                }
-                return BadRequest("No hay calificaciones para el proyecto.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            var response = await _projectsRepository.GetProjectQualifications(projectId);
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -500,24 +285,9 @@ namespace Expo_Management.API.Controllers
         [Route("project-by-year")]
         public async Task<IActionResult> GetProjectsByYear()
         {
-            try
-            {
-                var projects = await _projectsRepository.GetProjectsByYear();
 
-                if (projects != null)
-                {
-                    if (projects.Any())
-                    {
-                        return Ok(projects);
-                    }
-                    return BadRequest("No se encontro el proyecto.");
-                }
-                return BadRequest("No hay proyectos registrados.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            var response = await _projectsRepository.GetProjectsByYear();
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -529,24 +299,10 @@ namespace Expo_Management.API.Controllers
         [Route("project-by-category")]
         public async Task<IActionResult> GetProjectsByCategory()
         {
-            try
-            {
-                var projects = await _projectsRepository.GetProjectsByCategory();
 
-                if (projects != null)
-                {
-                    if (projects.Any())
-                    {
-                        return Ok(projects);
-                    }
-                    return BadRequest("No se encontro el proyecto.");
-                }
-                return BadRequest("No hay proyectos registrados.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            var response = await _projectsRepository.GetProjectsByCategory();
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -558,24 +314,10 @@ namespace Expo_Management.API.Controllers
         [Route("project-by-qualifications")]
         public async Task<IActionResult> GetProjectsByQualifications()
         {
-            try
-            {
-                var projects = await _projectsRepository.GetProjectsByQualifications();
 
-                if (projects != null)
-                {
-                    if (projects.Any())
-                    {
-                        return Ok(projects);
-                    }
-                    return BadRequest("No se encontro del proyecto.");
-                }
-                return BadRequest("No hay proyectos registrados.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            var response = await _projectsRepository.GetProjectsByQualifications();
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
 
         /// <summary>
@@ -587,24 +329,10 @@ namespace Expo_Management.API.Controllers
         [Route("users-per-project")]
         public async Task<IActionResult> GetUsersPerProject()
         {
-            try
-            {
-                var projects = await _projectsRepository.GetUsersByProject();
 
-                if (projects != null)
-                {
-                    if (projects.Any())
-                    {
-                        return Ok(projects);
-                    }
-                    return BadRequest("No se encontro el proyecto.");
-                }
-                return BadRequest("No hay proyectos registrados.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
+            var response = await _projectsRepository.GetUsersByProject();
+
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
     }
 }

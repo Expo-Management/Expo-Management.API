@@ -1,28 +1,29 @@
 ﻿using Expo_Management.API.Domain.Models.Entities;
 using Expo_Management.API.Domain.Models.InputModels;
+using Expo_Management.API.Domain.Models.Reponses;
 
 namespace Expo_Management.API.Application.Contracts.Repositories
 {
     public interface IUsersRepository
     {
-        Task<User?> UpdateStudetProjectAsync(UpdateUserProjectInputModel model);
-        Task<String?> GetUserFullName(string email);
+        Task<Response?> UpdateStudetProjectAsync(UpdateUserProjectInputModel model);
+        Task<Response?> GetUserFullName(string email);
 
-        Task<List<User>?> GetJudgesAsync();
-        Task<User?> GetJudgeAsync(string email);
-        Task<User?> UpdateJudgeAsync(UpdateUserInputModel model);
-        Task<bool> DeleteJudgeAsync(string email);
-
-
-        Task<List<User>?> GetAdminsAsync();
-        Task<User?> GetAdminAsync(string email);
-        Task<User?> UpdateAdminAsync(UpdateUserInputModel model);
-        Task<bool> DeleteAdminAsync(string email);
+        Task<Response?> GetJudgesAsync();
+        Task<Response?> GetJudgeAsync(string email);
+        Task<Response?> UpdateJudgeAsync(UpdateUserInputModel model);
+        Task<Response> DeleteJudgeAsync(string email);
 
 
-        Task<List<User>?> GetStudentsAsync();
-        Task<User?> GetStudentAsync(string email);
-        Task<User?> UpdateStudentAsync(UpdateUserInputModel model);
-        Task<bool> DeleteStudentAsync(string email);
+        Task<Response?> GetAdminsAsync();
+        Task<Response?> GetAdminAsync(string email);
+        Task<Response?> UpdateAdminAsync(UpdateUserInputModel model);
+        Task<Response> DeleteAdminAsync(string email);
+
+
+        Task<Response?> GetStudentsAsync();
+        Task<Response?> GetStudentAsync(string email);
+        Task<Response?> UpdateStudentAsync(UpdateUserInputModel model);
+        Task<Response> DeleteStudentAsync(string email);
     }
 }

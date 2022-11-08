@@ -165,7 +165,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
             User user = new()
             {
-                UserId = model.Id,
+                UserId = model.UserId,
                 Name = model.Name,
                 PhoneNumber = model.Phone,
                 Lastname = model.Lastname,

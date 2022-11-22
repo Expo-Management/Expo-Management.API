@@ -32,7 +32,7 @@ namespace Expo_Management.API.Infraestructure.Utils
                 }
                 else
                 {
-                    groupOfUsers.Add(tempUser);
+                    groupOfUsers.Add((User)tempUser.Data);
                 }
             }
 

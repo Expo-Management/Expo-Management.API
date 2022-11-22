@@ -11,7 +11,7 @@ namespace Expo_Management.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class LogsController : ControllerBase
+    public class LogsController : Controller
     {
         private readonly ILogsRepository _logs;
 
@@ -35,14 +35,7 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _logs.GetLogsAsync();
 
-            if (response == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(response);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
         }
     }
 }

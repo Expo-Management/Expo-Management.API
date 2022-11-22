@@ -13,7 +13,7 @@ namespace Expo_Management.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
+    public class UsersController : Controller
     {
         readonly UserManager<User> _userManager;
         private readonly IUsersRepository _userRepository;
@@ -41,21 +41,15 @@ namespace Expo_Management.API.Controllers
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        [Authorize(Roles="Admin,Judge,User")]
+        [Authorize(Roles = "Admin,Judge,User")]
         [HttpGet]
         [Route("get-user-fullname")]
         public async Task<IActionResult> GetUserFullname(string email)
         {
             var response = await _userRepository.GetUserFullName(email);
 
-            if (response == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(response);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+
         }
 
         //Judges
@@ -64,21 +58,14 @@ namespace Expo_Management.API.Controllers
         /// Endpoint para obtener los jueces
         /// </summary>
         /// <returns></returns>
-        [Authorize(Roles="Admin,Judge")]
+        [Authorize(Roles = "Admin,Judge")]
         [HttpGet]
         [Route("judges")]
         public async Task<IActionResult> GetJudgesAsync()
         {
             var response = await _userRepository.GetJudgesAsync();
 
-            if (response == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(response);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
 
         }
 
@@ -94,14 +81,7 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _userRepository.GetJudgeAsync(email);
 
-            if (response != null)
-            {
-                return Ok(response);
-            }
-            else
-            {
-                return NotFound();
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
 
         }
 
@@ -117,14 +97,7 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _userRepository.UpdateJudgeAsync(model);
 
-            if (response == null)
-            {
-                return BadRequest("Hubo un error, por favor, intentelo más tarde!");
-            }
-            else
-            {
-                return Ok(response);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
 
         }
 
@@ -138,16 +111,9 @@ namespace Expo_Management.API.Controllers
         [Route("judge")]
         public async Task<IActionResult> DeleteJudgeAsync(string email)
         {
-            bool response = await _userRepository.DeleteJudgeAsync(email);
+            var response = await _userRepository.DeleteJudgeAsync(email);
 
-            if (response)
-            {
-                return Ok("Judge deleted!");
-            }
-            else
-            {
-                return BadRequest("Correo incorrecto!");
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
 
         }
 
@@ -165,14 +131,8 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _userRepository.GetAdminsAsync();
 
-            if (response == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(response);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+
         }
 
         /// <summary>
@@ -187,14 +147,8 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _userRepository.GetAdminAsync(email);
 
-            if (response == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(response);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+
         }
 
         /// <summary>
@@ -209,11 +163,8 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _userRepository.UpdateAdminAsync(model);
 
-            if (response == null)
-            {
-                return BadRequest("Correo incorrecto!");
-            }
-            return Ok(response);
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+
         }
 
         /// <summary>
@@ -226,13 +177,10 @@ namespace Expo_Management.API.Controllers
         [Route("admin")]
         public async Task<IActionResult> DeleteAdminAsync(string email)
         {
-            bool response = await _userRepository.DeleteStudentAsync(email);
+            var response = await _userRepository.DeleteStudentAsync(email);
 
-            if (response)
-            {
-                return Ok("Admin deleted!");
-            }
-            return BadRequest("Correo incorrecto!");
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+
         }
 
 
@@ -249,14 +197,8 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _userRepository.GetStudentsAsync();
 
-            if (response == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(response);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+
         }
 
         /// <summary>
@@ -271,14 +213,8 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _userRepository.GetStudentAsync(email);
 
-            if (response == null)
-            {
-                return NotFound();
-            }
-            else
-            {
-                return Ok(response);
-            }
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+
         }
 
         /// <summary>
@@ -293,11 +229,8 @@ namespace Expo_Management.API.Controllers
         {
             var response = await _userRepository.UpdateStudentAsync(model);
 
-            if (response == null)
-            {
-                return BadRequest("Correo incorrecto!");
-            }
-            return Ok(response);
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+
         }
 
         /// <summary>
@@ -310,13 +243,10 @@ namespace Expo_Management.API.Controllers
         [Route("student")]
         public async Task<IActionResult> DeleteStudentAsync(string email)
         {
-            bool response = await _userRepository.DeleteStudentAsync(email);
+            var response = await _userRepository.DeleteStudentAsync(email);
 
-            if (response)
-            {
-                return Ok("Student deleted!");
-            }
-            return BadRequest("Correo incorrecto!");
+            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
+
         }
     }
 }

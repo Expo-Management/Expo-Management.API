@@ -9,8 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using SendGrid.Helpers.Mail;
-using System.Security.Cryptography;
+using Expo_Management.API.Domain.Models.Reponses;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -67,7 +66,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Project?> CreateProject(NewProjectInputModel model)
+        public async Task<Response?> CreateProject(NewProjectInputModel model)
         {
             try
             {
@@ -96,7 +95,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                         {
                             Files = upload,
                             Name = model.Name,
-                            Fair = Fair,
+                            Fair = (Fair)Fair.Data,
                             Description = model.Description,
                             category = category,
                             oldMembers = ""
@@ -109,42 +108,104 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
                         var ProjectCreated = await _crudUtils.addUsersToProject(groupOfUserEmails, newProject);
 
-                        return newProject;
+                        return new Response()
+                        {
+                            Status = 200,
+                            Data = newProject,
+                            Message = "Proyectos creado exitosamente!"
+                        };
                     }
                     else
                     {
-                        _logger.LogWarning("No se puede obtener la categoria o la feria.");
-                        return null;
+                        return new Response()
+                        {
+                            Status = 204,
+                            Message = "Categoria y/o feria no encontrados."
+                        };
                     }
                 }
-                _logger.LogWarning("Error al crear un proyecto.");
-                return null;
+                return new Response()
+                {
+                    Status = 400,
+                    Message = "Revise los datos enviados"
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
-
         }
 
         /// <summary>
         /// Metodo para obtener todos los proyectos
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Project>?> GetAllProjectsAsync()
+        public async Task<Response?> GetAllProjectsAsync()
         {
             try
             {
-                return await (from p in _context.Projects
+                var projects = await (from p in _context.Projects
                               select p)
                               .Include(x => x.Files)
                               .Include(c => c.category)
                               .ToListAsync();
 
+                if (projects != null)
+                {
+
+                    var domainProjects = new List<Project>();
+
+                    foreach (var items in projects)
+                    {
+                        domainProjects.Add(new Project()
+                        {
+                            Id = items.Id,
+                            Name = items.Name,
+                            Description = items.Description,
+                            Fair = items.Fair,
+                            oldMembers = items.oldMembers,
+                            Files = new Files()
+                            {
+                                Id = items.Files.Id,
+                                Name = items.Files.Name,
+                                Size = items.Files.Size,
+                                Url = items.Files.Url,
+                                uploadDateTime = items.Files.uploadDateTime
+                            },
+                            category = new Category()
+                            {
+                                Id = items.category.Id,
+                                Description = items.category.Description
+                            }
+                        });
+
+                        return new Response()
+                        {
+                            Status = 200,
+                            Data = domainProjects,
+                            Message = "Proyectos encontrados exitosamente!"
+                        };
+                    }
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Proyectos no encontrados."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -153,7 +214,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="fairId"></param>
         /// <returns></returns>
-        public async Task<Fair?> GetFair(int fairId)
+        public async Task<Response?> GetFair(int fairId)
         {
             try
             {
@@ -161,11 +222,29 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                     where f.Id == fairId
                                     select f).FirstOrDefaultAsync();
 
-                return result;
+               if(result != null)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = result,
+                        Message = "Feria encontrada exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Feria no encontrada."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -201,7 +280,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public async Task<User?> removeUserFromProject(string email)
+        public async Task<Response?> removeUserFromProject(string email)
         {
             try
             {
@@ -216,59 +295,35 @@ namespace Expo_Management.API.Infraestructure.Repositories
                     removedUser.Project.oldMembers = String.Concat(removedUser.Project.oldMembers, " " + removedUser.UserName);
                     removedUser.Project = null;
                     _context.SaveChanges();
-                    return removedUser;
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = removedUser,
+                        Message = "Usuario removido del proyecto exitosamente!"
+                    };
                 }
-
-                return null;
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Usuario no encontrado."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
-
-
-        ///// <summary>
-        ///// Metodo para verificar si el proyecto existe
-        ///// </summary>
-        ///// <param name="email"></param>
-        ///// <returns></returns>
-        //public async Task<Project?> removeProject(string email)
-        //{
-        //    try
-        //    {
-        //        var removedUser = await (from u in _context.User
-        //                                 where u.Email == email
-        //                                 select u)
-        //                                 .Include(p => p.Project)
-        //                                 .FirstOrDefaultAsync();
-
-        //        if (removedUser != null)
-        //        {
-
-        //            removedUser.Project.oldMembers = String.Concat(removedUser.Project.oldMembers, ", " + removedUser.UserName);
-        //            Project oldProject = removedUser.Project;
-        //            removedUser.Project = null;
-        //            _context.SaveChanges();
-        //            return oldProject;
-        //        }
-
-        //        return null;
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        return null;
-        //    }
-        //}
-
 
         /// <summary>
         /// Metodo para obtener las menciones
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Mention>?> GetMentionsAsync()
+        public async Task<Response?> GetMentionsAsync()
         {
             try
             {
@@ -277,13 +332,27 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
                 if (mentions != null && mentions.Any())
                 {
-                    return mentions;
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = mentions,
+                        Message = "Menciones encontradas exitosamente!"
+                    };
                 }
-                return null;
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Menciones no encontrados."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -291,7 +360,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener los proyectos actuales
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Project>?> GetAllCurrentProjectsAsync()
+        public async Task<Response?> GetAllCurrentProjectsAsync()
         {
             try
             {
@@ -303,11 +372,55 @@ namespace Expo_Management.API.Infraestructure.Repositories
                               .Include(c => c.category)
                               .ToListAsync();
 
-                return projects.Distinct().ToList();
+                var domainProjects = new List<Project>();
+
+                foreach (var items in projects)
+                {
+                    domainProjects.Add(new Project()
+                    {
+                        Id = items.Id,
+                        Name = items.Name,
+                        Description = items.Description,
+                        Fair = items.Fair,
+                        oldMembers = items.oldMembers,
+                        Files = new Files()
+                        {
+                            Id = items.Files.Id,
+                            Name = items.Files.Name,
+                            Size = items.Files.Size,
+                            Url = items.Files.Url,
+                            uploadDateTime = items.Files.uploadDateTime
+                        },
+                        category = new Category()
+                        {
+                            Id = items.category.Id,
+                            Description = items.category.Description
+                        }
+                    });
+                }
+                    if (domainProjects.Count > 0)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = domainProjects,
+                        Message = "Proyectos encontrados exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Proyectos no encontrados."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -315,7 +428,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener los proyectos antiguos
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Project>?> GetOldProjectsAsync()
+        public async Task<Response?> GetOldProjectsAsync()
         {
             try
             {
@@ -327,13 +440,27 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
                 if (projects != null && projects.Any())
                 {
-                    return projects;
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = projects,
+                        Message = "Proyectos encontrados exitosamente!"
+                    };
                 }
-                return null;
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Proyectos no encontrados."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -342,26 +469,47 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Claim?> CreateProjectClaim(NewClaimInputModel model)
+        public async Task<Response?> CreateProjectClaim(NewClaimInputModel model)
         {
-            var project = await (from p in _context.Projects
-                                 where p.Id == model.ProjectId
-                                 select p).FirstOrDefaultAsync();
-
-            if (project == null)
+            try
             {
-                return null;
+                var project = await (from p in _context.Projects
+                                     where p.Id == model.ProjectId
+                                     select p).FirstOrDefaultAsync();
+
+                if (project == null)
+                {
+                    return new Response()
+                    {
+                        Status = 204,
+                        Message = "Proyecto no encontrado."
+                    };
+                }
+
+                var claim = new Claim()
+                {
+                    ClaimDescription = model.ClaimDescription,
+                    Project = project
+                };
+
+                await _context.Claim.AddAsync(claim);
+                await _context.SaveChangesAsync();
+                return new Response()
+                {
+                    Status = 200,
+                    Data = claim,
+                    Message = "Reclamo creado exitosamente!"
+                };
             }
-
-            var claim = new Claim()
+            catch (Exception ex)
             {
-                ClaimDescription = model.ClaimDescription,
-                Project = project
-            };
-
-            await _context.Claim.AddAsync(claim);
-            await _context.SaveChangesAsync();
-            return claim;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
+            }
         }
 
         /// <summary>
@@ -369,7 +517,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
-        public async Task<List<ProjectDetailsViewModel>?> GetProjectDetails(int projectId)
+        public async Task<Response?> GetProjectDetails(int projectId)
         {
             try
             {
@@ -394,19 +542,33 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 if (projects != null)
                 {
                     List<string>? members = await GetProjectMembers(projectId);
-                    List<ProjectQualificationsViewModel>? qualifications = await GetProjectQualifications(projectId);
+                    var qualifications = await GetProjectQualifications(projectId);
 
                     projects[0].Members = members;
-                    projects[0].ProjectQualifications = qualifications;
-                    projects[0].FinalPunctuation = CalculateProjectFinalPunctuation(qualifications).Result.ToString();
+                    projects[0].ProjectQualifications = (List<ProjectQualificationsViewModel>?)qualifications.Data;
+                    projects[0].FinalPunctuation = CalculateProjectFinalPunctuation((List<ProjectQualificationsViewModel>)qualifications.Data).Result.ToString();
 
-                    return projects;
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = projects,
+                        Message = "Detalles del proyecto encontrados exitosamente!"
+                    };
                 }
-                return null;
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Proyecto no encontrado."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
 
             async Task<List<string>> GetProjectMembers(int projectId)
@@ -441,11 +603,10 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Recommendation?> JudgeRecommendation(NewRecommendationInputModel model)
+        public async Task<Response?> JudgeRecommendation(NewRecommendationInputModel model)
         {
             try
             {
-                //verifica el juez
                 var juez = (from j in _context.User
                             where j.Email == model.correoJuez
                             select j).FirstOrDefault();
@@ -465,20 +626,31 @@ namespace Expo_Management.API.Infraestructure.Repositories
                     await _context.JudgeRecommendation.AddAsync(newRecommendation);
                     await _context.SaveChangesAsync();
 
-                    return newRecommendation;
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = newRecommendation,
+                        Message = "Recomendación creada exitosamente!"
+                    };
                 }
                 else
                 {
-                    _logger.LogWarning("Error al crear una recomendación para el proyecto.");
-                    return null;
+                    return new Response()
+                    {
+                        Status = 400,
+                        Message = "Revise los datos enviados"
+                    };
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
-            //se agrega a la base de datos
-
         }
 
         /// <summary>
@@ -486,19 +658,36 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="recomendacion"></param>
         /// <returns></returns>
-        public async Task<Recommendation?> GetRecommendation(int recomendacion)
+        public async Task<Response?> GetRecommendation(int recomendacion)
         {
             try
             {
                 var recommendation = await (from r in _context.JudgeRecommendation
                                             where r.Id == recomendacion
                                             select r).FirstOrDefaultAsync();
-                return recommendation;
-
+                if (recommendation != null)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = recommendation,
+                        Message = "Recomendación encontrada exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Recomendación no encontrada."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -507,7 +696,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
-        public async Task<List<Recommendation>?> GetRecommendationByProjectId(int projectId)
+        public async Task<Response?> GetRecommendationByProjectId(int projectId)
         {
             try
             {
@@ -516,12 +705,29 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                              select r)
                                             .Include(p => p.user)
                                             .ToListAsync();
-                return recommendations;
-
+                if(recommendations.Count() > 0)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = recommendations,
+                        Message = "Recomendaciones encontradas exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Recomendaciones no encontradas."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -530,7 +736,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="ProjectId"></param>
         /// <returns></returns>
-        public async Task<Project?> GetProjectById(int ProjectId)
+        public async Task<Response?> GetProjectById(int ProjectId)
         {
             try
             {
@@ -539,13 +745,27 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                      select p).FirstAsync();
                 if (project != null)
                 {
-                    return project;
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = project,
+                        Message = "Proyecto encontrado exitosamente!"
+                    };
                 }
-                return null;
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Proyecto no encontrado."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -584,7 +804,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
             });
         }
 
-
+        /// <summary>
+        /// Metodo para saber si un juez puede calificar o no un proyecto
+        /// </summary>
+        /// <param name="ProjectId"></param>
+        /// <param name="JudgeEmail"></param>
         public async Task<Boolean> CanJudgeQualifyTheProject(int ProjectId, string JudgeEmail)
         {
             try
@@ -619,13 +843,12 @@ namespace Expo_Management.API.Infraestructure.Repositories
             }
         }
 
-
         /// <summary>
         /// Metodo para calificar proyecto
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Qualifications?> QualifyProject(QualifyProjectInputModel model)
+        public async Task<Response?> QualifyProject(QualifyProjectInputModel model)
         {
             try
             {
@@ -639,7 +862,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
                 if (project == null || judge == null)
                 {
-                    return null;
+                    return new Response()
+                    {
+                        Status = 204,
+                        Message = "Proyecto y/o usuario juez no encontrados."
+                    };
                 }
 
                 var qualification = new Qualifications()
@@ -656,12 +883,21 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 await _context.Qualifications.AddAsync(qualification);
                 await _context.SaveChangesAsync();
 
-                return qualification;
-
+                return new Response()
+                {
+                    Status = 200,
+                    Data = qualification,
+                    Message = "Calificación realizada exitosamente!"
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -669,7 +905,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener los miembros de un proyecto
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProjectMembersViewModels>?> GetMembers()
+        public async Task<Response?> GetMembers()
         {
             try
             {
@@ -687,13 +923,27 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
                 if (members.Any())
                 {
-                    return members;
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = members,
+                        Message = "Miembros del proyecto encontrados exitosamente!"
+                    };
                 }
-                return null;
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Usuarios no encontrados."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -702,7 +952,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
-        public async Task<List<User>> GetMembersEmail(int projectId)
+        public async Task<Response> GetMembersEmail(int projectId)
         {
             try
             {
@@ -712,11 +962,29 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                     .Include(p => p.Project)
                                     .ToListAsync();
 
-                return emails;
+                if(emails != null)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = emails,
+                        Message = "Correos de los usuarios encontrados exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Usuarios no encontrados."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -725,12 +993,12 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
-        public async Task<List<ProjectQualificationsViewModel>?> GetProjectQualifications(int projectId)
+        public async Task<Response?> GetProjectQualifications(int projectId)
         {
 
             try
             {
-                return await (from p in _context.Projects
+                var projectsByQualifications =  await (from p in _context.Projects
                               join q in _context.Qualifications on p.Id equals q.Project.Id
                               join u in _context.User on q.Judge.Id equals u.Id
                               where p.Id == projectId
@@ -739,10 +1007,30 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                   Punctuation = q.Punctuation,
                                   JudgeName = u.Name + " " + u.Lastname
                               }).ToListAsync();
+
+                if(projectsByQualifications.Count > 0)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = projectsByQualifications,
+                        Message = "Proyectos encontrados exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Proyectos no encontrados."
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -750,23 +1038,42 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener los proyectos de cada año
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProjectQuantityViewModel>?> GetProjectsByYear()
+        public async Task<Response?> GetProjectsByYear()
         {
 
             try
             {
-                return await _context.Projects
+                var projectsByYear = await _context.Projects
                 .GroupBy(x => x.Fair.StartDate.Year)
                 .Select(x => new ProjectQuantityViewModel
                 {
                     name = x.Select(x => x.Fair.Description).First(),
                     value = x.Count()
                 }).ToListAsync();
-            }
-            catch (Exception)
-            {
 
-                return null;
+                if (projectsByYear != null)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = projectsByYear,
+                        Message = "Proyectos encontrados exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Proyectos no encontrados."
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -774,23 +1081,42 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener las categorias por los proyectos
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProjectQuantityViewModel>?> GetProjectsByCategory()
+        public async Task<Response?> GetProjectsByCategory()
         {
 
             try
             {
-                return await _context.Projects
+                var projectsByCategory = await _context.Projects
                 .GroupBy(x => x.category.Id)
                 .Select(x => new ProjectQuantityViewModel
                 {
                     name = x.Select(x => x.category.Description).First(),
                     value = x.Count()
                 }).ToListAsync();
-            }
-            catch (Exception)
-            {
 
-                return null;
+                if(projectsByCategory != null)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = projectsByCategory,
+                        Message = "Proyectos encontrados exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Proyectos no encontrados."
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -798,23 +1124,42 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener las calificaciones por proyectos
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProjectQuantityViewModel>?> GetProjectsByQualifications()
+        public async Task<Response?> GetProjectsByQualifications()
         {
 
             try
             {
-                return await _context.Qualifications
+                var projects = await _context.Qualifications
                     .GroupBy(x => x.Project.Id)
                     .Select(x => new ProjectQuantityViewModel
                     {
                         name = x.Select(x => x.Project.Name).First(),
                         value = x.Count()
                     }).ToListAsync();
-            }
-            catch (Exception)
-            {
 
-                return null;
+                if (projects != null)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = projects,
+                        Message = "Proyectos encontrados exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Proyectos no encontrados."
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 
@@ -822,12 +1167,11 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener los los usuarios por los proyectos
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ProjectQuantityViewModel>?> GetUsersByProject()
+        public async Task<Response?> GetUsersByProject()
         {
-
             try
             {
-                return await _context.User
+                var users = await _context.User
                     .Where(x => x.Project.Name != null)
                     .GroupBy(x => x.Project.Id)
                     .Select(x => new ProjectQuantityViewModel
@@ -835,11 +1179,30 @@ namespace Expo_Management.API.Infraestructure.Repositories
                         name = x.Select(x => x.Project.Name).First(),
                         value = x.Count()
                     }).ToListAsync();
-            }
-            catch (Exception)
-            {
 
-                return null;
+                if (users != null)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = users,
+                        Message = "Usuarios encontrados exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Usuarios no encontrados."
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
     }

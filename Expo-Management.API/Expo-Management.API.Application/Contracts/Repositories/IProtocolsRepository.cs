@@ -1,11 +1,10 @@
-﻿using Expo_Management.API.Domain.Models.Entities;
-using Expo_Management.API.Domain.Models.InputModels;
+﻿using Expo_Management.API.Domain.Models.Reponses;
 
 namespace Expo_Management.API.Application.Contracts.Repositories
 {
     public interface IProtocolsRepository
     {
-        Task<SecurityProtocols?> CreateProtocolAsync(string description);
-        Task<bool> DeleteProtocolAsync(int id);
+        Task<Response?> CreateProtocolAsync(string description);
+        Task<Response> DeleteProtocolAsync(int id);
     }
 }

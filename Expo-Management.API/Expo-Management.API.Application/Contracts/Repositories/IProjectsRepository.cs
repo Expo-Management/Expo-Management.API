@@ -1,5 +1,6 @@
 ﻿using Expo_Management.API.Domain.Models.Entities;
 using Expo_Management.API.Domain.Models.InputModels;
+using Expo_Management.API.Domain.Models.Reponses;
 using Expo_Management.API.Domain.Models.ViewModels;
 
 namespace Expo_Management.API.Application.Contracts.Repositories
@@ -7,30 +8,30 @@ namespace Expo_Management.API.Application.Contracts.Repositories
     public interface IProjectsRepository
     {
 
-        Task<Project?> CreateProject(NewProjectInputModel model);
+        Task<Response?> CreateProject(NewProjectInputModel model);
         bool ProjectExists(string lider);
-        Task<List<Project>?> GetAllProjectsAsync();
-        Task<Fair?> GetFair(int project);
-        Task<User?> removeUserFromProject(string email);
+        Task<Response?> GetAllProjectsAsync();
+        Task<Response?> GetFair(int project);
+        Task<Response?> removeUserFromProject(string email);
         //Task<Project?> removeProject(string email);
-        Task<List<Mention>?> GetMentionsAsync();
-        Task<List<Project>?> GetAllCurrentProjectsAsync();
-        Task<List<Project>?> GetOldProjectsAsync();
-        Task<List<ProjectDetailsViewModel>?> GetProjectDetails(int projectId);
-        Task<Claim?> CreateProjectClaim(NewClaimInputModel model);
+        Task<Response?> GetMentionsAsync();
+        Task<Response?> GetAllCurrentProjectsAsync();
+        Task<Response?> GetOldProjectsAsync();
+        Task<Response?> GetProjectDetails(int projectId);
+        Task<Response> CreateProjectClaim(NewClaimInputModel model);
         void SendCalificationsEmails(Project project, User judge);
-        Task<Recommendation?> JudgeRecommendation(NewRecommendationInputModel model);
-        Task<Project?> GetProjectById(int ProjectId);
-        Task<Recommendation?> GetRecommendation(int recomendacion);
-        Task<List<ProjectMembersViewModels>?> GetMembers();
-        Task<List<User>> GetMembersEmail(int projectId);
-        Task<List<Recommendation>?> GetRecommendationByProjectId(int recomendacion);
-        Task<Qualifications?> QualifyProject(QualifyProjectInputModel model);
+        Task<Response?> JudgeRecommendation(NewRecommendationInputModel model);
+        Task<Response?> GetProjectById(int ProjectId);
+        Task<Response?> GetRecommendation(int recomendacion);
+        Task<Response?> GetMembers();
+        Task<Response> GetMembersEmail(int projectId);
+        Task<Response?> GetRecommendationByProjectId(int recomendacion);
+        Task<Response?> QualifyProject(QualifyProjectInputModel model);
         Task<Boolean> CanJudgeQualifyTheProject(int ProjectId, string JudgeEmail);
-        Task<List<ProjectQualificationsViewModel>?> GetProjectQualifications(int projectId);
-        Task<List<ProjectQuantityViewModel>?> GetProjectsByYear();
-        Task<List<ProjectQuantityViewModel>?> GetProjectsByCategory();
-        Task<List<ProjectQuantityViewModel>?> GetUsersByProject();
-        Task<List<ProjectQuantityViewModel>?> GetProjectsByQualifications();
+        Task<Response?> GetProjectQualifications(int projectId);
+        Task<Response?> GetProjectsByYear();
+        Task<Response?> GetProjectsByCategory();
+        Task<Response?> GetUsersByProject();
+        Task<Response?> GetProjectsByQualifications();
     }
 }

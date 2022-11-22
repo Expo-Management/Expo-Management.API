@@ -138,45 +138,6 @@ namespace UploadFiles.Controllers
             return StatusCode(500);
         }
 
-        // [HttpGet]
-        // [Route("profile-picture")]
-        // public async Task<IActionResult> getProfilePicture(string userId)
-        // {
-        //     var profilePicture = await _filesUploaderRepository.getProfilePictureAsync(userId);
-
-        //     if (profilePicture != null)
-        //     {
-        //             return Ok(profilePicture);
-        //     }
-
-        //     return BadRequest("Usuario no posee foto de perfil");
-        // }
-
-        //[HttpPost]
-        //[Route("upload-pf")]
-        //public async Task<IActionResult> UploadProfilePicture(IFormFile file)
-        //{
-
-        //    if (file != null)
-        //    {
-        //        var existFile = _filesUploaderRepository.fileExist(file.FileName);
-        //        if (existFile == false)
-        //        {
-        //            if (file.ContentType == "image/jpeg" || file.ContentType == "image/png" || file.ContentType == "image/jpg")
-        //            {
-        //                await _filesUploaderRepository.Add(file);
-        //                return Ok($"Profile picture upload succesfully!");
-        //            }
-
-        //            return BadRequest("Profile picture must be only JPEG or PNG");
-
-        //        }
-        //        return BadRequest("File already exists.");
-        //    }
-
-        //    return BadRequest("There was an error.");
-        //}
-
         /// <summary>
         /// Endpoint para eliminar un archivo
         /// </summary>

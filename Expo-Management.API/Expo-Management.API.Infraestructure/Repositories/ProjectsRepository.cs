@@ -9,8 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using SendGrid.Helpers.Mail;
-using System.Security.Cryptography;
 using Expo_Management.API.Domain.Models.Reponses;
 
 namespace Expo_Management.API.Infraestructure.Repositories
@@ -157,21 +155,48 @@ namespace Expo_Management.API.Infraestructure.Repositories
                               .Include(c => c.category)
                               .ToListAsync();
 
-                if(projects != null)
+                if (projects != null)
                 {
-                    return new Response()
+
+                    var domainProjects = new List<Project>();
+
+                    foreach (var items in projects)
                     {
-                        Status = 200,
-                        Data = projects,
-                        Message = "Proyectos encontrados exitosamente!"
-                    };
+                        domainProjects.Add(new Project()
+                        {
+                            Id = items.Id,
+                            Name = items.Name,
+                            Description = items.Description,
+                            Fair = items.Fair,
+                            oldMembers = items.oldMembers,
+                            Files = new Files()
+                            {
+                                Id = items.Files.Id,
+                                Name = items.Files.Name,
+                                Size = items.Files.Size,
+                                Url = items.Files.Url,
+                                uploadDateTime = items.Files.uploadDateTime
+                            },
+                            category = new Category()
+                            {
+                                Id = items.category.Id,
+                                Description = items.category.Description
+                            }
+                        });
+
+                        return new Response()
+                        {
+                            Status = 200,
+                            Data = domainProjects,
+                            Message = "Proyectos encontrados exitosamente!"
+                        };
+                    }
                 }
                 return new Response()
                 {
                     Status = 204,
                     Message = "Proyectos no encontrados."
                 };
-
             }
             catch (Exception ex)
             {
@@ -347,12 +372,38 @@ namespace Expo_Management.API.Infraestructure.Repositories
                               .Include(c => c.category)
                               .ToListAsync();
 
-                if(projects.Count > 0)
+                var domainProjects = new List<Project>();
+
+                foreach (var items in projects)
+                {
+                    domainProjects.Add(new Project()
+                    {
+                        Id = items.Id,
+                        Name = items.Name,
+                        Description = items.Description,
+                        Fair = items.Fair,
+                        oldMembers = items.oldMembers,
+                        Files = new Files()
+                        {
+                            Id = items.Files.Id,
+                            Name = items.Files.Name,
+                            Size = items.Files.Size,
+                            Url = items.Files.Url,
+                            uploadDateTime = items.Files.uploadDateTime
+                        },
+                        category = new Category()
+                        {
+                            Id = items.category.Id,
+                            Description = items.category.Description
+                        }
+                    });
+                }
+                    if (domainProjects.Count > 0)
                 {
                     return new Response()
                     {
                         Status = 200,
-                        Data = projects.Distinct().ToList(),
+                        Data = domainProjects,
                         Message = "Proyectos encontrados exitosamente!"
                     };
                 }

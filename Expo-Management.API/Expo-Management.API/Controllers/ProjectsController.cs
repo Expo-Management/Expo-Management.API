@@ -20,7 +20,6 @@ namespace Expo_Management.API.Controllers
         private readonly IProjectsRepository _projectsRepository;
         private readonly ILogger<ProjectsController> _logger;
 
-
         /// <summary>
         /// Constructor del controlador de proyectos
         /// </summary>

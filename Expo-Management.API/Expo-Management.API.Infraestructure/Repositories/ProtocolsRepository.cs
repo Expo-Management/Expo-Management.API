@@ -1,5 +1,4 @@
 ﻿using Expo_Management.API.Domain.Models.Entities;
-using Expo_Management.API.Domain.Models.InputModels;
 using Expo_Management.API.Infraestructure.Data;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;

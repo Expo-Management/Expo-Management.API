@@ -621,7 +621,6 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 var qualification = new Qualifications()
                 {
                     Punctuation = model.Punctuation,
-                    Comments = model.Comments,
                     Judge = (User)judge,
                     Project = project
                 };

@@ -90,6 +90,7 @@ namespace Expo_Management.API.Controllers
 
         /// <summary>
         /// Endpoint para obtener las calificaciones de los proyectos
+        /// </summary>
         /// <param name="projectId"></param>
         /// <returns></returns>
         [Authorize(Roles = "Judge,User")]

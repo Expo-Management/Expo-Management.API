@@ -432,7 +432,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Response?> CreateProjectClaim(NewClaimInputModel model)
+        public async Task<Response> CreateProjectClaim(NewClaimInputModel model)
         {
             try
             {

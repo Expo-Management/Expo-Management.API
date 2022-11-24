@@ -192,31 +192,6 @@ namespace Expo_Management.API.Controllers
         }
 
         /// <summary>
-        /// Endpoint para mostrar las menciones
-        /// </summary>
-        /// <returns></returns>
-        [Authorize(Roles = "Judge,User")]
-        [HttpGet]
-        [Route("mentions")]
-        public async Task<IActionResult> showMentions()
-        {
-            try
-            {
-
-                var mentions = await _projectsRepository.GetMentionsAsync();
-                if (mentions != null)
-                {
-                    return Ok(mentions);
-                }
-                return NotFound("Aún no hay menciones creadas.");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500);
-            }
-        }
-
-        /// <summary>
         /// Endpoint para obtener las calificaciones de los proyectos
         /// </summary>
         /// <param name="projectId"></param>

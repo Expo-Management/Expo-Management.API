@@ -263,30 +263,6 @@ namespace Expo_Management.API.Infraestructure.Repositories
         //    }
         //}
 
-
-        /// <summary>
-        /// Metodo para obtener las menciones
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<Mention>?> GetMentionsAsync()
-        {
-            try
-            {
-                var mentions = await (from m in _context.Mention
-                                      select m).ToListAsync();
-
-                if (mentions != null && mentions.Any())
-                {
-                    return mentions;
-                }
-                return null;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-
         /// <summary>
         /// Metodo para obtener los proyectos actuales
         /// </summary>

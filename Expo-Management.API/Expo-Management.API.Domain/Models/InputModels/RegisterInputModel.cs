@@ -33,10 +33,10 @@ namespace Expo_Management.API.Domain.Models.InputModels
         public string Phone { get; set; } = default!;
 
 
-        [StringLength(30, ErrorMessage = "´La posicion del juez debe ser de un máximo de 30 caracteres.")]
+        [StringLength(30, ErrorMessage = "La posicion del juez debe ser de un máximo de 30 caracteres.")]
         public string Position { get; set; } = default!;
 
-        [StringLength(50, ErrorMessage = "El la institución del juez debe de ser de un máximo de 50 caracteres.")]
+        [StringLength(50, ErrorMessage = "La institución del juez debe de ser de un máximo de 50 caracteres.")]
         public string Institution { get; set; } = default!;
     }
 }

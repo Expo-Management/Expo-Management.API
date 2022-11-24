@@ -2,6 +2,7 @@
 using Expo_Management.API.Infraestructure.Data;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Expo_Management.API.Domain.Models.Reponses;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -25,16 +26,34 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener los logs del sistema
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Logs>?> GetLogsAsync()
+        public async Task<Response?> GetLogsAsync()
         {
             try
             {
-                return await (from l in _context.Logs
-                              select l).ToListAsync();
+                List<Logs> logs = await (from l in _context.Logs
+                                  select l).ToListAsync();
+                if (logs.Count > 0)
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = logs,
+                        Message = "Logs encontrados exitosamente!"
+                    };
+                }
+                return new Response()
+                {
+                    Status = 204,
+                    Message = "Logs no encontrados."
+                };
             }
             catch (Exception)
             {
-                return null;
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
     }

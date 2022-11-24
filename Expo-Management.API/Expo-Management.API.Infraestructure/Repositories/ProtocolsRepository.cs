@@ -1,9 +1,9 @@
 ﻿using Expo_Management.API.Domain.Models.Entities;
-using Expo_Management.API.Domain.Models.InputModels;
 using Expo_Management.API.Infraestructure.Data;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Expo_Management.API.Domain.Models.Reponses;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -32,7 +32,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="description"></param>
         /// <returns></returns>
-        public async Task<SecurityProtocols?> CreateProtocolAsync(string description)
+        public async Task<Response?> CreateProtocolAsync(string description)
         {
             try
             {
@@ -58,23 +58,37 @@ namespace Expo_Management.API.Infraestructure.Repositories
                     if (await _context.SecurityProtocols.AddAsync(newProtocol) != null && CurrentFair != null)
                     {
                         await _context.SaveChangesAsync();
-                        return newProtocol;
+                        return new Response()
+                        {
+                            Status = 200,
+                            Data = newProtocol,
+                            Message = "Protocolo creado exitosamente!"
+                        };
                     }
                 }
-                _logger.LogWarning("Error al crear el protocolo de seguridad.");
-                return null;
+                return new Response()
+                {
+                    Status = 400,
+                    Message = "Revise los datos enviados"
+                };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
+        
         /// <summary>
         /// Metodo para eliminar protocolos de seguridad
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteProtocolAsync(int id)
+        public async Task<Response> DeleteProtocolAsync(int id)
         {
             try
             {
@@ -86,16 +100,29 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 {
                     _context.SecurityProtocols.Remove(result);
                     _context.SaveChanges();
-                    return true;
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = true,
+                        Message = "Protocolo borrado exitosamente!"
+                    };
                 }
-
-                _logger.LogWarning("Error al eliminar el protocolo de seguridad.");
-                return false;
+                return new Response()
+                {
+                    Status = 204,
+                    Data = false,
+                    Message = "Protocolo no encontrado."
+                }; ;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return false;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Data = false,
+                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
+                };
             }
         }
 

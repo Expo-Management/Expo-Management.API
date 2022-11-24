@@ -10,7 +10,7 @@ namespace Expo_Management.API.Application.Contracts.Repositories
 
         Task<List<User>?> GetJudgesAsync();
         Task<User?> GetJudgeAsync(string email);
-        Task<User?> UpdateJudgeAsync(UpdateUserInputModel model);
+        Task<User?> UpdateJudgeAsync(UpdateJudgeInputModel model);
         Task<bool> DeleteJudgeAsync(string email);
 
 

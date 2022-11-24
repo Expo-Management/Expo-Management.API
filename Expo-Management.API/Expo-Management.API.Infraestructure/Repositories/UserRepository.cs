@@ -99,10 +99,9 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<User?> UpdateJudgeAsync(UpdateUserInputModel model)
+        public async Task<User?> UpdateJudgeAsync(UpdateJudgeInputModel model)
         {
             var oldUser = await _userManager.FindByEmailAsync(model.Email);
-            //var oldUser = await _userManager.FindByIdAsync(model.Id);
 
             if(oldUser != null)
             {
@@ -111,6 +110,8 @@ namespace Expo_Management.API.Infraestructure.Repositories
                 oldUser.Lastname = model.Lastname;
                 oldUser.Email = model.Email;
                 oldUser.PhoneNumber = model.Phone;
+                oldUser.Institution = model.Institution;
+                oldUser.Position = model.Position;
 
                 var result = await _userManager.UpdateAsync(oldUser);
 

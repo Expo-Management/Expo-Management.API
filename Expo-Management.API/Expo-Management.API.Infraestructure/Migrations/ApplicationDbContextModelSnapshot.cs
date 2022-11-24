@@ -74,6 +74,7 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Details")
+                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -96,8 +97,8 @@ namespace Expo_Management.API.Infraestructure.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -284,10 +285,6 @@ namespace Expo_Management.API.Infraestructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Comments")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("JudgeId")
                         .HasColumnType("nvarchar(450)");
 
@@ -295,6 +292,7 @@ namespace Expo_Management.API.Infraestructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Punctuation")
+                        .HasMaxLength(1)
                         .HasColumnType("int");
 
                     b.HasKey("Id");

@@ -82,7 +82,7 @@ namespace Expo_Management.API.Controllers
         {
             try
             {
-                var currentFair =  _fairRepository.GetCurrentFairId();
+                var currentFair = _fairRepository.GetCurrentFairId();
 
                 if (currentFair != 0)
                 {
@@ -143,10 +143,10 @@ namespace Expo_Management.API.Controllers
                     {
                         domainFair.Add(new Fair()
                         {
-                           Id = items.Id,
-                           StartDate = items.StartDate,
-                           EndDate = items.EndDate,
-                           Description = items.Description
+                            Id = items.Id,
+                            StartDate = items.StartDate,
+                            EndDate = items.EndDate,
+                            Description = items.Description
 
                         });
                     }

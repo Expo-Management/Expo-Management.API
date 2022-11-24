@@ -305,12 +305,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Controllers.ProjectsController.showMentions">
-            <summary>
-            Endpoint para mostrar las menciones
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:Expo_Management.API.Controllers.ProjectsController.getProjectQualificationAsync(System.Int32)">
             <summary>
             Endpoint para obtener las calificaciones de los proyectos
@@ -463,7 +457,7 @@
             <param name="email"></param>
             <returns></returns>
         </member>
-        <member name="M:Expo_Management.API.Controllers.UsersController.UpdateJudgeAsync(Expo_Management.API.Domain.Models.InputModels.UpdateUserInputModel)">
+        <member name="M:Expo_Management.API.Controllers.UsersController.UpdateJudgeAsync(Expo_Management.API.Domain.Models.InputModels.UpdateJudgeInputModel)">
             <summary>
             Endpoint para actualizar un juez
             </summary>

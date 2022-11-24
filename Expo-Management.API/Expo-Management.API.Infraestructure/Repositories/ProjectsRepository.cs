@@ -150,7 +150,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
             try
             {
                 var projects = await (from p in _context.Projects
-                              select p)
+                                      select p)
                               .Include(x => x.Files)
                               .Include(c => c.category)
                               .ToListAsync();
@@ -222,7 +222,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                     where f.Id == fairId
                                     select f).FirstOrDefaultAsync();
 
-               if(result != null)
+                if (result != null)
                 {
                     return new Response()
                     {
@@ -320,43 +320,6 @@ namespace Expo_Management.API.Infraestructure.Repositories
         }
 
         /// <summary>
-        /// Metodo para obtener las menciones
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Response?> GetMentionsAsync()
-        {
-            try
-            {
-                var mentions = await (from m in _context.Mention
-                                      select m).ToListAsync();
-
-                if (mentions != null && mentions.Any())
-                {
-                    return new Response()
-                    {
-                        Status = 200,
-                        Data = mentions,
-                        Message = "Menciones encontradas exitosamente!"
-                    };
-                }
-                return new Response()
-                {
-                    Status = 204,
-                    Message = "Menciones no encontrados."
-                };
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.Message);
-                return new Response()
-                {
-                    Status = 500,
-                    Message = "Hubo un problema procesando su solicitud, contacte administracion."
-                };
-            }
-        }
-
-        /// <summary>
         /// Metodo para obtener los proyectos actuales
         /// </summary>
         /// <returns></returns>
@@ -364,10 +327,9 @@ namespace Expo_Management.API.Infraestructure.Repositories
         {
             try
             {
-                var projects =  await (from p in _context.Projects
-                              join u in _context.User on p.Id equals u.Project.Id
-                              where p.Fair.StartDate.Year == DateTime.Now.Year && u.Project != null
-                              select p)
+                var projects = await (from p in _context.Projects
+                                      where p.Fair.StartDate.Year == DateTime.Now.Year
+                                      select p)
                               .Include(x => x.Files)
                               .Include(c => c.category)
                               .ToListAsync();
@@ -398,7 +360,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                         }
                     });
                 }
-                    if (domainProjects.Count > 0)
+                if (domainProjects.Count > 0)
                 {
                     return new Response()
                     {
@@ -469,7 +431,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Response?> CreateProjectClaim(NewClaimInputModel model)
+        public async Task<Response> CreateProjectClaim(NewClaimInputModel model)
         {
             try
             {
@@ -705,7 +667,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                              select r)
                                             .Include(p => p.user)
                                             .ToListAsync();
-                if(recommendations.Count() > 0)
+                if (recommendations.Count() > 0)
                 {
                     return new Response()
                     {
@@ -776,32 +738,68 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// <param name="judge"></param>
         public async void SendCalificationsEmails(Project project, User judge)
         {
-
-            var Leader = await (from l in _context.User
-                                where l.Project.Id == project.Id && l.IsLead == true
-                                select l).FirstOrDefaultAsync();
-
-
-            //Email to student
-            dynamic ToStudentEmailTemplate = new DynamicTemplate();
-
-            await _mailService.SendEmailAsync(Leader.Email, "d-dac12791e045497b9d5a84dfa260f244", ToStudentEmailTemplate = new
+            try
             {
-                student_username = Leader.UserName,
-                project_name = project.Name,
-                judge_name = judge.UserName,
-                url = $"{_configuration["WebUrl"]}/student/project/{project.Id}"
-            });
+                var Leader = await (from l in _context.User
+                                    where l.Project.Id == project.Id && l.IsLead == true
+                                    select l).FirstOrDefaultAsync();
 
-            //Email to judge
-            dynamic ToJudgeEmailTemplate = new DynamicTemplate();
+                var userTwo = await (from l in _context.User
+                                     where l.Project.Id == project.Id && l.IsLead == false
+                                     select l).FirstOrDefaultAsync();
 
-            await _mailService.SendEmailAsync(judge.Email, "d-3d3a74d6d191448e82fbb6d59de3a683", ToJudgeEmailTemplate = new
+
+                if (Leader != null)
+                {
+                    //Email to student
+                    dynamic ToStudentEmailTemplate = new DynamicTemplate();
+
+                    await _mailService.SendEmailAsync(Leader.Email, "d-dac12791e045497b9d5a84dfa260f244", ToStudentEmailTemplate = new
+                    {
+                        student_username = Leader.UserName,
+                        project_name = project.Name,
+                        judge_name = judge.UserName,
+                        url = $"{_configuration["WebUrl"]}/student/project/{project.Id}"
+                    });
+
+                    //Email to judge
+                    dynamic ToJudgeEmailTemplate = new DynamicTemplate();
+
+                    await _mailService.SendEmailAsync(judge.Email, "d-3d3a74d6d191448e82fbb6d59de3a683", ToJudgeEmailTemplate = new
+                    {
+                        judge_name = judge.UserName,
+                        project_name = project.Name,
+                        url = $"{_configuration["WebUrl"]}/judges/project-qualify/{project.Id}"
+                    });
+                }
+                else
+                {
+                    //Email to students
+                    dynamic ToStudentEmailTemplate = new DynamicTemplate();
+
+                    await _mailService.SendEmailAsync(userTwo.Email, "d-dac12791e045497b9d5a84dfa260f244", ToStudentEmailTemplate = new
+                    {
+                        studentTwo_username = userTwo.UserName,
+                        project_name = project.Name,
+                        judge_name = judge.UserName,
+                        url = $"{_configuration["WebUrl"]}/student/project/{project.Id}"
+                    });
+
+                    //Email to judge
+                    dynamic ToJudgeEmailTemplate = new DynamicTemplate();
+
+                    await _mailService.SendEmailAsync(judge.Email, "d-3d3a74d6d191448e82fbb6d59de3a683", ToJudgeEmailTemplate = new
+                    {
+                        judge_name = judge.UserName,
+                        project_name = project.Name,
+                        url = $"{_configuration["WebUrl"]}/judges/project-qualify/{project.Id}"
+                    });
+                }
+            }
+            catch (Exception ex)
             {
-                judge_name = judge.UserName,
-                project_name = project.Name,
-                url = $"{_configuration["WebUrl"]}/judges/project-qualify/{project.Id}"
-            });
+                _logger.LogError(ex.Message);
+            }
         }
 
         /// <summary>
@@ -852,15 +850,36 @@ namespace Expo_Management.API.Infraestructure.Repositories
         {
             try
             {
-                var judge = await (from u in _context.User
-                                   where u.Email == model.JudgeEmail
-                                   select u).FirstAsync();
+                var judge = (from u in _context.User
+                             where u.Email == model.JudgeEmail
+                             select u).FirstOrDefault();
 
-                var project = await (from p in _context.Projects
-                                     where p.Id == model.ProjectId
-                                     select p).FirstAsync();
+                var project = (from p in _context.Projects
+                               where p.Id == model.ProjectId
+                               select p).FirstOrDefault();
 
-                if (project == null || judge == null)
+                if (project != null && judge != null)
+                {
+                    var qualification = new Qualifications()
+                    {
+                        Punctuation = model.Punctuation,
+                        Judge = judge,
+                        Project = project
+                    };
+
+                    SendCalificationsEmails(project, judge);
+
+                    await _context.Qualifications.AddAsync(qualification);
+                    await _context.SaveChangesAsync();
+
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = qualification,
+                        Message = "Calificación realizada exitosamente!"
+                    };
+                }
+                else
                 {
                     return new Response()
                     {
@@ -868,27 +887,6 @@ namespace Expo_Management.API.Infraestructure.Repositories
                         Message = "Proyecto y/o usuario juez no encontrados."
                     };
                 }
-
-                var qualification = new Qualifications()
-                {
-                    Punctuation = model.Punctuation,
-                    Comments = model.Comments,
-                    Judge = (User)judge,
-                    Project = project
-                };
-
-                //send emails 
-                SendCalificationsEmails(project, judge);
-
-                await _context.Qualifications.AddAsync(qualification);
-                await _context.SaveChangesAsync();
-
-                return new Response()
-                {
-                    Status = 200,
-                    Data = qualification,
-                    Message = "Calificación realizada exitosamente!"
-                };
             }
             catch (Exception ex)
             {
@@ -962,7 +960,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                     .Include(p => p.Project)
                                     .ToListAsync();
 
-                if(emails != null)
+                if (emails != null)
                 {
                     return new Response()
                     {
@@ -998,17 +996,17 @@ namespace Expo_Management.API.Infraestructure.Repositories
 
             try
             {
-                var projectsByQualifications =  await (from p in _context.Projects
-                              join q in _context.Qualifications on p.Id equals q.Project.Id
-                              join u in _context.User on q.Judge.Id equals u.Id
-                              where p.Id == projectId
-                              select new ProjectQualificationsViewModel()
-                              {
-                                  Punctuation = q.Punctuation,
-                                  JudgeName = u.Name + " " + u.Lastname
-                              }).ToListAsync();
+                var projectsByQualifications = await (from p in _context.Projects
+                                                      join q in _context.Qualifications on p.Id equals q.Project.Id
+                                                      join u in _context.User on q.Judge.Id equals u.Id
+                                                      where p.Id == projectId
+                                                      select new ProjectQualificationsViewModel()
+                                                      {
+                                                          Punctuation = q.Punctuation,
+                                                          JudgeName = u.Name + " " + u.Lastname
+                                                      }).ToListAsync();
 
-                if(projectsByQualifications.Count > 0)
+                if (projectsByQualifications.Count > 0)
                 {
                     return new Response()
                     {
@@ -1094,7 +1092,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                     value = x.Count()
                 }).ToListAsync();
 
-                if(projectsByCategory != null)
+                if (projectsByCategory != null)
                 {
                     return new Response()
                     {

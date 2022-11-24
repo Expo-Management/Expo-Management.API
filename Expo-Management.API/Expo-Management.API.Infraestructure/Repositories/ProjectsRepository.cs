@@ -328,8 +328,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
             try
             {
                 var projects = await (from p in _context.Projects
-                                      join u in _context.User on p.Id equals u.Project.Id
-                                      where p.Fair.StartDate.Year == DateTime.Now.Year && u.Project != null
+                                      where p.Fair.StartDate.Year == DateTime.Now.Year
                                       select p)
                               .Include(x => x.Files)
                               .Include(c => c.category)
@@ -778,7 +777,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                     //Email to students
                     dynamic ToStudentEmailTemplate = new DynamicTemplate();
 
-                    await _mailService.SendEmailAsync(Leader.Email, "d-dac12791e045497b9d5a84dfa260f244", ToStudentEmailTemplate = new
+                    await _mailService.SendEmailAsync(userTwo.Email, "d-dac12791e045497b9d5a84dfa260f244", ToStudentEmailTemplate = new
                     {
                         studentTwo_username = userTwo.UserName,
                         project_name = project.Name,

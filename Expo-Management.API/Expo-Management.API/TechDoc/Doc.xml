@@ -305,7 +305,13 @@
             </summary>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Expo_Management.API.Controllers.ProjectsController.getProjectQualificationAsync(System.Int32)" -->
+        <member name="M:Expo_Management.API.Controllers.ProjectsController.getProjectQualificationAsync(System.Int32)">
+            <summary>
+            Endpoint para obtener las calificaciones de los proyectos
+            </summary>
+            <param name="projectId"></param>
+            <returns></returns>
+        </member>
         <member name="M:Expo_Management.API.Controllers.ProjectsController.CreateProjectClaim(Expo_Management.API.Domain.Models.InputModels.NewClaimInputModel)">
             <summary>
             Endpoint para crear los reclamos

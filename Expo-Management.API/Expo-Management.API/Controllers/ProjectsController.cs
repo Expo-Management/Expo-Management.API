@@ -219,7 +219,7 @@ namespace Expo_Management.API.Controllers
                 {
                     return Ok(result);
                 }
-                return BadRequest("El proyecto ya fue calificado con esta cuenta");
+                return StatusCode(204, "El proyecto ya fue calificado con esta cuenta");
             }
             catch (Exception)
             {

@@ -328,16 +328,15 @@ namespace Expo_Management.API.Infraestructure.Repositories
             try
             {
                 var projects = await (from p in _context.Projects
-                                      where p.Fair.StartDate.Year == DateTime.Now.Year
+                                      join u in _context.User on p.Id equals u.Project.Id
+                                      where p.Fair.StartDate.Year == DateTime.Now.Year && u.Project != null
                                       select p)
                               .Include(x => x.Files)
                               .Include(c => c.category)
                               .Distinct()
                               .ToListAsync();
 
-
                 var domainProjects = new List<Project>();
-
 
                 foreach (var items in projects)
                 {

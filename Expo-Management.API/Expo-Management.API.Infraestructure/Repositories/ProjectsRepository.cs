@@ -370,9 +370,12 @@ namespace Expo_Management.API.Infraestructure.Repositories
                               select p)
                               .Include(x => x.Files)
                               .Include(c => c.category)
+                              .Distinct()
                               .ToListAsync();
 
+
                 var domainProjects = new List<Project>();
+
 
                 foreach (var items in projects)
                 {

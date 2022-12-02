@@ -44,7 +44,7 @@ namespace Expo_Management.API.Infraestructure.Repositories
                     Description = "Expo Ingeniería " + model.Year,
                 };
 
-                if(GetCurrentFairId() == 0 /*&& newFair.EndDate.Year == DateTime.Now.Year*/)
+                if (GetCurrentFairId() == 0 /*&& newFair.EndDate.Year == DateTime.Now.Year*/)
                 {
 
                     if (await _context.Fair.AddAsync(newFair) != null)
@@ -120,9 +120,9 @@ namespace Expo_Management.API.Infraestructure.Repositories
         {
             try
             {
-                var currentFair =  (from x in _context.Fair
-                                         where x.StartDate.Year == DateTime.Now.Year
-                                         select x.Id).FirstOrDefault();
+                var currentFair = (from x in _context.Fair
+                                   where x.StartDate.Year == DateTime.Now.Year
+                                   select x.Id).FirstOrDefault();
 
                 if (currentFair != 0)
                 {

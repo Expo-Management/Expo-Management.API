@@ -93,7 +93,7 @@ namespace Expo_Management.API.Controllers
         [Authorize(Roles = "Admin,Judge")]
         [HttpPut]
         [Route("judge")]
-        public async Task<IActionResult> UpdateJudgeAsync([FromBody] UpdateUserInputModel model)
+        public async Task<IActionResult> UpdateJudgeAsync([FromBody] UpdateJudgeInputModel model)
         {
             var response = await _userRepository.UpdateJudgeAsync(model);
 

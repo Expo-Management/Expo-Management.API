@@ -13,8 +13,6 @@ namespace Expo_Management.API.Application.Contracts.Repositories
         Task<Response?> GetAllProjectsAsync();
         Task<Response?> GetFair(int project);
         Task<Response?> removeUserFromProject(string email);
-        //Task<Project?> removeProject(string email);
-        Task<Response?> GetMentionsAsync();
         Task<Response?> GetAllCurrentProjectsAsync();
         Task<Response?> GetOldProjectsAsync();
         Task<Response?> GetProjectDetails(int projectId);

@@ -4,6 +4,9 @@ using Expo_Management.API.Infraestructure.Data;
 using Expo_Management.API.Application.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Expo_Management.API.Domain.Models.Reponses;
+using Microsoft.AspNetCore.Http;
+using Castle.Windsor.Installer;
 
 namespace Expo_Management.API.Infraestructure.Repositories
 {
@@ -33,13 +36,13 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public async Task<Category?> CreateCategoryAsync(NewCategoryInputModel model)
+        public async Task<Response> CreateCategoryAsync(NewCategoryInputModel model)
         {
             try
             {
                 if (model != null)
                 {
-                    
+
                     var newCategory = new Category()
                     {
 
@@ -49,24 +52,49 @@ namespace Expo_Management.API.Infraestructure.Repositories
                     if (await _context.Categories.AddAsync(newCategory) != null)
                     {
                         await _context.SaveChangesAsync();
-                        return newCategory;
+                        return new Response()
+                        {
+                            Status = 200,
+                            Data = newCategory,
+                            Message = "Categoría creada exitosamente!"
+                        };
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Error al crear una categoria.");
+                        return new Response()
+                        {
+                            Status = 500,
+                            Message = "No se pudo crear la categoria, intentelo mas tarde."
+                        };
                     }
                 }
-                _logger.LogWarning("Error al crear una categoría.");
-                return null;
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 400,
+                        Message = "Revise los datos enviados"
+                    };
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud."
+                };
             }
         }
 
         /// <summary>
-        /// Metodo para eliminar Categoria de la feria
+        /// Metodo para eliminar una categoria
         /// </summary>
-        /// <param name="Id"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<bool> DeleteCategoryAsync(int id)
+        public async Task<Response> DeleteCategoryAsync(int id)
         {
             try
             {
@@ -74,20 +102,35 @@ namespace Expo_Management.API.Infraestructure.Repositories
                                     where x.Id == id
                                     select x).FirstOrDefaultAsync();
 
-                if(result != null)
+                if (result != null)
                 {
                     _context.Categories.Remove(result);
                     _context.SaveChanges();
-                    return true;
+
+                    return new Response()
+                    {
+                        Status = 202,
+                        Message = "La categoria se eliminó correctamente"
+                    };
+                }
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 400,
+                        Message = "No se pudo eliminar la categoria"
+                    };
                 }
 
-                _logger.LogWarning("Error al eliminar una categoría.");
-                return false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return false;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud."
+                };
             }
         }
 
@@ -95,43 +138,79 @@ namespace Expo_Management.API.Infraestructure.Repositories
         /// Metodo para obtener las categorias de la feria
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Category>?> GetAllCategoriesAsync()
+        public async Task<Response> GetAllCategoriesAsync()
         {
             try
             {
-                return await _context.Categories.ToListAsync();
+                var categories = await (from c in _context.Categories
+                                        select c).ToListAsync();
 
+                if (categories.Any())
+                {
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = categories
+                    };
+                }
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 204,
+                        Message = "No hay categorias registradas."
+                    };
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud."
+                };
             }
         }
 
         /// <summary>
         /// Metodo para obtener una categoria de la feria
         /// </summary>
-        /// <param name="Id"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public async Task<Category?> GetCategoryAsync(int id)
+        public async Task<Response> GetCategoryAsync(int id)
         {
             try
             {
                 var result = await (from x in _context.Categories
-                                   where x.Id == id
-                                   select x).FirstOrDefaultAsync();
+                                    where x.Id == id
+                                    select x).FirstOrDefaultAsync();
 
                 if (result != null)
                 {
-                    return result;
+                    return new Response()
+                    {
+                        Status = 200,
+                        Data = result
+                    };
                 }
-
-                return null;
+                else
+                {
+                    return new Response()
+                    {
+                        Status = 404,
+                        Message = "No se encontro la cateogoría."
+                    };
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                return null;
+                _logger.LogError(ex.Message);
+                return new Response()
+                {
+                    Status = 500,
+                    Message = "Hubo un problema procesando su solicitud."
+                };
             }
         }
     }

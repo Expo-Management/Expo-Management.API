@@ -89,21 +89,6 @@ namespace Expo_Management.API.Controllers
         }
 
         /// <summary>
-        /// Endpoint para mostrar las menciones
-        /// </summary>
-        /// <returns></returns>
-        [Authorize(Roles = "Judge,User")]
-        [HttpGet]
-        [Route("mentions")]
-        public async Task<IActionResult> showMentions()
-        {
-
-            var response = await _projectsRepository.GetMentionsAsync();
-
-            return Json(new { status = response.Status, message = response.Message, data = response.Data, error = response.Error });
-        }
-
-        /// <summary>
         /// Endpoint para obtener las calificaciones de los proyectos
         /// </summary>
         /// <param name="projectId"></param>
@@ -144,7 +129,6 @@ namespace Expo_Management.API.Controllers
         [Authorize(Roles = "Judge")]
         [HttpPost]
         [Route("recommendation")]
-        //[Authorize(Roles = "Judge")]
         public async Task<IActionResult> postRecommendation([FromBody] NewRecommendationInputModel model)
         {
 
@@ -235,7 +219,7 @@ namespace Expo_Management.API.Controllers
                 {
                     return Ok(result);
                 }
-                return BadRequest("El proyecto ya fue calificado con esta cuenta");
+                return StatusCode(204, "El proyecto ya fue calificado con esta cuenta");
             }
             catch (Exception)
             {

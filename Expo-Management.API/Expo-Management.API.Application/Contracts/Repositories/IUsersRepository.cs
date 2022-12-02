@@ -11,15 +11,13 @@ namespace Expo_Management.API.Application.Contracts.Repositories
 
         Task<Response?> GetJudgesAsync();
         Task<Response?> GetJudgeAsync(string email);
-        Task<Response?> UpdateJudgeAsync(UpdateUserInputModel model);
+        Task<Response?> UpdateJudgeAsync(UpdateJudgeInputModel model);
         Task<Response> DeleteJudgeAsync(string email);
-
 
         Task<Response?> GetAdminsAsync();
         Task<Response?> GetAdminAsync(string email);
         Task<Response?> UpdateAdminAsync(UpdateUserInputModel model);
         Task<Response> DeleteAdminAsync(string email);
-
 
         Task<Response?> GetStudentsAsync();
         Task<Response?> GetStudentAsync(string email);
